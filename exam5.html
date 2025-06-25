@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fonksiyon Analizi - f(x)=1/4(x-1)^2-5</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        // Sınav tamamlandığında çalışacak fonksiyon
+        function sinavBitir(puan) {
+            // Mevcut sınavın puanını kaydet
+            sessionStorage.setItem("sinav5", puan);
+            
+            // Bir sonraki sınava yönlendir
+            window.location.href = "result.html";
+        }
+    </script>
+    <style>
+        /* Mevcut tüm CSS kodu burada kalacak */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        header {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+            color: #FFD700;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .module-info {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .relation-info {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 8px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
+        .math {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #FFD700;
+        }
+        
+        .content {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .instructions {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #1a2a6c;
+        }
+        
+        .instructions h2 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .instructions h2 i {
+            color: #b21f1f;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+            font-size: 0.95rem;
+        }
+        
+        .instructions li strong {
+            color: #1a2a6c;
+        }
+        
+        .geogebra-container {
+            background-color: #e9ecef;
+            padding: 5px;
+            border-radius: 2px;
+            text-align: center;
+        }
+        
+        .geogebra-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .geogebra-header h3 {
+            color: #1a2a6c;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        
+        .geogebra-header .buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .how-to-btn {
+            background: linear-gradient(to right, #1a2a6c, #3a5fc5);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .geogebra-btn {
+            background: linear-gradient(to right, #28a745, #4caf50);
+        }
+        
+        .how-to-btn:hover {
+            background: linear-gradient(to right, #0d1b4d, #2a4bbd);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .geogebra-btn:hover {
+            background: linear-gradient(to right, #218838, #3d8b40);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .how-to-btn i {
+            font-size: 0.9rem;
+        }
+        
+        .graph-container {
+            position: relative;
+            width: 100%;
+            padding-top: 83.33%; /* 5:6 aspect ratio */
+            margin: 0 auto;
+            overflow: hidden;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        #function-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .slider-container {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        #vertical-slider {
+            width: 100%;
+            margin: 0;
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+        
+        /* Fonksiyon Özellikleri Bölümü */
+        .properties-section {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border-top: 3px solid #1a2a6c;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+        
+        .properties-section h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .property-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .property-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .property-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .property-card h4 i {
+            color: #b21f1f;
+        }
+        
+        .points {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #1a2a6c;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .option {
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .option.selected {
+            background-color: #1a2a6c;
+            color: white;
+            border-color: #1a2a6c;
+            box-shadow: 0 4px 8px rgba(26, 42, 108, 0.2);
+        }
+        
+        .feedback {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+	    display: none;
+        }
+        
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+	    display: none !important;
+        }
+        
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Ana Soru Bölümü */
+        .question-section {
+            grid-column: 1 / -1;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border-top: 3px solid #b21f1f;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question-section h3 {
+            color: #b21f1f;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .question {
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #1a2a6c;
+            text-align: center;
+        }
+        
+        .points-badge {
+            background: #b21f1f;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-check {
+            background: linear-gradient(to right, #1a2a6c, #3a5fc5);
+            color: white;
+        }
+        
+        .btn-check:hover:not(:disabled) {
+            background: linear-gradient(to right, #0d1b4d, #2a4bbd);
+            transform: translateY(-2px);
+        }
+        
+        .btn-next {
+            background: linear-gradient(to right, #b21f1f, #d9534f);
+            color: white;
+        }
+        
+        .btn-next:hover:not(:disabled) {
+            background: linear-gradient(to right, #8a1919, #c9302c);
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #1a2a6c;
+            color: white;
+            font-size: 0.85rem;
+        }
+        
+        .module-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .module-nav-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .module-nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .module-nav-btn.active {
+            background-color: #FFD700;
+            color: #1a2a6c;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a2a6c;
+        }
+        
+        .modal-header h2 {
+            color: #1a2a6c;
+            font-size: 1.5rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #b21f1f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            transform: scale(1.2);
+            color: #8a1919;
+        }
+        
+        .modal-instructions {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #1a2a6c;
+        }
+        
+        .modal-instructions ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        
+        .modal-instructions li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+        
+        .modal-instructions li strong {
+            color: #1a2a6c;
+        }
+        
+        .modal-tip {
+            background-color: #fffde7;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #ffd600;
+            margin-top: 15px;
+        }
+        
+        /* Özellikler için özel stiller */
+        .property-card .math {
+            color: #1a2a6c;
+            font-size: 1rem;
+        }
+        
+        .answer-summary {
+            background-color: #e2f0ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .answer-summary h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .answer-summary ul {
+            padding-left: 20px;
+        }
+        
+        .answer-summary li {
+            margin-bottom: 8px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #1a2a6c, #3a5fc5);
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+        
+        .exam-result {
+            display: none;
+            background-color: #e2f0ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            border: 2px solid #1a2a6c;
+        }
+        
+        .exam-result h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #1a2a6c;
+        }
+        
+        .score-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .score-details {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        
+        .score-details h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .score-details ul {
+            padding-left: 20px;
+        }
+        
+        .score-details li {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .score-details .score-value {
+            font-weight: bold;
+        }
+        
+        .result-message {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .excellent {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .good {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        
+        .average {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Yeni eklenen buton stili */
+        .next-exam-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #1a6c2a, #3ac55f);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+            max-width: 250px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .next-exam-btn:hover {
+            background: linear-gradient(to right, #0d4d1b, #2abd4b);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .result-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .geogebra-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .geogebra-header .buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .how-to-btn {
+                width: 48%;
+                justify-content: center;
+            }
+            
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .module-nav-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .how-to-btn {
+                font-size: 0.8rem;
+                padding: 8px 10px;
+            }
+            
+            .score-display {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-function"></i>
+                <div>
+                    <h1>Fonksiyon Kavramı Değerlendirme Testi</h1>
+                </div>
+            </div>
+            <div class="module-info">
+                <!-- Soru numarasını 5 olarak güncelledik -->
+                <span><i class="fas fa-book-open"></i> Soru:5</span>
+                <span><i class="fas fa-star"></i> Toplam 25 Puan</span>
+            </div>
+            <div class="relation-info">
+               Grafiği Verilen İfade: <span class="math">\( f(x) = \frac{1}{4}(x-1)^2 - 5 \)</span> 
+                (<span class="math">\( [-2, 3] \to \mathbb{R} \)</span>)
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="geogebra-container">
+                <div class="geogebra-header">
+                    <h3><i class="fas fa-chart-line"></i> İnteraktif Uygulama</h3>
+                    <div class="buttons">
+                        <button class="how-to-btn geogebra-btn" id="geogebra-btn">
+                            <i class="fas fa-external-link-alt"></i> Geogebrada İncele
+                        </button>
+                        <button class="how-to-btn" id="how-to-btn">
+                            <i class="fas fa-question-circle"></i> Nasıl Kullanılır?
+                        </button>
+                    </div>
+                </div>
+                <p>\( f(x) = \frac{1}{4}(x-1)^2 - 5 \) Bağıntısı ve Düşey Doğru Testi</p>
+                <div class="graph-container">
+                    <canvas id="function-canvas"></canvas>
+                    <div class="slider-container">
+                        <input type="range" id="vertical-slider" min="-2" max="3" step="0.01" value="0">
+                        <div class="slider-value">Düşey Doğru: x = <span id="slider-value">0</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fonksiyon Özellikleri Bölümü -->
+            <div class="properties-section" id="properties-section">
+                <h3><i class="fas fa-tasks"></i> Fonksiyon Özellikleri Analizi <span class="points-badge">15 Puan</span></h3>
+                <p>Temel soruyu doğru cevapladınız! Şimdi fonksiyonun temel özelliklerini belirlemek için aşağıdaki soruları cevaplayın:</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+                
+                <div class="properties-grid">
+                    <!-- Tanım Kümesi -->
+                    <div class="property-card">
+                        <div class="points">1 Puan</div>
+                        <h4><i class="fas fa-calculator"></i> Tanım Kümesi</h4>
+                        <p>Fonksiyonun tanımlı olduğu x değerleri hangi aralıktadır?</p>
+                        <div class="options">
+                            <div class="option" data-value="reel">Tüm reel sayılar</div>
+                            <div class="option" data-value="interval">[-2, 3]</div>
+                            <div class="option" data-value="positive">Pozitif reel sayılar</div>
+                            <div class="option" data-value="negative">Negatif reel sayılar</div>
+                        </div>
+                        <div class="feedback correct">
+                            <i class="fas fa-check-circle" style="display: none;"></i> Doğru! Tanım kümesi [-2, 3] aralığıdır.
+                        </div>
+                        <div class="feedback incorrect">
+                            <i class="fas fa-times-circle"></i> Yanlış. Soruda tanım kümesi [-2, 3] olarak belirtilmiştir.
+                        </div>
+                    </div>
+                    
+                    <!-- Görüntü Kümesi -->
+                    <div class="property-card">
+                        <div class="points">1 Puan</div>
+                        <h4><i class="fas fa-chart-bar"></i> Görüntü Kümesi</h4>
+                        <p>Fonksiyonun alabileceği y değerleri hangi aralıktadır?</p>
+                        <div class="options">
+                            <div class="option" data-value="reel">Tüm reel sayılar</div>
+                            <div class="option" data-value="interval">[-5, -2.75]</div>
+                            <div class="option" data-value="positive">Pozitif reel sayılar</div>
+                            <div class="option" data-value="negative">Negatif reel sayılar</div>
+                        </div>
+                        <div class="feedback correct">
+                            <i class="fas fa-check-circle"></i> Doğru! Görüntü kümesi [-5, -2.75] aralığıdır.
+                        </div>
+                        <div class="feedback incorrect">
+                            <i class="fas fa-times-circle"></i> Yanlış. Parabolün tepe noktasına ve tanım kümesinin sınırlarına bakın.
+                        </div>
+                    </div>
+                    
+                    <!-- Sıfır Noktası -->
+                    <div class="property-card">
+                        <div class="points">1 Puan</div>
+                        <h4><i class="fas fa-bullseye"></i> Fonksiyonun Sıfırları</h4>
+                        <p>Fonksiyon hangi x değerlerinde y = 0 olur?</p>
+                        <div class="options">
+                            <div class="option" data-value="none">Sıfır noktası yok</div>
+                            <div class="option" data-value="0">x=0</div>
+                            <div class="option" data-value="1">x=1</div>
+                            <div class="option" data-value="1-3">x=1 ve x=3</div>
+                        </div>
+                        <div class="feedback correct">
+                            <i class="fas fa-check-circle"></i> Doğru! Fonksiyon [-2, 3] aralığında hiç sıfır değeri almaz.
+                        </div>
+                        <div class="feedback incorrect">
+                            <i class="fas fa-times-circle"></i> Yanlış. Fonksiyon tüm tanım kümesinde negatif değerler alır.
+                        </div>
+                    </div>
+                    
+                    <!-- Tepe Noktası -->
+                    <div class="property-card">
+                        <div class="points">2 Puan</div>
+                        <h4><i class="fas fa-map-marker-alt"></i> Tepe Noktası</h4>
+                        <p>Fonksiyonun minimum noktası nerededir?</p>
+                        <div class="options">
+                            <div class="option" data-value="1-5">(1, -5)</div>
+                            <div class="option" data-value="0-0">(0, 0)</div>
+                            <div class="option" data-value="1-0">(1, 0)</div>
+                            <div class="option" data-value="3-0">(3, 0)</div>
+                        </div>
+                        <div class="feedback correct">
+                            <i class="fas fa-check-circle"></i> Doğru! Fonksiyonun minimum noktası (1, -5)'dir.
+                        </div>
+                        <div class="feedback incorrect">
+                            <i class="fas fa-times-circle"></i> Yanlış. Parabolün tepe noktası formülünü hatırlayın.
+                        </div>
+                    </div>
+                    
+                    <!-- Artan/Azalan -->
+                    <div class="property-card">
+                        <div class="points">2 Puan</div>
+                        <h4><i class="fas fa-arrow-up"></i> Artan/Azalan Aralıklar</h4>
+                        <p>Fonksiyon hangi aralıklarda artan/azalandır?</p>
+                        <div class="options">
+                            <div class="option" data-value="artan">Tüm tanım kümesinde artan</div>
+                            <div class="option" data-value="azalan">Tüm tanım kümesinde azalan</div>
+                            <div class="option" data-value="kismi">[-2, 1] azalan, [1, 3] artan</div>
+                            <div class="option" data-value="sabit">Sabit</div>
+                        </div>
+                        <div class="feedback correct">
+                            <i class="fas fa-check-circle"></i> Doğru! Fonksiyon [-2, 1] aralığında azalan, [1, 3] aralığında artandır.
+                        </div>
+                        <div class="feedback incorrect">
+                            <i class="fas fa-times-circle"></i> Yanlış. Tepe noktasını referans alarak inceleyin.
+                        </div>
+                    </div>
+                    
+                    <!-- Pozitif/Negatif -->
+                    <div class="property-card">
+                        <div class="points">2 Puan</div>
+                        <h4><i class="fas fa-plus-minus"></i> Pozitif/Negatif Aralıklar</h4>
+                        <p>Fonksiyon hangi aralıklarda pozitif/negatiftir?</p>
+                        <div class="options">
+                            <div class="option" data-value="poz-neg">[-2, 1] pozitif, [1, 3] negatif</div>
+                            <div class="option" data-value="poz">Tüm tanım kümesinde pozitif</div>
+                            <div class="option" data-value="neg">Tüm tanım kümesinde negatif</div>
+                            <div class="option" data-value="neg-poz">[-2, 0)'da negatif, (0, 3]'da pozitif</div>
+                        </div>
+                        <div class="feedback correct">
+                            <i class="fas fa-check-circle"></i> Doğru! Fonksiyon tüm tanım kümesinde negatiftir.
+                        </div>
+                        <div class="feedback incorrect">
+                            <i class="fas fa-times-circle"></i> Yanlış. Fonksiyonun sıfır noktalarını dikkate alın.
+                        </div>
+                    </div>
+                    
+                    <!-- Fonksiyon Tipi -->
+                    <div class="property-card">
+                        <div class="points">1 Puan</div>
+                        <h4><i class="fas fa-shapes"></i> Fonksiyon Tipi</h4>
+                        <p>Bu fonksiyon hangi tiptedir?</p>
+                        <div class="options">
+                            <div class="option" data-value="dogrusal">Doğrusal fonksiyon</div>
+                            <div class="option" data-value="karesel">Karesel fonksiyon</div>
+                            <div class="option" data-value="ussel">Üssel fonksiyon</div>
+                            <div class="option" data-value="trigonometrik">Trigonometrik fonksiyon</div>
+                        </div>
+                        <div class="feedback correct">
+                            <i class="fas fa-check-circle"></i> Doğru! y = a(x-h)^2 + k formundadır, karesel fonksiyondur.
+                        </div>
+                        <div class="feedback incorrect">
+                            <i class="fas fa-times-circle"></i> Yanlış. Fonksiyonun denklem formuna bakın.
+                        </div>
+                    </div>
+                    
+                    <!-- Bire Bir Olma -->
+                    <div class="property-card">
+                        <div class="points">2 Puan</div>
+                        <h4><i class="fas fa-fingerprint"></i> Bire Bir Olma</h4>
+                        <p>Bu fonksiyon bire bir midir?</p>
+                        <div class="options">
+                            <div class="option" data-value="evet">Evet, bire birdir</div>
+                            <div class="option" data-value="hayir">Hayır, bire bir değildir</div>
+                        </div>
+                        <div class="feedback correct">
+                            <i class="fas fa-check-circle"></i> Doğru! Fonksiyon bire bir değildir (yatay doğru testi).
+                        </div>
+                        <div class="feedback incorrect">
+                            <i class="fas fa-times-circle"></i> Yanlış. Yatay doğru testi ile kontrol edin.
+                        </div>
+                    </div>
+                    
+                    <!-- Örten Olma -->
+                    <div class="property-card">
+                        <div class="points">3 Puan</div>
+                        <h4><i class="fas fa-project-diagram"></i> Örten Olma</h4>
+                        <p>Bu fonksiyon örten midir?</p>
+                        <div class="options">
+                            <div class="option" data-value="evet">Evet, örtendir</div>
+                            <div class="option" data-value="hayir">Hayır, örten değildir</div>
+                        </div>
+                        <div class="feedback correct">
+                            <i class="fas fa-check-circle"></i> Doğru! Görüntü kümesi [-5, -2.75] olduğu için tüm reel sayıları kapsamaz, bu nedenle örten değildir.
+                        </div>
+                        <div class="feedback incorrect">
+                            <i class="fas fa-times-circle"></i> Yanlış. Görüntü kümesi ile değer kümesini karşılaştırın.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn btn-check" id="check-properties">
+                        <i class="fas fa-check"></i> Özellikleri Kontrol Et
+                    </button>
+                    <button class="btn btn-next" id="next-properties-btn" disabled>
+                        <i class="fas fa-arrow-right"></i> Sınavı Tamamla
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Ana Soru Bölümü -->
+            <div class="question-section">
+                <h3>
+                    <i class="fas fa-question-circle"></i> Temel Soru 
+                    <span class="points-badge">10 Puan</span>
+                </h3>
+                <div class="question">
+                   Grafikte gösterilen \( [-2, 3] \to \mathbb{R} \) tanımlı \( f(x) = \frac{1}{4}(x-1)^2 - 5 \) ifadesi bir fonksiyon mudur?
+                </div>
+                
+                <div class="options">
+                    <div class="option" data-value="yes">Evet, fonksiyondur.</div>
+                    <div class="option" data-value="no">Hayır, fonksiyon değildir.</div>
+                </div>
+                <div class="feedback correct">
+                    <i class="fas fa-check-circle"></i> Doğru cevap! \( f(x) = \frac{1}{4}(x-1)^2 - 5 \) bağıntısı bir fonksiyondur. <br>
+                    Şimdi fonksiyonun özelliklerini inceleyebilirsiniz.
+                </div>
+                
+                <div class="feedback incorrect">
+                    <i class="fas fa-times-circle"></i> Yanlış cevap. Lütfen tekrar deneyin.
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn btn-check" id="check-main">
+                        <i class="fas fa-check"></i> Kontrol Et
+                    </button>
+                    <button class="btn btn-next" id="next-btn" disabled>
+                        <i class="fas fa-arrow-right"></i> Sınavı Tamamla
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Sınav Sonuç Bölümü -->
+            <div class="exam-result" id="exam-result">
+                <h3><i class="fas fa-award"></i> Sınav Sonucu</h3>
+                <div class="score-display" id="total-score">0/25</div>
+                
+                <div class="result-message" id="result-message">
+                    Sınavınız değerlendiriliyor...
+                </div>
+                
+                <div class="score-details">
+                    <h4>Puan Dağılımı</h4>
+                    <ul>
+                        <li>
+                            <span>Temel Soru:</span>
+                            <span class="score-value" id="basic-score">0/10</span>
+                        </li>
+                        <li>
+                            <span>Fonksiyon Özellikleri:</span>
+                            <span class="score-value" id="properties-score">0/15</span>
+                        </li>
+                        <li>
+                            <span>Toplam Puan:</span>
+                            <span class="score-value" id="final-score">0/25</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="score-text">
+                    <p>Sınavınız tamamlandı! Sonuçlarınız yukarıda gösterilmektedir.</p>
+                </div>
+                
+                <!-- Bu butonu değiştirdik -->
+                <div class="result-buttons">
+                    <button class="next-exam-btn" id="next-exam-btn">
+                        <i class="fas fa-arrow-right"></i> Sınavı Tamamla
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer navigasyonunu güncelledik -->
+        <footer>
+            <div class="module-nav">
+                <button class="module-nav-btn">
+                    <a href="exam1.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">1</a>
+                </button>
+                <button class="module-nav-btn">
+                    <a href="exam2.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">2</a>
+                </button>
+                <button class="module-nav-btn">
+                    <a href="exam3.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">3</a>
+                </button>
+                <button class="module-nav-btn">
+                    <a href="exam4.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">4</a>
+                </button>
+                <button class="module-nav-btn active">5</button>
+            </div>
+            <p>Fonksiyon Kavramı Analiz Sınavı &copy; 2023</p>
+        </footer>
+    </div>
+    
+    <!-- Nasıl Kullanılır Modal -->
+    <div class="modal" id="how-to-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> Nasıl Kullanılır?</h2>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-instructions">
+                <h3>Fonksiyon Özelliklerini Analiz Etme</h3>
+                <p>Bu modülde, \( f(x) = \frac{1}{4}(x-1)^2 - 5 \) fonksiyonunun çeşitli özelliklerini inceleyeceksiniz:</p>
+                
+                <ol>
+                    <li><strong>Tanım kümesi:</strong> Fonksiyonun hangi x değerleri için tanımlı olduğunu belirleyin.</li>
+                    <li><strong>Görüntü kümesi:</strong> Fonksiyonun alabileceği tüm y değerlerini bulun.</li>
+                    <li><strong>Sıfır noktaları:</strong> Fonksiyonun x eksenini kestiği noktaları belirleyin.</li>
+                    <li><strong>Tepe noktası:</strong> Fonksiyonun maksimum veya minimum noktasını bulun.</li>
+                    <li><strong>Artış/azalış:</strong> Fonksiyonun hangi aralıklarda arttığını veya azaldığını analiz edin.</li>
+                    <li><strong>Pozitif/negatif:</strong> Fonksiyonun hangi aralıklarda pozitif veya negatif değerler aldığını tespit edin.</li>
+                    <li><strong>Fonksiyon tipi:</strong> Fonksiyonun doğrusal, karesel veya başka bir tipte olup olmadığını belirleyin.</li>
+                    <li><strong>Bire bir olma:</strong> Fonksiyonun bire bir (injective) olup olmadığını kontrol edin.</li>
+                    <li><strong>Örten olma:</strong> Fonksiyonun örten (surjective) olup olmadığını kontrol edin.</li>
+                </ol>
+                
+                <div class="modal-tip">
+                    <p><strong><i class="fas fa-lightbulb"></i> İpucu:</strong> Grafiği dikkatlice inceleyin. Karesel fonksiyonlar parabol şeklinde grafiğe sahiptir ve tepe noktası fonksiyonun davranışını belirler. Tanım kümesinin kısıtlı olduğunu unutmayın. Yatay doğru testi ile bire bir olup olmadığını kontrol edebilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- GeoGebra Modal -->
+    <div class="modal" id="geogebra-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-chart-line"></i> GeoGebra Uygulaması</h2>
+                <button class="close-modal" id="close-geogebra-modal">&times;</button>
+            </div>
+            <div class="modal-geogebra">
+                <div style="width:100%; padding-top:83.33%; position:relative;">
+                    <iframe scrolling="no" title="1/4(x-1)^2-5" src="https://www.geogebra.org/material/iframe/id/xrgywwx9/width/600/height/500/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/true/rc/false/ld/false/sdz/false/ctl/false" 
+                            style="position:absolute; top:0; left:0; width:100%; height:100%; border:0px;" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Canvas grafik çizimi
+            const canvas = document.getElementById('function-canvas');
+            const ctx = canvas.getContext('2d');
+            const slider = document.getElementById('vertical-slider');
+            const sliderValue = document.getElementById('slider-value');
+            
+            // Grafik boyutları ve ölçekleme
+            function resizeCanvas() {
+                const container = canvas.parentElement;
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                
+                canvas.width = width;
+                canvas.height = height;
+                drawGraph();
+            }
+            
+            // Fonksiyon tanımı
+            function f(x) {
+                return (1/4) * Math.pow(x - 1, 2) - 5;
+            }
+            
+            // Koordinat dönüşüm fonksiyonları
+            function toPixelX(x) {
+                const graphWidth = 6; // -2.5 to 3.5
+                const minX = -2.5;
+                return ((x - minX) / graphWidth) * canvas.width;
+            }
+            
+            function toPixelY(y) {
+                const graphHeight = 6.5; // -5.5 to 1
+                const minY = -5.5;
+                return canvas.height - ((y - minY) / graphHeight) * canvas.height;
+            }
+            
+            // Grafik çizimi
+            function drawGraph() {
+                if (canvas.width === 0 || canvas.height === 0) return;
+                
+                // Arka planı temizle
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Arka plan ızgarası
+                ctx.strokeStyle = '#e0e0e0';
+                ctx.lineWidth = 1;
+                
+                // Yatay çizgiler
+                for (let y = -5; y <= 0; y++) {
+                    const pixelY = toPixelY(y);
+                    ctx.beginPath();
+                    ctx.moveTo(0, pixelY);
+                    ctx.lineTo(canvas.width, pixelY);
+                    ctx.stroke();
+                    
+                    // Y ekseni etiketleri
+                    ctx.fillStyle = '#666';
+                    ctx.font = '12px Arial';
+                    ctx.fillText(y.toFixed(1), 5, pixelY - 5);
+                }
+                
+                // Dikey çizgiler
+                for (let x = -2; x <= 3; x++) {
+                    const pixelX = toPixelX(x);
+                    ctx.beginPath();
+                    ctx.moveTo(pixelX, 0);
+                    ctx.lineTo(pixelX, canvas.height);
+                    ctx.stroke();
+                    
+                    // X ekseni etiketleri
+                    ctx.fillStyle = '#666';
+                    ctx.font = '12px Arial';
+                    ctx.fillText(x, pixelX - 5, canvas.height - 5);
+                }
+                
+                // Eksenleri çiz
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                
+                // X ekseni
+                ctx.beginPath();
+                ctx.moveTo(0, toPixelY(0));
+                ctx.lineTo(canvas.width, toPixelY(0));
+                ctx.stroke();
+                
+                // Y ekseni
+                ctx.beginPath();
+                ctx.moveTo(toPixelX(0), 0);
+                ctx.lineTo(toPixelX(0), canvas.height);
+                ctx.stroke();
+                
+                // Tanım kümesi sınırları
+                ctx.strokeStyle = '#b21f1f';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 3]);
+                
+                // x = -2
+                let pixelX = toPixelX(-2);
+                ctx.beginPath();
+                ctx.moveTo(pixelX, 0);
+                ctx.lineTo(pixelX, canvas.height);
+                ctx.stroke();
+                
+                // x = 3
+                pixelX = toPixelX(3);
+                ctx.beginPath();
+                ctx.moveTo(pixelX, 0);
+                ctx.lineTo(pixelX, canvas.height);
+                ctx.stroke();
+                
+                ctx.setLineDash([]);
+                
+                // Fonksiyon grafiğini çiz
+                ctx.strokeStyle = '#1a2a6c';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                
+                const step = 0.05;
+                for (let x = -2; x <= 3; x += step) {
+                    const y = f(x);
+                    const pixelX = toPixelX(x);
+                    const pixelY = toPixelY(y);
+                    
+                    if (x === -2) {
+                        ctx.moveTo(pixelX, pixelY);
+                    } else {
+                        ctx.lineTo(pixelX, pixelY);
+                    }
+                }
+                
+                ctx.stroke();
+                
+                // Tepe noktasını işaretle
+                const vertexX = 1;
+                const vertexY = f(vertexX);
+                const vertexPixelX = toPixelX(vertexX);
+                const vertexPixelY = toPixelY(vertexY);
+                
+                ctx.fillStyle = '#b21f1f';
+                ctx.beginPath();
+                ctx.arc(vertexPixelX, vertexPixelY, 6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Düşey doğru çiz
+                const currentX = parseFloat(slider.value);
+                const currentPixelX = toPixelX(currentX);
+                const currentY = f(currentX);
+                const currentPixelY = toPixelY(currentY);
+                
+                ctx.strokeStyle = '#28a745';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(currentPixelX, 0);
+                ctx.lineTo(currentPixelX, canvas.height);
+                ctx.stroke();
+                
+                // Kesişim noktası
+                ctx.fillStyle = '#28a745';
+                ctx.beginPath();
+                ctx.arc(currentPixelX, currentPixelY, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Koordinat etiketleri
+                ctx.fillStyle = '#28a745';
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(`(${currentX.toFixed(2)}, ${currentY.toFixed(2)})`, currentPixelX + 10, currentPixelY - 10);
+            }
+            
+            // Sürgü değiştiğinde
+            slider.addEventListener('input', function() {
+                sliderValue.textContent = parseFloat(slider.value).toFixed(2);
+                drawGraph();
+            });
+            
+            // Pencere boyutu değiştiğinde
+            window.addEventListener('resize', resizeCanvas);
+            
+            // İlk çizimi yap
+            resizeCanvas();
+            
+            // Ana soru için elemanlar
+            const mainOptions = document.querySelectorAll('.question-section .option');
+            const checkMainButton = document.getElementById('check-main');
+            const nextButton = document.getElementById('next-btn');
+            const nextPropertiesButton = document.getElementById('next-properties-btn');
+            const mainFeedback = document.querySelectorAll('.question-section .feedback');
+            const propertiesSection = document.getElementById('properties-section');
+            const progressBar = document.getElementById('progress-bar');
+            const examResult = document.getElementById('exam-result');
+            const nextExamButton = document.getElementById('next-exam-btn'); // Butonu değiştirdik
+            
+            let mainSelectedOption = null;
+            let basicQuestionScore = 0;
+            let propertiesScore = 0;
+            let totalScore = 0;
+            
+            // Fonksiyon özellikleri için elemanlar
+            const propertyCards = document.querySelectorAll('.property-card');
+            const checkPropertiesButton = document.getElementById('check-properties');
+            
+            // Puan gösterim elemanları
+            const basicScoreElement = document.getElementById('basic-score');
+            const propertiesScoreElement = document.getElementById('properties-score');
+            const totalScoreElement = document.getElementById('total-score');
+            const finalScoreElement = document.getElementById('final-score');
+            const resultMessage = document.getElementById('result-message');
+            
+            // Modal için elemanlar
+            const howToBtn = document.getElementById('how-to-btn');
+            const howToModal = document.getElementById('how-to-modal');
+            const closeModal = document.getElementById('close-modal');
+            
+            const geogebraBtn = document.getElementById('geogebra-btn');
+            const geogebraModal = document.getElementById('geogebra-modal');
+            const closeGeogebraModal = document.getElementById('close-geogebra-modal');
+            
+            // Seçenekleri karıştırma fonksiyonu
+            function shuffleOptions() {
+                propertyCards.forEach(card => {
+                    const optionsContainer = card.querySelector('.options');
+                    const options = Array.from(card.querySelectorAll('.option'));
+                    
+                    // Seçenekleri karıştır
+                    for (let i = options.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [options[i], options[j]] = [options[j], options[i]];
+                    }
+                    
+                    // Yeniden ekle
+                    optionsContainer.innerHTML = '';
+                    options.forEach(option => {
+                        optionsContainer.appendChild(option);
+                    });
+                });
+            }
+            
+            // Sayfa yüklendiğinde seçenekleri karıştır
+            shuffleOptions();
+            
+            // Ana soru seçeneklerinin tıklanma olayı
+            mainOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Önceki seçimi temizle
+                    mainOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Yeni seçimi yap
+                    this.classList.add('selected');
+                    mainSelectedOption = this.getAttribute('data-value');
+                    
+                    // Feedback'leri gizle
+                    mainFeedback.forEach(fb => fb.style.display = 'none');
+                    
+                    // Kontrol butonunu aktifleştir
+                    checkMainButton.disabled = false;
+                });
+            });
+            
+            // Ana soru kontrol et butonu
+            checkMainButton.addEventListener('click', function() {
+                if (mainSelectedOption === null) return;
+                
+                // Feedback'leri gizle
+                mainFeedback.forEach(fb => fb.style.display = 'none');
+                
+                // Doğru cevabı göster
+                if (mainSelectedOption === 'yes') {
+                    document.querySelector('.feedback.correct').style.display = 'block';
+                    nextButton.disabled = false;
+                    basicQuestionScore = 10;
+                    
+                    // Fonksiyon özellikleri bölümünü göster
+                    propertiesSection.style.display = 'block';
+                    propertiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Buton metnini güncelle
+                    this.innerHTML = '<i class="fas fa-check"></i> Doğru Cevap!';
+                    this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
+                    this.disabled = true;
+                } else {
+                    document.querySelector('.feedback.incorrect').style.display = 'block';
+                    basicQuestionScore = 0;
+                }
+            });
+            
+            // Özellikler için seçeneklerin tıklanma olayı
+            propertyCards.forEach(card => {
+                const options = card.querySelectorAll('.option');
+                const feedbacks = card.querySelectorAll('.feedback');
+                
+                options.forEach(option => {
+                    option.addEventListener('click', function() {
+                        // Aynı karttaki diğer seçimleri temizle
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        
+                        // Yeni seçimi yap
+                        this.classList.add('selected');
+                        
+                        // Feedback'leri gizle
+                        feedbacks.forEach(fb => fb.style.display = 'none');
+                    });
+                });
+            });
+            
+            // Özellikleri kontrol et butonu
+            checkPropertiesButton.addEventListener('click', function() {
+                let allAnswered = true;
+                let answeredCount = 0;
+                propertiesScore = 0;
+                
+                propertyCards.forEach(card => {
+                    const selectedOption = card.querySelector('.option.selected');
+                    const feedbacks = card.querySelectorAll('.feedback');
+                    const pointsText = card.querySelector('.points').textContent;
+                    const pointsValue = parseFloat(pointsText.split(' ')[0]);
+                    
+                    // Feedback'leri gizle
+                    feedbacks.forEach(fb => fb.style.display = 'none');
+                    
+                    if (selectedOption) {
+                        answeredCount++;
+                        const isCorrect = checkPropertyAnswer(card, selectedOption.getAttribute('data-value'));
+                        const feedback = isCorrect ? card.querySelector('.feedback.correct') : card.querySelector('.feedback.incorrect');
+                        
+                        if (feedback) {
+                            feedback.style.display = 'block';
+                        }
+                        
+                        if (isCorrect) {
+                            propertiesScore += pointsValue;
+                        }
+                    } else {
+                        allAnswered = false;
+                    }
+                });
+                
+                // İlerleme çubuğunu güncelle
+                const progress = (answeredCount / propertyCards.length) * 100;
+                progressBar.style.width = `${progress}%`;
+                
+                if (!allAnswered) {
+                    alert('Lütfen tüm soruları cevaplayın!');
+                    return;
+                }
+                
+                // Butonu güncelle
+                this.innerHTML = '<i class="fas fa-check-double"></i> Cevaplar Kontrol Edildi!';
+                this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
+                nextButton.disabled = false;
+                nextPropertiesButton.disabled = false;
+            });
+            
+            // Özellik cevap kontrol fonksiyonu
+            function checkPropertyAnswer(card, answer) {
+                const cardId = card.querySelector('h4').textContent;
+                
+                if (cardId.includes('Tanım')) return answer === 'interval';
+                if (cardId.includes('Görüntü')) return answer === 'interval';
+                if (cardId.includes('Sıfır')) return answer === 'none';
+                if (cardId.includes('Tepe')) return answer === '1-5';
+                if (cardId.includes('Artış')) return answer === 'kismi';
+                if (cardId.includes('Pozitif')) return answer === 'neg';
+                if (cardId.includes('Tipi')) return answer === 'karesel';
+                if (cardId.includes('Bire')) return answer === 'hayir';
+                if (cardId.includes('Örten')) return answer === 'hayir';
+                
+                return false;
+            }
+            
+            // Sınav sonuçlarını gösteren fonksiyon
+            function showExamResult() {
+                // Toplam puanı hesapla
+                totalScore = basicQuestionScore + propertiesScore;
+                
+                // Puanları göster
+                basicScoreElement.textContent = `${basicQuestionScore}/10`;
+                propertiesScoreElement.textContent = `${propertiesScore}/15`;
+                totalScoreElement.textContent = `${totalScore}/25`;
+                finalScoreElement.textContent = `${totalScore}/25`;
+                
+                // Sonuç mesajını belirle
+                if (totalScore >= 23) {
+                    resultMessage.textContent = "Mükemmel! Fonksiyon analizinde çok başarılısınız.";
+                    resultMessage.className = "result-message excellent";
+                } else if (totalScore >= 18) {
+                    resultMessage.textContent = "Tebrikler! Fonksiyon analizini iyi anlamışsınız.";
+                    resultMessage.className = "result-message good";
+                } else if (totalScore >= 13) {
+                    resultMessage.textContent = "Orta seviyede başarılı oldunuz. Daha fazla çalışmalısınız.";
+                    resultMessage.className = "result-message average";
+                } else {
+                    resultMessage.textContent = "Fonksiyon analizini daha iyi anlamak için tekrar çalışmalısınız.";
+                    resultMessage.className = "result-message average";
+                }
+                
+                // Sonuç bölümünü göster
+                examResult.style.display = 'block';
+                examResult.scrollIntoView({ behavior: 'smooth' });
+                
+                // Butonu gizle
+                nextButton.style.display = 'none';
+                nextPropertiesButton.style.display = 'none';
+            }
+            
+            // Sınavı tamamla butonları
+            nextButton.addEventListener('click', showExamResult);
+            nextPropertiesButton.addEventListener('click', showExamResult);
+            
+            // Sınavı tamamla butonu (yeni eklenen)
+            nextExamButton.addEventListener('click', function() {
+                sinavBitir(totalScore);
+            });
+            
+            // Nasıl Kullanılır Modal İşlevselliği
+            howToBtn.addEventListener('click', function() {
+                howToModal.style.display = 'flex';
+            });
+            
+            closeModal.addEventListener('click', function() {
+                howToModal.style.display = 'none';
+            });
+            
+            // GeoGebra Modal İşlevselliği
+            geogebraBtn.addEventListener('click', function() {
+                geogebraModal.style.display = 'flex';
+            });
+            
+            closeGeogebraModal.addEventListener('click', function() {
+                geogebraModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === howToModal) {
+                    howToModal.style.display = 'none';
+                }
+                if (event.target === geogebraModal) {
+                    geogebraModal.style.display = 'none';
+                }
+            });
+            
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    howToModal.style.display = 'none';
+                    geogebraModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
