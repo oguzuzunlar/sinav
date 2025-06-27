@@ -18,7 +18,6 @@
         }
     </script>
     <style>
-        /* Mevcut tüm CSS kodu burada kalacak */
         * {
             margin: 0;
             padding: 0;
@@ -336,6 +335,12 @@
             box-shadow: 0 4px 8px rgba(26, 42, 108, 0.2);
         }
         
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
         .feedback {
             padding: 10px;
             border-radius: 8px;
@@ -343,14 +348,12 @@
             display: none;
             font-weight: 500;
             font-size: 0.9rem;
-	    display: none;
         }
         
         .feedback.correct {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
-	    display: none !important;
         }
         
         .feedback.incorrect {
@@ -435,6 +438,14 @@
         .btn-next {
             background: linear-gradient(to right, #b21f1f, #d9534f);
             color: white;
+        }
+        
+        #continue-btn {
+            background: linear-gradient(to right, #1a6c2a, #3ac55f);
+        }
+
+        #continue-btn:hover:not(:disabled) {
+            background: linear-gradient(to right, #0d4d1b, #2abd4b);
         }
         
         .btn-next:hover:not(:disabled) {
@@ -785,7 +796,6 @@
                 </div>
             </div>
             <div class="module-info">
-                <!-- Soru numarasını 5 olarak güncelledik -->
                 <span><i class="fas fa-book-open"></i> Soru:5</span>
                 <span><i class="fas fa-star"></i> Toplam 25 Puan</span>
             </div>
@@ -840,7 +850,7 @@
                             <div class="option" data-value="negative">Negatif reel sayılar</div>
                         </div>
                         <div class="feedback correct">
-                            <i class="fas fa-check-circle" style="display: none;"></i> Doğru! Tanım kümesi [-2, 3] aralığıdır.
+                            <i class="fas fa-check-circle"></i> Doğru! Tanım kümesi [-2, 3] aralığıdır.
                         </div>
                         <div class="feedback incorrect">
                             <i class="fas fa-times-circle"></i> Yanlış. Soruda tanım kümesi [-2, 3] olarak belirtilmiştir.
@@ -1033,8 +1043,8 @@
                     <button class="btn btn-check" id="check-main">
                         <i class="fas fa-check"></i> Kontrol Et
                     </button>
-                    <button class="btn btn-next" id="next-btn" disabled>
-                        <i class="fas fa-arrow-right"></i> Sınavı Tamamla
+                    <button class="btn" id="continue-btn" disabled>
+                        <i class="fas fa-arrow-right"></i> Sınava Devam Et
                     </button>
                 </div>
             </div>
@@ -1070,7 +1080,6 @@
                     <p>Sınavınız tamamlandı! Sonuçlarınız yukarıda gösterilmektedir.</p>
                 </div>
                 
-                <!-- Bu butonu değiştirdik -->
                 <div class="result-buttons">
                     <button class="next-exam-btn" id="next-exam-btn">
                         <i class="fas fa-arrow-right"></i> Sınavı Tamamla
@@ -1079,7 +1088,6 @@
             </div>
         </div>
         
-        <!-- Footer navigasyonunu güncelledik -->
         <footer>
             <div class="module-nav">
                 <button class="module-nav-btn">
@@ -1330,13 +1338,9 @@
             // Ana soru için elemanlar
             const mainOptions = document.querySelectorAll('.question-section .option');
             const checkMainButton = document.getElementById('check-main');
-            const nextButton = document.getElementById('next-btn');
-            const nextPropertiesButton = document.getElementById('next-properties-btn');
+            const continueButton = document.getElementById('continue-btn');
             const mainFeedback = document.querySelectorAll('.question-section .feedback');
             const propertiesSection = document.getElementById('properties-section');
-            const progressBar = document.getElementById('progress-bar');
-            const examResult = document.getElementById('exam-result');
-            const nextExamButton = document.getElementById('next-exam-btn'); // Butonu değiştirdik
             
             let mainSelectedOption = null;
             let basicQuestionScore = 0;
@@ -1346,6 +1350,10 @@
             // Fonksiyon özellikleri için elemanlar
             const propertyCards = document.querySelectorAll('.property-card');
             const checkPropertiesButton = document.getElementById('check-properties');
+            const nextPropertiesButton = document.getElementById('next-properties-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const examResult = document.getElementById('exam-result');
+            const nextExamButton = document.getElementById('next-exam-btn');
             
             // Puan gösterim elemanları
             const basicScoreElement = document.getElementById('basic-score');
@@ -1363,34 +1371,14 @@
             const geogebraModal = document.getElementById('geogebra-modal');
             const closeGeogebraModal = document.getElementById('close-geogebra-modal');
             
-            // Seçenekleri karıştırma fonksiyonu
-            function shuffleOptions() {
-                propertyCards.forEach(card => {
-                    const optionsContainer = card.querySelector('.options');
-                    const options = Array.from(card.querySelectorAll('.option'));
-                    
-                    // Seçenekleri karıştır
-                    for (let i = options.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [options[i], options[j]] = [options[j], options[i]];
-                    }
-                    
-                    // Yeniden ekle
-                    optionsContainer.innerHTML = '';
-                    options.forEach(option => {
-                        optionsContainer.appendChild(option);
-                    });
-                });
-            }
-            
-            // Sayfa yüklendiğinde seçenekleri karıştır
-            shuffleOptions();
-            
             // Ana soru seçeneklerinin tıklanma olayı
             mainOptions.forEach(option => {
                 option.addEventListener('click', function() {
                     // Önceki seçimi temizle
-                    mainOptions.forEach(opt => opt.classList.remove('selected'));
+                    mainOptions.forEach(opt => {
+                        opt.classList.remove('selected');
+                        opt.style.pointerEvents = 'auto';
+                    });
                     
                     // Yeni seçimi yap
                     this.classList.add('selected');
@@ -1401,6 +1389,7 @@
                     
                     // Kontrol butonunu aktifleştir
                     checkMainButton.disabled = false;
+                    checkMainButton.style.opacity = '1';
                 });
             });
             
@@ -1408,27 +1397,38 @@
             checkMainButton.addEventListener('click', function() {
                 if (mainSelectedOption === null) return;
                 
+                // Şıkları pasif hale getir
+                mainOptions.forEach(opt => {
+                    opt.classList.add('disabled');
+                    opt.style.pointerEvents = 'none';
+                });
+                
                 // Feedback'leri gizle
                 mainFeedback.forEach(fb => fb.style.display = 'none');
                 
                 // Doğru cevabı göster
                 if (mainSelectedOption === 'yes') {
-                    document.querySelector('.feedback.correct').style.display = 'block';
-                    nextButton.disabled = false;
+                    document.querySelector('.question-section .feedback.correct').style.display = 'block';
                     basicQuestionScore = 10;
-                    
-                    // Fonksiyon özellikleri bölümünü göster
-                    propertiesSection.style.display = 'block';
-                    propertiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    
-                    // Buton metnini güncelle
-                    this.innerHTML = '<i class="fas fa-check"></i> Doğru Cevap!';
-                    this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
-                    this.disabled = true;
                 } else {
-                    document.querySelector('.feedback.incorrect').style.display = 'block';
+                    document.querySelector('.question-section .feedback.incorrect').style.display = 'block';
                     basicQuestionScore = 0;
                 }
+                
+                // Butonu güncelle
+                this.innerHTML = '<i class="fas fa-check"></i> Cevap Verildi';
+                this.style.background = 'linear-gradient(to right, #6c757d, #495057)';
+                this.disabled = true;
+                
+                // Devam butonunu aktif et
+                continueButton.disabled = false;
+                continueButton.style.opacity = '1';
+            });
+
+            // Sınava Devam Et butonu
+            continueButton.addEventListener('click', function() {
+                propertiesSection.style.display = 'block';
+                propertiesSection.scrollIntoView({ behavior: 'smooth' });
             });
             
             // Özellikler için seçeneklerin tıklanma olayı
@@ -1494,7 +1494,6 @@
                 // Butonu güncelle
                 this.innerHTML = '<i class="fas fa-check-double"></i> Cevaplar Kontrol Edildi!';
                 this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
-                nextButton.disabled = false;
                 nextPropertiesButton.disabled = false;
             });
             
@@ -1545,16 +1544,14 @@
                 examResult.style.display = 'block';
                 examResult.scrollIntoView({ behavior: 'smooth' });
                 
-                // Butonu gizle
-                nextButton.style.display = 'none';
-                nextPropertiesButton.style.display = 'none';
+                // Butonu göster
+                nextExamButton.style.display = 'block';
             }
             
-            // Sınavı tamamla butonları
-            nextButton.addEventListener('click', showExamResult);
+            // Sınavı tamamla butonu (özellikler bölümü)
             nextPropertiesButton.addEventListener('click', showExamResult);
             
-            // Sınavı tamamla butonu (yeni eklenen)
+            // Sınavı tamamla butonu (sonuç bölümü)
             nextExamButton.addEventListener('click', function() {
                 sinavBitir(totalScore);
             });

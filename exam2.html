@@ -18,6 +18,16 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
+	    .relation-info {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 8px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+
         * {
             margin: 0;
             padding: 0;
@@ -801,7 +811,7 @@
             <div class="logo">
                 <i class="fas fa-function"></i>
                 <div>
-                    <h1>Fonksiyon Temel Kavramlar ve Özellikler Değerlendirme Sınavı</h1>
+                    <h1>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</h1>
                 </div>
             </div>
             <div class="module-info">
@@ -809,15 +819,15 @@
                 
                 <span><i class="fas fa-star"></i> Toplam 25 Puan</span>
             </div>
+		<div class="relation-info">
+   
+    		<p >Grafikte verilen \( \mathbb{R} \to \mathbb{R} \) tanımlı \( f(x) = 2x-3 \)
+    		bağıntısının özelliklerini inceleyeceğiz ve fonksiyon olup olmadığını test edeceğiz.</p>
+	</div>
 
         </header>
         
-        <div class="content">
-            <div class="function-highlight">
-                <h3><i class="fas fa-lightbulb"></i> Analiz Edilecek Bağıntı</h3>
-                <p class="math"> \( \mathbb{R} \to \mathbb{R} \) tanımlı \( f(x) = 2x - 3 \)</p>
-                <p>Bu bağıntının özelliklerini inceleyeceğiz ve fonksiyon olup olmadığını test edeceğiz.</p>
-            </div>
+
             
             <div class="graph-container">
                 <div class="graph-header">
@@ -831,7 +841,7 @@
                         </button>
                     </div>
                 </div>
-                <p>\( y = 2x - 3 \) Bağıntısı ve Düşey Doğru Testi</p>
+                <p>\( f(x) = 2x - 3 \) Bağıntısı ve Düşey Doğru Testi</p>
                 
                 <div class="canvas-wrapper">
                     <canvas id="graph-canvas"></canvas>
@@ -857,7 +867,7 @@
                     <span class="points-badge">10 Puan</span>
                 </h3>
                 <div class="question">
-                   Grafikte gösterilen \( \mathbb{R} \to \mathbb{R} \) tanımlı \( y = 2x - 3 \) ifadesi bir fonksiyon mudur?
+                   Grafikte gösterilen \( \mathbb{R} \to \mathbb{R} \) tanımlı \( f(x) = 2x - 3 \) ifadesi bir fonksiyon mudur?
                 </div>
                 
                 <div class="options">
@@ -877,15 +887,15 @@
                     <button class="btn btn-check" id="check-main">
                         <i class="fas fa-check"></i> Kontrol Et
                     </button>
-                    <button class="btn btn-next" id="next-btn" disabled>
-                        <i class="fas fa-arrow-right"></i> Sınavı Tamamla
+                    <button class="btn" id="continue-btn" disabled>
+                        <i class="fas fa-arrow-right"></i> Sınava Devam Et
                     </button>
                 </div>
             </div>
             
             <!-- Fonksiyon Özellikleri Bölümü (15 puan) -->
             <div class="properties-section" id="properties-section">
-                <h3><i class="fas fa-tasks"></i> Fonksiyon Özellikleri Analizi <span class="points-badge">15 Puan</span></h3>
+                <h3><i class="fas fa-tasks"></i> Fonksiyon Nitel Özellikleri  <span class="points-badge">15 Puan</span></h3>
                 <p>Temel soruyu doğru cevapladınız! Şimdi fonksiyonun temel özelliklerini belirlemek için aşağıdaki soruları cevaplayın:</p>
                 
                 <div class="progress-container">
@@ -990,8 +1000,7 @@
                         <div class="options">
                             <div class="option" data-value="dogrusal">Doğrusal fonksiyon</div>
                             <div class="option" data-value="karesel">Karesel fonksiyon</div>
-                            <div class="option" data-value="ussel">Üssel fonksiyon</div>
-                            <div class="option" data-value="trigonometrik">Trigonometrik fonksiyon</div>
+
                         </div>
                         <div class="feedback correct">
                             <i class="fas fa-check-circle"></i> Doğru! y = ax + b formundadır, doğrusal fonksiyondur.
@@ -1020,17 +1029,17 @@
                 
                 <div class="buttons">
                     <button class="btn btn-check" id="check-properties">
-                        <i class="fas fa-check"></i> Özellikleri Kontrol Et
+                        <i class="fas fa-check"></i> Cevapları Kontrol Et
                     </button>
                     <button class="btn btn-next" id="next-properties-btn" disabled>
-                        <i class="fas fa-arrow-right"></i> Sınavı Tamamla
+                        <i class="fas fa-arrow-right"></i> 2. Soruyu Tamamla
                     </button>
                 </div>
             </div>
             
             <!-- Sınav Sonuç Bölümü -->
             <div class="exam-result" id="exam-result">
-                <h3><i class="fas fa-award"></i> Sınav Sonucu</h3>
+                <h3><i class="fas fa-award"></i>2.Soru Sonucu</h3>
                 <div class="score-display" id="total-score">0/25</div>
                 
                 <div class="result-message" id="result-message">
@@ -1045,7 +1054,7 @@
                             <span class="score-value" id="basic-score">0/10</span>
                         </li>
                         <li>
-                            <span>Fonksiyon Özellikleri:</span>
+                            <span>Fonksiyonun Nitel Özellikleri:</span>
                             <span class="score-value" id="properties-score">0/15</span>
                         </li>
                         <li>
@@ -1056,15 +1065,15 @@
                 </div>
                 
                 <div class="score-text">
-                    <p>Sınavınız tamamlandı! Sonuçlarınız yukarıda gösterilmektedir.</p>
+                    <p>2.soru tamamlandı! Sonuçlarınız yukarıda gösterilmektedir.</p>
                 </div>
                 
-                <!-- Yeni eklenen 3. soruya geç butonu -->
+                <!-- Güncellenmiş buton -->
                 <button class="next-exam-btn" id="next-exam-btn">
-                    <i class="fas fa-arrow-right"></i> 3. Soruya Geç
+                    <i class="fas fa-arrow-right"></i> 3. Soruyu Geç
                 </button>
             </div>
-        </div>
+       
         
         <footer>
             <div class="module-nav">
@@ -1078,29 +1087,13 @@
                 <button class="module-nav-btn">4</button>
                 <button class="module-nav-btn">5</button>
             </div>
-            <p>Fonksiyon Kavramı Analiz Sınavı &copy; 2023</p>
+            <p>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</p>
         </footer>
     </div>
     
     <div class="modal" id="how-to-modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-question-circle"></i> Nasıl Kullanılır?</h2>
-                <button class="close-modal" id="close-modal">&times;</button>
-            </div>
-            <div class="modal-instructions">
-                <h3>Sınav Talimatları</h3>
-                <p>Bu sınav 25 puan üzerinden değerlendirilecektir:</p>
-                
-                <ol>
-                    <li><strong>Temel Soru (10 puan):</strong> Fonksiyon olup olmadığını belirleyin.</li>
-                    <li><strong>Fonksiyon Özellikleri (15 puan):</strong> 7 sorudan oluşan bu bölümde ilk 6 soru 2'şer puan, son soru 3 puandır.</li>
-                    <li><strong>Puanlama:</strong> Her doğru cevap için tam puan alırsınız, yanlış cevaplar puan getirmez.</li>
-                    <li><strong>Sınav Süreci:</strong> Temel soruyu cevapladıktan sonra fonksiyon özellikleri bölümü açılacaktır.</li>
-                    <li><strong>Sonuç:</strong> Sınavı tamamladığınızda toplam puanınız hesaplanacak ve gösterilecektir.</li>
-                </ol>
-                
-                <div class="modal-tip">
+  
                     <p><strong><i class="fas fa-lightbulb"></i> İpucu:</strong> Düşey doğru testini kullanarak fonksiyon olup olmadığını doğrulayın. Doğrusal fonksiyonların temel özelliklerini hatırlayın.</p>
                 </div>
             </div>
@@ -1359,8 +1352,7 @@
             // Ana soru için elemanlar
             const mainOptions = document.querySelectorAll('.question-section .option');
             const checkMainButton = document.getElementById('check-main');
-            const nextButton = document.getElementById('next-btn');
-            const nextPropertiesButton = document.getElementById('next-properties-btn');
+            const continueButton = document.getElementById('continue-btn');
             const mainFeedback = document.querySelectorAll('.question-section .feedback');
             const propertiesSection = document.getElementById('properties-section');
             const progressBar = document.getElementById('progress-bar');
@@ -1374,6 +1366,7 @@
             // Fonksiyon özellikleri için elemanlar
             const propertyCards = document.querySelectorAll('.property-card');
             const checkPropertiesButton = document.getElementById('check-properties');
+            const nextPropertiesButton = document.getElementById('next-properties-btn');
             
             // Puan gösterim elemanları
             const basicScoreElement = document.getElementById('basic-score');
@@ -1440,27 +1433,38 @@
             checkMainButton.addEventListener('click', function() {
                 if (mainSelectedOption === null) return;
                 
+                // Şıkları pasif hale getir
+                mainOptions.forEach(opt => {
+                    opt.classList.add('disabled');
+                    opt.style.pointerEvents = 'none';
+                });
+                
                 // Feedback'leri gizle
                 mainFeedback.forEach(fb => fb.style.display = 'none');
                 
                 // Doğru cevabı göster
                 if (mainSelectedOption === 'yes') {
-                    document.querySelector('.feedback.correct').style.display = 'block';
-                    nextButton.disabled = false;
+                    document.querySelector('.question-section .feedback.correct').style.display = 'block';
                     basicQuestionScore = 10;
-                    
-                    // Fonksiyon özellikleri bölümünü göster
-                    propertiesSection.style.display = 'block';
-                    propertiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    
-                    // Buton metnini güncelle
-                    this.innerHTML = '<i class="fas fa-check"></i> Doğru Cevap!';
-                    this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
-                    this.disabled = true;
                 } else {
-                    document.querySelector('.feedback.incorrect').style.display = 'block';
+                    document.querySelector('.question-section .feedback.incorrect').style.display = 'block';
                     basicQuestionScore = 0;
                 }
+                
+                // Butonu güncelle
+                this.innerHTML = '<i class="fas fa-check"></i> Cevap Verildi';
+                this.style.background = 'linear-gradient(to right, #6c757d, #495057)';
+                this.disabled = true;
+                
+                // Devam butonunu aktif et
+                continueButton.disabled = false;
+                continueButton.style.opacity = '1';
+            });
+
+            // Sınava Devam Et butonu
+            continueButton.addEventListener('click', function() {
+                propertiesSection.style.display = 'block';
+                propertiesSection.scrollIntoView({ behavior: 'smooth' });
             });
             
             // Özellikler için seçeneklerin tıklanma olayı
@@ -1482,7 +1486,7 @@
                 });
             });
             
-            // Özellikleri kontrol et butonu
+            // Cevapları Kontrol Et butonu
             checkPropertiesButton.addEventListener('click', function() {
                 let allAnswered = true;
                 let answeredCount = 0;
@@ -1526,7 +1530,6 @@
                 // Butonu güncelle
                 this.innerHTML = '<i class="fas fa-check-double"></i> Cevaplar Kontrol Edildi!';
                 this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
-                nextButton.disabled = false;
                 nextPropertiesButton.disabled = false;
             });
             
@@ -1575,19 +1578,14 @@
                 examResult.style.display = 'block';
                 examResult.scrollIntoView({ behavior: 'smooth' });
                 
-                // Butonu gizle
-                nextButton.style.display = 'none';
-                nextPropertiesButton.style.display = 'none';
-                
-                // Sonraki sınava geçiş butonunu göster
+                // Butonu göster
                 nextExamButton.style.display = 'block';
             }
             
-            // Sınavı tamamla butonları
-            nextButton.addEventListener('click', showExamResult);
+            // 2. Soruyu Tamamla butonu (özellikler bölümü)
             nextPropertiesButton.addEventListener('click', showExamResult);
             
-            // Sonraki sınava geçiş butonu
+            // 2. Soruyu Tamamla butonu (sonuç bölümü)
             nextExamButton.addEventListener('click', function() {
                 sinavBitir(totalScore);
             });

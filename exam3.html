@@ -7,16 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
-        // Sınav tamamlandığında çalışacak fonksiyon
-        function sinavBitir(puan) {
-            // Mevcut sınavın puanını kaydet
-            sessionStorage.setItem("sinav3", puan);
-            
-            // Bir sonraki sınava yönlendir
-            window.location.href = "exam4.html";
-        }
-    </script>
     <style>
         * {
             margin: 0;
@@ -738,6 +728,19 @@
                 align-items: center;
             }
         }
+        
+        /* Yanlış cevap sonrası seçenekleri devre dışı bırakma */
+        .options.disabled .option {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        /* Doğru cevabı vurgulama */
+        .correct-answer {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
     </style>
 </head>
 <body>
@@ -746,21 +749,20 @@
             <div class="logo">
                 <i class="fas fa-function"></i>
                 <div>
-                    <h1>Fonksiyon Kavramı Değerlendirme Testi</h1>
+                    <h1>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</h1>
                 </div>
             </div>
             <div class="module-info">
                 <span><i class="fas fa-book-open"></i> Soru:3</span>
-                <span><i class="fas fa-star"></i> Toplam 7.5 Puan</span>
+                <span><i class="fas fa-star"></i> Toplam 10 Puan</span>
             </div>
             <div class="relation-info">
-               Grafiği Verilen İfade: <span class="math">\( x^2 + y^2 = 9 \)</span> 
-                (<span class="math">\( \mathbb{R} \to \mathbb{R} \)</span>)
+                <span class="math">\( \mathbb{R} \to \mathbb{R} \)</span> tanımlı <span class="math">\( x^2 + y^2 = 9 \)</span> bağıntısının fonksiyon olup olmadığını inceleyeceğiz. 
+               
             </div>
         </header>
         
         <div class="content">
- 
             
             <div class="canvas-container">
                 <div class="canvas-header">
@@ -769,8 +771,8 @@
                         <button class="geogebra-btn" id="geogebra-btn">
                             <i class="fas fa-external-link-alt"></i> Geogebrada İncele
                         </button>
-		    </div>
-		    <div>
+                    </div>
+                    <div>
                         <button class="how-to-btn" id="how-to-btn">
                             <i class="fas fa-question-circle"></i> Nasıl Kullanılır?
                         </button>
@@ -801,7 +803,7 @@
             <div class="question-section">
                 <h3>
                     <i class="fas fa-question-circle"></i> Temel Soru 
-                    <span class="points-badge">7.5 Puan</span>
+                    <span class="points-badge">10 Puan</span>
                 </h3>
                 <div class="question">
                    Grafikte gösterilen \( \mathbb{R} \to \mathbb{R} \) tanımlı \( x^2 + y^2 = 9 \) bağıntısı bir fonksiyon mudur?
@@ -813,31 +815,34 @@
                 </div>
                 <div class="feedback correct">
                     <i class="fas fa-check-circle"></i> Doğru cevap! \( x^2 + y^2 = 9 \) bağıntısı bir fonksiyon değildir. 
-                    <p><strong>7.5 puan</strong> kazandınız!</p>
+                    <p><strong>10 puan</strong> kazandınız!</p>
                 </div>
                 
                 <div class="feedback incorrect">
-                    <i class="fas fa-times-circle"></i> Yanlış cevap. Lütfen tekrar deneyin.
+                    <i class="fas fa-times-circle"></i> Yanlış cevap. Bağıntının fonksiyon olmadığı açıklamada gösterilmektedir.
                 </div>
                 
                 <div class="explanation">
                     <p><strong>Açıklama:</strong> \( x^2 + y^2 = 9 \) bağıntısı fonksiyon değildir çünkü bu bir çember denklemidir. Örneğin, x=0 değeri için y=3 ve y=-3 olmak üzere iki farklı y değeri vardır. Düşey doğru testinde, -3 &lt; x &lt; 3 aralığındaki x değerleri için düşey doğru grafiği iki noktada kesmektedir. Bir bağıntının fonksiyon olabilmesi için her x değerine karşılık en fazla bir y değeri olmalıdır.</p>
+                    <p class="correct-answer" style="padding: 10px; margin-top: 10px; border-radius: 5px;">
+                        <i class="fas fa-check"></i> <strong>Doğru Cevap:</strong> Hayır, fonksiyon değildir.
+                    </p>
                 </div>
                 
                 <div class="buttons">
                     <button class="btn btn-check" id="check-btn">
-                        <i class="fas fa-check"></i> Kontrol Et
+                        <i class="fas fa-check"></i> Cevapları Kontrol Et Et
                     </button>
                     <button class="btn btn-next" id="next-btn" disabled>
-                        <i class="fas fa-arrow-right"></i> Sınavı Tamamla
+                        <i class="fas fa-arrow-right"></i> 3.Soruyu Tamamla
                     </button>
                 </div>
             </div>
             
             <!-- Sınav Sonuç Bölümü -->
             <div class="exam-result" id="exam-result">
-                <h3><i class="fas fa-award"></i> Sınav Sonucu</h3>
-                <div class="score-display" id="total-score">0/7.5</div>
+                <h3><i class="fas fa-award"></i> 3.Soru Sonucu</h3>
+                <div class="score-display" id="total-score">0/10</div>
                 
                 <div class="result-message" id="result-message">
                     Sınavınız değerlendiriliyor...
@@ -848,22 +853,20 @@
                     <ul>
                         <li>
                             <span>Temel Soru:</span>
-                            <span class="score-value" id="basic-score">0/7.5</span>
+                            <span class="score-value" id="basic-score">0/10</span>
                         </li>
                         <li>
                             <span>Toplam Puan:</span>
-                            <span class="score-value" id="final-score">0/7.5</span>
+                            <span class="score-value" id="final-score">0/10</span>
                         </li>
                     </ul>
                 </div>
                 
                 <div class="score-text">
-                    <p>Sınavınız tamamlandı! Sonuçlarınız yukarıda gösterilmektedir.</p>
-                   
+                    <p>3.soru tamamlandı! Sonuçlarınız yukarıda gösterilmektedir.</p>
                 </div>
                 
                 <div class="result-buttons">
-
                     <button class="next-exam-btn" id="next-exam-btn">
                         <i class="fas fa-arrow-right"></i> 4. Soruya Geç
                     </button>
@@ -885,7 +888,7 @@
                 </button>
                 <button class="module-nav-btn">5</button>
             </div>
-            <p>Fonksiyon Kavramı Analiz Sınavı &copy; 2023</p>
+            <p>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</p>
         </footer>
     </div>
     
@@ -899,7 +902,7 @@
             <div class="modal-instructions">
                 <h3>Düşey Doğru Testi Nasıl Uygulanır?</h3>
                 <ol>
-                    <li><strong>Kaydırıcıyı</strong> sağa ve sola hareket ettirerek düşey doğruyu kontrol edin</li>
+                    <li><strong>Kaydırıcıyı</strong> sağa ve sola hareket ettirerek düşey doğruyu Cevapları Kontrol Et edin</li>
                     <li>Düşey doğrunun (kırmızı çizgi) grafiği kaç noktada kestiğine dikkat edin</li>
                     <li><strong>Bir x değeri için birden fazla y değeri</strong> varsa fonksiyon değildir</li>
                     <li><strong>Her x değeri için en fazla bir y değeri</strong> varsa fonksiyondur</li>
@@ -1048,9 +1051,7 @@
                 ctx.fillText('0', width / 2 - 15, height / 2 + 15);
                 
                 // Başlık
-                ctx.fillStyle = '#1a2a6c';
-                ctx.font = 'bold 16px Arial';
-                ctx.fillText('x² + y² = 9 Grafiği ve Düşey Doğru Testi', width / 2, 20);
+                
                 
                 // Çember grafiği
                 ctx.beginPath();
@@ -1136,13 +1137,13 @@
             resizeCanvas();
             
             // Soru bölümü işlevselliği
+            const optionsContainer = document.querySelector('.options');
             const options = document.querySelectorAll('.option');
             const checkButton = document.getElementById('check-btn');
             const nextButton = document.getElementById('next-btn');
             const feedback = document.querySelectorAll('.feedback');
             const explanation = document.querySelector('.explanation');
             const examResult = document.getElementById('exam-result');
-            const retryButton = document.getElementById('retry-btn');
             const nextExamButton = document.getElementById('next-exam-btn');
             const totalScoreElement = document.getElementById('total-score');
             const basicScoreElement = document.getElementById('basic-score');
@@ -1167,12 +1168,12 @@
                     feedback.forEach(fb => fb.style.display = 'none');
                     explanation.style.display = 'none';
                     
-                    // Kontrol butonunu aktifleştir
+                    // Cevapları Kontrol Et butonunu aktifleştir
                     checkButton.disabled = false;
                 });
             });
             
-            // Kontrol et butonu
+            // Cevapları Kontrol Et et butonu
             checkButton.addEventListener('click', function() {
                 if (selectedOption === null) return;
                 
@@ -1184,13 +1185,24 @@
                     document.querySelector('.feedback.correct').style.display = 'block';
                     explanation.style.display = 'block';
                     nextButton.disabled = false;
-                    basicQuestionScore = 7.5;
+                    basicQuestionScore = 10;
                     this.innerHTML = '<i class="fas fa-check-double"></i> Doğru Cevap!';
                     this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
                     this.disabled = true;
                 } else {
                     document.querySelector('.feedback.incorrect').style.display = 'block';
+                    explanation.style.display = 'block';
                     basicQuestionScore = 0;
+                    
+                    // Yanlış cevapta seçenekleri devre dışı bırak
+                    optionsContainer.classList.add('disabled');
+                    this.disabled = true;
+                    
+                    // Doğru cevabı vurgula
+                    document.querySelector('.option[data-value="no"]').classList.add('correct-answer');
+                    
+                    // Sonraki butonunu aktifleştir
+                    nextButton.disabled = false;
                 }
             });
             
@@ -1199,16 +1211,16 @@
                 totalScore = basicQuestionScore;
                 
                 // Puanları göster
-                totalScoreElement.textContent = `${totalScore}/7.5`;
-                basicScoreElement.textContent = `${basicQuestionScore}/7.5`;
-                finalScoreElement.textContent = `${totalScore}/7.5`;
+                totalScoreElement.textContent = `${totalScore}/10`;
+                basicScoreElement.textContent = `${basicQuestionScore}/10`;
+                finalScoreElement.textContent = `${totalScore}/10`;
                 
                 // Sonuç mesajını belirle
-                if (totalScore >= 7.5) {
+                if (totalScore >= 10) {
                     resultMessage.textContent = "Tebrikler! Doğru cevap verdiniz.";
                     resultMessage.className = "result-message excellent";
                 } else {
-                    resultMessage.textContent = "Başarısız oldunuz. Lütfen tekrar deneyin.";
+                    resultMessage.textContent = "Başarısız oldunuz. Lütfen konuyu tekrar edin.";
                     resultMessage.className = "result-message average";
                 }
                 
@@ -1220,14 +1232,10 @@
                 nextExamButton.style.display = 'block';
             });
             
-            // Tekrar dene butonu
-            retryButton.addEventListener('click', function() {
-                location.reload();
-            });
-            
             // Sonraki sınava geçiş butonu
             nextExamButton.addEventListener('click', function() {
-                sinavBitir(totalScore);
+                sessionStorage.setItem("sinav3", totalScore);
+                window.location.href = "exam4.html";
             });
             
             // Nasıl Kullanılır Modal İşlevselliği
