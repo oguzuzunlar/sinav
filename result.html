@@ -395,9 +395,7 @@
                     <p> Fonksiyonun tanımı ve Fonksiyonun Nitel Özellikleri</p>
                 </div>
             </div>
-            <div class="exam-info">
 
-            </div>
         </header>
         
         <div class="content">
@@ -408,44 +406,99 @@
             
             <div class="score-display">
                 <h3>Toplam Puan</h3>
-                <div class="total-score" id="total-score">78</div>
+                <div class="total-score" id="total-score">0</div>
                 <div class="max-score">100 puan üzerinden</div>
                 
                 <div class="result-message excellent" id="result-message">
-                    <i class="fas fa-star"></i> Mükemmel! Fonksiyonun Tanımı ve Fonksiyonun Nitel Özellikleri konusunda çok başarılısınız.
+                    <i class="fas fa-star"></i> Değerlendirme yapılıyor...
                 </div>
             </div>
             
-
+            <div class="exam-details">
+                <div class="exam-card exam-1">
+                    <h3><i class="fas fa-calculator"></i> Sınav 1</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-1"></div>
+                    </div>
+                    <div class="exam-score">
+                        <span class="score-value" id="score-1">0</span>
+                        <span class="max-points">/ 10</span>
+                    </div>
+                </div>
+                
+                <div class="exam-card exam-2">
+                    <h3><i class="fas fa-function"></i> Sınav 2</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-2"></div>
+                    </div>
+                    <div class="exam-score">
+                        <span class="score-value" id="score-2">0</span>
+                        <span class="max-points">/ 25</span>
+                    </div>
+                </div>
+                
+                <div class="exam-card exam-3">
+                    <h3><i class="fas fa-graph"></i> Sınav 3</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-3"></div>
+                    </div>
+                    <div class="exam-score">
+                        <span class="score-value" id="score-3">0</span>
+                        <span class="max-points">/ 10</span>
+                    </div>
+                </div>
+                
+                <div class="exam-card exam-4">
+                    <h3><i class="fas fa-chart-bar"></i> Sınav 4</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-4"></div>
+                    </div>
+                    <div class="exam-score">
+                        <span class="score-value" id="score-4">0</span>
+                        <span class="max-points">/ 25</span>
+                    </div>
+                </div>
+                
+                <div class="exam-card exam-5">
+                    <h3><i class="fas fa-infinity"></i> Sınav 5</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-5"></div>
+                    </div>
+                    <div class="exam-score">
+                        <span class="score-value" id="score-5">0</span>
+                        <span class="max-points">/ 30</span>
+                    </div>
+                </div>
+            </div>
             
             <div class="summary">
                 <h3><i class="fas fa-chart-pie"></i> Performans Özeti</h3>
                 <div class="summary-content">
                     <div class="summary-item">
-                        <div class="summary-value" id="correct-answers">43</div>
+                        <div class="summary-value" id="correct-answers">0</div>
                         <div class="summary-label">Doğru Cevap</div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-value" id="wrong-answers">7</div>
+                        <div class="summary-value" id="wrong-answers">0</div>
                         <div class="summary-label">Yanlış Cevap</div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-value" id="success-rate">86%</div>
+                        <div class="summary-value" id="success-rate">0%</div>
                         <div class="summary-label">Başarı Oranı</div>
                     </div>
-
                 </div>
             </div>
             
-            <div class="actions">
 
-
-            </div>
         </div>
         
         <footer>
             <p>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</p>
-
+            <div class="footer-nav">
+                <a href="#" class="footer-link">Yardım</a>
+                <a href="#" class="footer-link">İletişim</a>
+                <a href="#" class="footer-link">Gizlilik Politikası</a>
+            </div>
         </footer>
     </div>
     
@@ -502,6 +555,12 @@
             
             // Buton işlevleri
             document.querySelector('.restart-btn').addEventListener('click', function() {
+                // Tüm sınav verilerini temizle
+                sessionStorage.removeItem('sinav1');
+                sessionStorage.removeItem('sinav2');
+                sessionStorage.removeItem('sinav3');
+                sessionStorage.removeItem('sinav4');
+                sessionStorage.removeItem('sinav5');
                 window.location.href = "exam1.html";
             });
             
@@ -509,10 +568,14 @@
                 window.location.href = "index.html";
             });
             
-            // Rastgele performans özeti oluşturma (gerçek uygulamada veriler hesaplanır)
-            document.getElementById('correct-answers').textContent = Math.floor(totalScore / 2.1);
-            document.getElementById('wrong-answers').textContent = Math.floor(50 - (totalScore / 2.1));
-            document.getElementById('success-rate').textContent = Math.round((totalScore / 100) * 100) + '%';
+            // Gerçekçi performans özeti hesaplama
+            const correctAnswers = Math.floor(totalScore / 2.1);
+            const wrongAnswers = Math.floor(50 - (totalScore / 2.1));
+            const successRate = Math.round((totalScore / 100) * 100);
+            
+            document.getElementById('correct-answers').textContent = correctAnswers;
+            document.getElementById('wrong-answers').textContent = wrongAnswers;
+            document.getElementById('success-rate').textContent = `${successRate}%`;
         });
     </script>
 </body>

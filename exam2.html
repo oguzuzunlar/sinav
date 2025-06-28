@@ -5,29 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fonksiyon Analizi Sınavı - y=2x-3</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        // Sınav tamamlandığında çalışacak fonksiyon
-        function sinavBitir(puan) {
-            // Mevcut sınavın puanını kaydet
-            sessionStorage.setItem("sinav2", puan);
-            
-            // Bir sonraki sınava yönlendir
-            window.location.href = "exam3.html";
-        }
-    </script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-	    .relation-info {
-            background-color: rgba(255, 255, 255, 0.15);
-            padding: 8px;
-            border-radius: 5px;
-            margin-top: 8px;
-            font-size: 1.1rem;
-            text-align: center;
-        }
-
-
         * {
             margin: 0;
             padding: 0;
@@ -337,6 +317,12 @@
             color: white;
             border-color: #1a2a6c;
             box-shadow: 0 4px 8px rgba(26, 42, 108, 0.2);
+        }
+        
+        .option.disabled {
+            opacity: 0.7;
+            pointer-events: none;
+            cursor: not-allowed;
         }
         
         .feedback {
@@ -716,7 +702,6 @@
             border: 1px solid #f5c6cb;
         }
         
-        /* Yeni eklenen buton stili */
         .next-exam-btn {
             display: none;
             background: linear-gradient(to right, #1a6c2a, #3ac55f);
@@ -816,19 +801,15 @@
             </div>
             <div class="module-info">
                 <span><i class="fas fa-book-open"></i> Soru:2</span>
-                
                 <span><i class="fas fa-star"></i> Toplam 25 Puan</span>
             </div>
-		<div class="relation-info">
-   
-    		<p >Grafikte verilen \( \mathbb{R} \to \mathbb{R} \) tanımlı \( f(x) = 2x-3 \)
-    		bağıntısının özelliklerini inceleyeceğiz ve fonksiyon olup olmadığını test edeceğiz.</p>
-	</div>
-
+            <div class="relation-info">
+                <p>Grafikte verilen \( \mathrm{\mathbb{R} \to \mathbb{R} }\) tanımlı \(\mathrm{ f(x) = 2x-3 }\)
+                bağıntısının özelliklerini inceleyeceğiz ve fonksiyon olup olmadığını test edeceğiz.</p>
+            </div>
         </header>
         
-
-            
+        <div class="content">
             <div class="graph-container">
                 <div class="graph-header">
                     <h3><i class="fas fa-chart-line"></i> İnteraktif Grafik</h3>
@@ -841,7 +822,7 @@
                         </button>
                     </div>
                 </div>
-                <p>\( f(x) = 2x - 3 \) Bağıntısı ve Düşey Doğru Testi</p>
+                <p>\(\mathrm{ f(x) = 2x - 3} \) Bağıntısı ve Düşey Doğru Testi</p>
                 
                 <div class="canvas-wrapper">
                     <canvas id="graph-canvas"></canvas>
@@ -867,7 +848,7 @@
                     <span class="points-badge">10 Puan</span>
                 </h3>
                 <div class="question">
-                   Grafikte gösterilen \( \mathbb{R} \to \mathbb{R} \) tanımlı \( f(x) = 2x - 3 \) ifadesi bir fonksiyon mudur?
+                   Grafikte gösterilen \(\mathrm{\mathbb{R} \to \mathbb{R}} \) tanımlı \( \mathrm{f(x) = 2x - 3} \) ifadesi bir fonksiyon mudur?
                 </div>
                 
                 <div class="options">
@@ -875,7 +856,7 @@
                     <div class="option" data-value="no">Hayır, fonksiyon değildir.</div>
                 </div>
                 <div class="feedback correct">
-                    <i class="fas fa-check-circle"></i> Doğru cevap! \( y = 2x - 3 \) bağıntısı bir fonksiyondur.
+                    <i class="fas fa-check-circle"></i> Doğru cevap! \(\mathrm{ y = 2x - 3 }\) bağıntısı bir fonksiyondur.
                     <p>Şimdi fonksiyonun özelliklerini analiz edebilirsiniz.</p>
                 </div>
                 
@@ -975,7 +956,7 @@
                         </div>
                     </div>
                     
-                    <div class="property-card">
+		    <div class="property-card">
                         <div class="points">2 Puan</div>
                         <h4><i class="fas fa-plus-minus"></i> Pozitif/Negatif Aralıklar</h4>
                         <p>Fonksiyon hangi aralıklarda pozitif/negatiftir?</p>
@@ -1000,7 +981,6 @@
                         <div class="options">
                             <div class="option" data-value="dogrusal">Doğrusal fonksiyon</div>
                             <div class="option" data-value="karesel">Karesel fonksiyon</div>
-
                         </div>
                         <div class="feedback correct">
                             <i class="fas fa-check-circle"></i> Doğru! y = ax + b formundadır, doğrusal fonksiyondur.
@@ -1028,9 +1008,12 @@
                 </div>
                 
                 <div class="buttons">
-                    <button class="btn btn-check" id="check-properties">
+                    <button class="btn btn-check" id="check-properties" disabled>
                         <i class="fas fa-check"></i> Cevapları Kontrol Et
                     </button>
+			<div id="properties-note" class="feedback" style="display: block; margin-top: 15px;">
+   			 <i class="fas fa-exclamation-circle"></i> Butonların aktif olabilmesi için tüm soruları cevaplayınız!
+			</div>
                     <button class="btn btn-next" id="next-properties-btn" disabled>
                         <i class="fas fa-arrow-right"></i> 2. Soruyu Tamamla
                     </button>
@@ -1068,12 +1051,11 @@
                     <p>2.soru tamamlandı! Sonuçlarınız yukarıda gösterilmektedir.</p>
                 </div>
                 
-                <!-- Güncellenmiş buton -->
                 <button class="next-exam-btn" id="next-exam-btn">
                     <i class="fas fa-arrow-right"></i> 3. Soruyu Geç
                 </button>
             </div>
-       
+        </div>
         
         <footer>
             <div class="module-nav">
@@ -1093,7 +1075,18 @@
     
     <div class="modal" id="how-to-modal">
         <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> Nasıl Kullanılır?</h2>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-instructions">
+                <p>Bu sınavda \( y = 2x - 3 \) bağıntısının fonksiyon olup olmadığını ve fonksiyon özelliklerini inceleyeceksiniz.</p>
+                <ol>
+                    <li><strong>Grafiği inceleyin:</strong> İnteraktif grafikte bağıntının nasıl göründüğünü gözlemleyin.</li>
+                    <li><strong>Düşey doğru testi:</strong> Sürgüyü hareket ettirerek bağıntının fonksiyon olup olmadığını test edin.</li>
   
+                </ol>
+                <div class="modal-tip">
                     <p><strong><i class="fas fa-lightbulb"></i> İpucu:</strong> Düşey doğru testini kullanarak fonksiyon olup olmadığını doğrulayın. Doğrusal fonksiyonların temel özelliklerini hatırlayın.</p>
                 </div>
             </div>
@@ -1322,8 +1315,6 @@
                 ctx.fillStyle = '#1a2a6c';
                 ctx.font = 'bold 18px Arial';
                 ctx.fillText('y = 2x - 3', canvas.width - 150, 30);
-                
-                
             }
             
             function drawAll() {
@@ -1411,6 +1402,23 @@
             // Sayfa yüklendiğinde seçenekleri karıştır
             shuffleOptions();
             
+            // Tüm özellik sorularının cevaplanıp cevaplanmadığını kontrol et
+            function checkAllPropertiesAnswered() {
+                let allAnswered = true;
+                
+                propertyCards.forEach(card => {
+                    const selectedOption = card.querySelector('.option.selected');
+                    if (!selectedOption) {
+                        allAnswered = false;
+                    }
+                });
+                
+                // Butonu aktif/pasif yap
+                checkPropertiesButton.disabled = !allAnswered;
+                
+                return allAnswered;
+            }
+            
             // Ana soru seçeneklerinin tıklanma olayı
             mainOptions.forEach(option => {
                 option.addEventListener('click', function() {
@@ -1464,6 +1472,7 @@
             // Sınava Devam Et butonu
             continueButton.addEventListener('click', function() {
                 propertiesSection.style.display = 'block';
+		document.querySelector('.question-section').style.display = 'none';
                 propertiesSection.scrollIntoView({ behavior: 'smooth' });
             });
             
@@ -1482,6 +1491,9 @@
                         
                         // Feedback'leri gizle
                         feedbacks.forEach(fb => fb.style.display = 'none');
+                        
+                        // Tüm sorular cevaplandı mı kontrol et
+                        checkAllPropertiesAnswered();
                     });
                 });
             });
@@ -1527,9 +1539,21 @@
                     return;
                 }
                 
+                // Tüm şıkları pasif hale getir
+                propertyCards.forEach(card => {
+                    const options = card.querySelectorAll('.option');
+                    options.forEach(option => {
+                        option.classList.add('disabled');
+                        option.style.pointerEvents = 'none';
+                    });
+                });
+                
                 // Butonu güncelle
                 this.innerHTML = '<i class="fas fa-check-double"></i> Cevaplar Kontrol Edildi!';
                 this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
+                this.disabled = true;
+                
+                // Sonraki butonu aktif et
                 nextPropertiesButton.disabled = false;
             });
             
@@ -1540,8 +1564,8 @@
                 if (cardId.includes('Tanım')) return answer === 'reel';
                 if (cardId.includes('Görüntü')) return answer === 'reel';
                 if (cardId.includes('Sıfır')) return answer === '1.5';
-                if (cardId.includes('Artış')) return answer === 'artan';
-                if (cardId.includes('Pozitif')) return answer === 'poz-neg';
+                if (cardId.includes('Artan/Azalan')) return answer === 'artan';
+                if (cardId.includes('Pozitif/Negatif')) return answer === 'poz-neg';
                 if (cardId.includes('Tipi')) return answer === 'dogrusal';
                 if (cardId.includes('Bire')) return answer === 'evet';
                 
@@ -1587,8 +1611,18 @@
             
             // 2. Soruyu Tamamla butonu (sonuç bölümü)
             nextExamButton.addEventListener('click', function() {
+                // Sınav bitirme fonksiyonunu çağır
                 sinavBitir(totalScore);
             });
+            
+            // Sınav bitirme fonksiyonu
+            function sinavBitir(puan) {
+                // Mevcut sınavın puanını kaydet
+                sessionStorage.setItem("sinav2", puan);
+                
+                // Bir sonraki sınava yönlendir
+                window.location.href = "exam3.html";
+            }
             
             // Nasıl Kullanılır Modal İşlevselliği
             howToBtn.addEventListener('click', function() {
