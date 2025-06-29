@@ -190,7 +190,7 @@
         .graph-container {
             position: relative;
             width: 100%;
-            padding-top:70%; /* 5:6 aspect ratio */
+            padding-top:80%; /* 5:6 aspect ratio */
             margin: 0 auto;
             overflow: hidden;
             background-color: #fff;
@@ -1181,7 +1181,7 @@
         </div>
         
         <footer>
-            <div class="module-nav">
+            <!-- <div class="module-nav">
                 <button class="module-nav-btn">
                     <a href="exam1.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">1</a>
                 </button>
@@ -1195,7 +1195,7 @@
                     <a href="exam4.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">4</a>
                 </button>
                 <button class="module-nav-btn active">5</button>
-            </div>
+            </div> -->
             <p>Fonksiyon Kavramı Analiz Sınavı &copy; 2023</p>
         </footer>
     </div>
@@ -1858,6 +1858,17 @@
                     // Bir sonraki sınava yönlendir
                     window.location.href = "result.html";
                 }
+		 window.onload = function () {
+     	 // Sınav tamamlandıysa sonuç sayfasına yönlendir
+     	 	if (localStorage.getItem('sinavTamamlandi') === 'true') {
+       		 window.location.href = 'result.html';
+     		 }
+     		 // Geri tuşu engelleme
+     		 window.history.pushState(null, null, window.location.href);
+     		 window.onpopstate = function () {
+       		 window.location.href = 'result.html';
+     			 };
+  		 };
             // Sınavı tamamla butonu (özellikler bölümü)
             nextPropertiesButton.addEventListener('click', showExamResult);
             

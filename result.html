@@ -494,11 +494,7 @@
         
         <footer>
             <p>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</p>
-            <div class="footer-nav">
-                <a href="#" class="footer-link">Yardım</a>
-                <a href="#" class="footer-link">İletişim</a>
-                <a href="#" class="footer-link">Gizlilik Politikası</a>
-            </div>
+
         </footer>
     </div>
     
@@ -518,6 +514,17 @@
                 exam4: getScore('sinav4'),
                 exam5: getScore('sinav5')
             };
+		window.onload = function () {
+     	 // Sınav tamamlandıysa sonuç sayfasına yönlendir
+     	 	if (localStorage.getItem('sinavTamamlandi') === 'true') {
+       		 window.location.href = 'result.html';
+     		 }
+     		 // Geri tuşu engelleme
+     		 window.history.pushState(null, null, window.location.href);
+     		 window.onpopstate = function () {
+       		 window.location.href = 'result.html';
+     			 };
+  		 };
             
             // Toplam puan hesaplama
             const totalScore = scores.exam1 + scores.exam2 + scores.exam3 + scores.exam4 + scores.exam5;
