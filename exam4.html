@@ -130,7 +130,7 @@
         
         .graph-container {
             background-color: #e9ecef;
-            padding: 5px;
+            padding: 15px;
             border-radius: 8px;
             text-align: center;
         }
@@ -174,6 +174,7 @@
         
         .geogebra-btn {
             background: linear-gradient(to right, #28a745, #4caf50);
+		display:none;
         }
         
         .how-to-btn:hover, .geogebra-btn:hover {
@@ -842,7 +843,10 @@
             <div class="graph-container">
                 <div class="graph-header">
                     <h3><i class="fas fa-chart-line"></i> İnteraktif Grafik</h3>
-                    <div class="btn-group">
+                    <div >
+			    <button class="geogebra-btn" id="geogebra-btn">
+                           
+                        </button> 
                         <button class="how-to-btn" id="how-to-btn">
                             <i class="fas fa-question-circle"></i> Nasıl Kullanılır?
                         </button>
@@ -1063,6 +1067,9 @@
                     <button class="btn btn-check" id="check-properties" disabled>
                         <i class="fas fa-check"></i>  Cevapları Kontrol Et
                     </button>
+			<div id="properties-note" class="feedback" style="display: block; margin-top: 15px;">
+   			 <i class="fas fa-exclamation-circle"></i> Butonların aktif olabilmesi için tüm soruları cevaplayınız!
+			</div>
                     <button class="btn btn-next" id="next-properties-btn" disabled>
                         <i class="fas fa-arrow-right"></i> 4. Soruyu Tamamla
                     </button>
@@ -1076,7 +1083,7 @@
                     <span class="points-badge">10 Puan</span>
                 </h3>
                 <div class="question">
-                   Grafikte gösterilen \( \mathrm{\mathbb{R} \to \mathbb{R} }\) tanımlı \(\mathrm{ y = (x-2)^2 - 1 }\) ifadesi bir fonksiyon mudur?
+                   Grafikte gösterilen \( \mathrm{\mathbb{R} \to \mathbb{R} }\) tanımlı \(\mathrm{ y = (x-2)^2 - 1} \) ifadesi bir fonksiyon mudur?
                 </div>
                 
                 <div class="options">
@@ -1100,7 +1107,7 @@
                     <button class="btn btn-check" id="check-main">
                         <i class="fas fa-check"></i> Cevapları Kontrol Et
                     </button>
-                    <button class="btn" id="continue-btn" disabled>
+                    <button class="btn btn-next" id="continue-btn" disabled>
                         <i class="fas fa-arrow-right"></i> Sınava Devam Et
                     </button>
                 </div>
@@ -1146,8 +1153,41 @@
         </div>
         
         <footer>
+           <!-- <div class="module-nav">
+                <button class="module-nav-btn">
+                    <a href="exam1.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">1</a>
+                </button>
+                <button class="module-nav-btn">
+                    <a href="exam2.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">2</a>
+                </button>
+                <button class="module-nav-btn">
+                    <a href="exam3.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">3</a>
+                </button>
+                <button class="module-nav-btn active">4</button>
+                <button class="module-nav-btn">
+                    <a href="exam5.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">5</a>
+                </button>
+            </div> -->
             <p>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</p>
         </footer>
+    </div>
+    
+    <!-- GeoGebra Modal -->
+    <div class="modal" id="geogebra-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-chart-line"></i> GeoGebra İnceleme</h2>
+                <button class="close-modal" id="close-geogebra-modal">&times;</button>
+            </div>
+            <div class="geogebra-iframe-container">
+                <iframe scrolling="no" title="y=(x-2)^2-1" src="https://www.geogebra.org/material/iframe/id/hnaejbqt/width/600/height/500/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/true/rc/false/ld/false/sdz/false/ctl/false" allowfullscreen></iframe>
+            </div>
+            <div class="buttons" style="margin-top: 20px; justify-content: center;">
+                <button class="btn btn-next" id="close-geogebra-btn">
+                    <i class="fas fa-times"></i> Kapat
+                </button>
+            </div>
+        </div>
     </div>
     
     <!-- Nasıl Kullanılır Modal -->
@@ -1252,461 +1292,518 @@
                 // X-axis
                 ctx.beginPath();
                 ctx.moveTo(0, canvas.height/2);
-                    ctx.lineTo(canvas.width, canvas.height/2);
-                    ctx.stroke();
-                    
-                    // Y-axis
-                    ctx.beginPath();
-                    ctx.moveTo(canvas.width/2, 0);
-                    ctx.lineTo(canvas.width/2, canvas.height);
-                    ctx.stroke();
-                    
-                    // Draw axis arrows
-                    // X-axis arrow
-                    ctx.beginPath();
-                    ctx.moveTo(canvas.width - 10, canvas.height/2 - 5);
-                    ctx.lineTo(canvas.width, canvas.height/2);
-                    ctx.lineTo(canvas.width - 10, canvas.height/2 + 5);
-                    ctx.fill();
-                    
-                    // Y-axis arrow
-                    ctx.beginPath();
-                    ctx.moveTo(canvas.width/2 - 5, 10);
-                    ctx.lineTo(canvas.width/2, 0);
-                    ctx.lineTo(canvas.width/2 + 5, 10);
-                    ctx.fill();
-                    
-                    // Draw axis labels
-                    ctx.fillStyle = AXIS_COLOR;
-                    ctx.font = '14px Arial';
-                    
-                    // X-axis labels
-                    for (let x = -5; x <= 5; x++) {
-                        if (x === 0) continue;
-                        const pixelX = toPixelX(x);
-                        ctx.fillText(x, pixelX - 5, canvas.height/2 + 20);
-                    }
-                    
-                    // Y-axis labels
-                    for (let y = -5; y <= 5; y++) {
-                        if (y === 0) continue;
-                        const pixelY = toPixelY(y);
-                        ctx.fillText(y, canvas.width/2 + 10, pixelY + 5);
-                    }
-                    
-                    // Origin label
-                    ctx.fillText('0', canvas.width/2 + 5, canvas.height/2 + 20);
+                ctx.lineTo(canvas.width, canvas.height/2);
+                ctx.stroke();
+                
+                // Y-axis
+                ctx.beginPath();
+                ctx.moveTo(canvas.width/2, 0);
+                ctx.lineTo(canvas.width/2, canvas.height);
+                ctx.stroke();
+                
+                // Draw axis arrows
+                // X-axis arrow
+                ctx.beginPath();
+                ctx.moveTo(canvas.width - 10, canvas.height/2 - 5);
+                ctx.lineTo(canvas.width, canvas.height/2);
+                ctx.lineTo(canvas.width - 10, canvas.height/2 + 5);
+                ctx.fill();
+                
+                // Y-axis arrow
+                ctx.beginPath();
+                ctx.moveTo(canvas.width/2 - 5, 10);
+                ctx.lineTo(canvas.width/2, 0);
+                ctx.lineTo(canvas.width/2 + 5, 10);
+                ctx.fill();
+                
+                // Draw axis labels
+                ctx.fillStyle = AXIS_COLOR;
+                ctx.font = '14px Arial';
+                
+                // X-axis labels
+                for (let x = -5; x <= 5; x++) {
+                    if (x === 0) continue;
+                    const pixelX = toPixelX(x);
+                    ctx.fillText(x, pixelX - 5, canvas.height/2 + 20);
                 }
                 
-                // Function definition
-                function f(x) {
-                    return Math.pow(x - 2, 2) - 1;
+                // Y-axis labels
+                for (let y = -5; y <= 5; y++) {
+                    if (y === 0) continue;
+                    const pixelY = toPixelY(y);
+                    ctx.fillText(y, canvas.width/2 + 10, pixelY + 5);
                 }
                 
-                // Draw function graph
-                function drawFunction() {
-                    ctx.strokeStyle = FUNCTION_COLOR;
-                    ctx.lineWidth = 3;
-                    ctx.beginPath();
-                    
-                    // Draw the function
-                    for (let pixelX = 0; pixelX <= canvas.width; pixelX++) {
-                        const x = toMathX(pixelX);
-                        const y = f(x);
-                        const pixelY = toPixelY(y);
-                        
-                        if (pixelX === 0) {
-                            ctx.moveTo(pixelX, pixelY);
-                        } else {
-                            ctx.lineTo(pixelX, pixelY);
-                        }
-                    }
-                    
-                    ctx.stroke();
-                    
-                    // Draw vertex point
-                    const vertexX = 2;
-                    const vertexY = f(vertexX);
-                    const vertexPixelX = toPixelX(vertexX);
-                    const vertexPixelY = toPixelY(vertexY);
-                    
-                    ctx.fillStyle = '#b21f1f';
-                    ctx.beginPath();
-                    ctx.arc(vertexPixelX, vertexPixelY, 4, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    // Draw vertex label
-                    ctx.fillStyle = '#b21f1f';
-                    ctx.font = 'bold 14px Arial';
-                    ctx.fillText(`Tepe Noktası (2, -1)`, vertexPixelX , vertexPixelY +20);
-                }
+                // Origin label
+                ctx.fillText('0', canvas.width/2 + 5, canvas.height/2 + 20);
+            }
+            
+            // Function definition
+            function f(x) {
+                return Math.pow(x - 2, 2) - 1;
+            }
+            
+            // Draw function graph
+            function drawFunction() {
+                ctx.strokeStyle = FUNCTION_COLOR;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
                 
-                // Draw vertical line from slider
-                function drawVerticalLine() {
-                    const xValue = parseFloat(verticalSlider.value);
-                    const pixelX = toPixelX(xValue);
-                    const y = f(xValue);
+                // Draw the function
+                for (let pixelX = 0; pixelX <= canvas.width; pixelX++) {
+                    const x = toMathX(pixelX);
+                    const y = f(x);
                     const pixelY = toPixelY(y);
                     
-                    // Draw vertical line
-                    ctx.strokeStyle = VERTICAL_LINE_COLOR;
-                    ctx.lineWidth = 2;
-                    ctx.setLineDash([5, 5]);
-                    ctx.beginPath();
-                    ctx.moveTo(pixelX, 0);
-                    ctx.lineTo(pixelX, canvas.height);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
+                    if (pixelX === 0) {
+                        ctx.moveTo(pixelX, pixelY);
+                    } else {
+                        ctx.lineTo(pixelX, pixelY);
+                    }
+                }
+                
+                ctx.stroke();
+                
+                // Draw vertex point
+                const vertexX = 2;
+                const vertexY = f(vertexX);
+                const vertexPixelX = toPixelX(vertexX);
+                const vertexPixelY = toPixelY(vertexY);
+                
+                ctx.fillStyle = '#b21f1f';
+                ctx.beginPath();
+                ctx.arc(vertexPixelX, vertexPixelY, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw vertex label
+                ctx.fillStyle = '#b21f1f';
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(`Tepe Noktası (2, -1)`, vertexPixelX , vertexPixelY +20);
+            }
+            
+            // Draw vertical line from slider
+            function drawVerticalLine() {
+                const xValue = parseFloat(verticalSlider.value);
+                const pixelX = toPixelX(xValue);
+                const y = f(xValue);
+                const pixelY = toPixelY(y);
+                
+                // Draw vertical line
+                ctx.strokeStyle = VERTICAL_LINE_COLOR;
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(pixelX, 0);
+                ctx.lineTo(pixelX, canvas.height);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Draw intersection point
+                ctx.fillStyle = POINT_COLOR;
+                ctx.beginPath();
+                ctx.arc(pixelX, pixelY,4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw coordinates
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(`(${xValue.toFixed(2)}, ${y.toFixed(2)})`, pixelX + 15, pixelY - 10);
+            }
+            
+            // Draw horizontal line from slider
+            function drawHorizontalLine() {
+                const yValue = parseFloat(horizontalSlider.value);
+                const pixelY = toPixelY(yValue);
+                
+                // Draw horizontal line
+                ctx.strokeStyle = HORIZONTAL_LINE_COLOR;
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(0, pixelY);
+                ctx.lineTo(canvas.width, pixelY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Calculate intersection points
+                // Solve (x-2)^2 - 1 = yValue
+                // => (x-2)^2 = yValue + 1
+                // => x = 2 ± sqrt(yValue + 1)
+                
+                const discriminant = yValue + 1;
+                let solutions = [];
+                
+                if (discriminant >= 0) {
+                    const root = Math.sqrt(discriminant);
+                    solutions.push(2 - root);
+                    solutions.push(2 + root);
+                }
+                
+                // Draw intersection points
+                solutions.forEach(x => {
+                    const pixelX = toPixelX(x);
+                    const y = f(x);
                     
-                    // Draw intersection point
                     ctx.fillStyle = POINT_COLOR;
                     ctx.beginPath();
-                    ctx.arc(pixelX, pixelY,4, 0, Math.PI * 2);
+                    ctx.arc(pixelX, pixelY, 4, 0, Math.PI * 2);
                     ctx.fill();
                     
-                    // Draw coordinates
-                    ctx.fillStyle = '#333';
-                    ctx.font = 'bold 14px Arial';
-                    ctx.fillText(`(${xValue.toFixed(2)}, ${y.toFixed(2)})`, pixelX + 15, pixelY - 10);
-                }
-                
-                // Draw horizontal line from slider
-                function drawHorizontalLine() {
-                    const yValue = parseFloat(horizontalSlider.value);
-                    const pixelY = toPixelY(yValue);
-                    
-                    // Draw horizontal line
-                    ctx.strokeStyle = HORIZONTAL_LINE_COLOR;
-                    ctx.lineWidth = 2;
-                    ctx.setLineDash([5, 5]);
-                    ctx.beginPath();
-                    ctx.moveTo(0, pixelY);
-                    ctx.lineTo(canvas.width, pixelY);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-                    
-                    // Calculate intersection points
-                    // Solve (x-2)^2 - 1 = yValue
-                    // => (x-2)^2 = yValue + 1
-                    // => x = 2 ± sqrt(yValue + 1)
-                    
-                    const discriminant = yValue + 1;
-                    let solutions = [];
-                    
-                    if (discriminant >= 0) {
-                        const root = Math.sqrt(discriminant);
-                        solutions.push(2 - root);
-                        solutions.push(2 + root);
-                    }
-                    
-                    // Draw intersection points
-                    solutions.forEach(x => {
-                        const pixelX = toPixelX(x);
-                        const y = f(x);
-                        
-                        ctx.fillStyle = POINT_COLOR;
-                        ctx.beginPath();
-                        ctx.arc(pixelX, pixelY, 4, 0, Math.PI * 2);
-                        ctx.fill();
-                    });
-                }
-                
-                // Main draw function
-                function drawGraph() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    drawGridAndAxes();
-                    drawFunction();
-                    drawVerticalLine();
-                    drawHorizontalLine();
-                }
-                
-                // Initialize
-                resizeCanvas();
-                window.addEventListener('resize', resizeCanvas);
-                
-                // Slider events
-                verticalSlider.addEventListener('input', function() {
-                    const xValue = parseFloat(this.value);
-                    verticalSliderValue.textContent = `x = ${xValue.toFixed(2)}`;
-                    drawGraph();
+  
                 });
+            }
+            
+            // Main draw function
+            function drawGraph() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawGridAndAxes();
+                drawFunction();
+                drawVerticalLine();
+                drawHorizontalLine();
                 
-                horizontalSlider.addEventListener('input', function() {
-                    const yValue = parseFloat(this.value);
-                    horizontalSliderValue.textContent = `y = ${yValue.toFixed(2)}`;
-                    drawGraph();
-                });
-                
-                // Modal işlevleri
-                const howToBtn = document.getElementById('how-to-btn');
-                const howToModal = document.getElementById('how-to-modal');
-                const closeModal = document.getElementById('close-modal');
-                
-                howToBtn.addEventListener('click', function() {
-                    howToModal.style.display = 'flex';
-                });
-                
-                closeModal.addEventListener('click', function() {
-                    howToModal.style.display = 'none';
-                });
-                
-                window.addEventListener('click', function(event) {
-                    if (event.target === howToModal) {
-                        howToModal.style.display = 'none';
-                    }
-                });
-                
-                // Sınav fonksiyonları
-                const mainOptions = document.querySelectorAll('.question-section .option');
-                const checkMainButton = document.getElementById('check-main');
-                const continueButton = document.getElementById('continue-btn');
-                const mainFeedback = document.querySelectorAll('.question-section .feedback');
-                const propertiesSection = document.getElementById('properties-section');
-                
-                let mainSelectedOption = null;
-                let basicQuestionScore = 0;
-                let propertiesScore = 0;
-                let totalScore = 0;
-                
-                // Fonksiyon özellikleri için elemanlar
-                const propertyCards = document.querySelectorAll('.property-card');
-                const checkPropertiesButton = document.getElementById('check-properties');
-                const nextPropertiesButton = document.getElementById('next-properties-btn');
-                const progressBar = document.getElementById('progress-bar');
-                const examResult = document.getElementById('exam-result');
-                const nextExamButton = document.getElementById('next-exam-btn');
-                const notification = document.getElementById('notification');
-                const notificationText = document.getElementById('notification-text');
-                
-                // Puan gösterim elemanları
-                const basicScoreElement = document.getElementById('basic-score');
-                const propertiesScoreElement = document.getElementById('properties-score');
-                const totalScoreElement = document.getElementById('total-score');
-                const finalScoreElement = document.getElementById('final-score');
-                const resultMessage = document.getElementById('result-message');
-                
-                // Bildirim göster
-                function showNotification(message, isError = true) {
-                    notificationText.textContent = message;
-                    notification.style.backgroundColor = isError ? '#f8d7da' : '#d4edda';
-                    notification.style.color = isError ? '#721c24' : '#155724';
-                    notification.classList.add('show');
-                    
-                    setTimeout(() => {
-                        notification.classList.remove('show');
-                    }, 3000);
+ 
+            }
+            
+            // Initialize
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Slider events
+            verticalSlider.addEventListener('input', function() {
+                const xValue = parseFloat(this.value);
+                verticalSliderValue.textContent = `x = ${xValue.toFixed(2)}`;
+                drawGraph();
+            });
+            
+            horizontalSlider.addEventListener('input', function() {
+                const yValue = parseFloat(this.value);
+                horizontalSliderValue.textContent = `y = ${yValue.toFixed(2)}`;
+                drawGraph();
+            });
+            
+            // Modal işlevleri
+            const geogebraBtn = document.getElementById('geogebra-btn');
+            const geogebraModal = document.getElementById('geogebra-modal');
+            const closeGeogebraModal = document.getElementById('close-geogebra-modal');
+            const closeGeogebraBtn = document.getElementById('close-geogebra-btn');
+            
+            geogebraBtn.addEventListener('click', function() {
+                geogebraModal.style.display = 'flex';
+            });
+            
+            closeGeogebraModal.addEventListener('click', function() {
+                geogebraModal.style.display = 'none';
+            });
+            
+            closeGeogebraBtn.addEventListener('click', function() {
+                geogebraModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === geogebraModal) {
+                    geogebraModal.style.display = 'none';
                 }
+            });
+            
+            // Ana soru için elemanlar
+            const mainOptions = document.querySelectorAll('.question-section .option');
+            const checkMainButton = document.getElementById('check-main');
+            const continueButton = document.getElementById('continue-btn');
+            const mainFeedback = document.querySelectorAll('.question-section .feedback');
+            const propertiesSection = document.getElementById('properties-section');
+            
+            let mainSelectedOption = null;
+            let basicQuestionScore = 0;
+            let propertiesScore = 0;
+            let totalScore = 0;
+            
+            // Fonksiyon özellikleri için elemanlar
+            const propertyCards = document.querySelectorAll('.property-card');
+            const checkPropertiesButton = document.getElementById('check-properties');
+            const nextPropertiesButton = document.getElementById('next-properties-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const examResult = document.getElementById('exam-result');
+            const nextExamButton = document.getElementById('next-exam-btn');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            // Puan gösterim elemanları
+            const basicScoreElement = document.getElementById('basic-score');
+            const propertiesScoreElement = document.getElementById('properties-score');
+            const totalScoreElement = document.getElementById('total-score');
+            const finalScoreElement = document.getElementById('final-score');
+            const resultMessage = document.getElementById('result-message');
+            
+            // Modal için elemanlar
+            const howToBtn = document.getElementById('how-to-btn');
+            const howToModal = document.getElementById('how-to-modal');
+            const closeModal = document.getElementById('close-modal');
+            
+            // Bildirim göster
+            function showNotification(message, isError = true) {
+                notificationText.textContent = message;
+                notification.style.backgroundColor = isError ? '#f8d7da' : '#d4edda';
+                notification.style.color = isError ? '#721c24' : '#155724';
+                notification.classList.add('show');
                 
-                // Tüm özellik sorularının cevaplanıp cevaplanmadığını kontrol et
-                function checkAllPropertiesAnswered() {
-                    let allAnswered = true;
-                    
-                    propertyCards.forEach(card => {
-                        const selectedOption = card.querySelector('.option.selected');
-                        if (!selectedOption) {
-                            allAnswered = false;
-                        }
-                    });
-                    
-                    return allAnswered;
-                }
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Tüm özellik sorularının cevaplanıp cevaplanmadığını kontrol et
+            function checkAllPropertiesAnswered() {
+                let allAnswered = true;
                 
-                // Özellikler için seçeneklerin tıklanma olayı
                 propertyCards.forEach(card => {
-                    const options = card.querySelectorAll('.option');
-                    
-                    options.forEach(option => {
-                        option.addEventListener('click', function() {
-                            // Aynı karttaki diğer seçimleri temizle
-                            options.forEach(opt => opt.classList.remove('selected'));
-                            
-                            // Yeni seçimi yap
-                            this.classList.add('selected');
-                            
-                            // Feedback'leri gizle
-                            const feedbacks = card.querySelectorAll('.feedback');
-                            feedbacks.forEach(fb => fb.style.display = 'none');
-                            
-                            // Tüm sorular cevaplandıysa kontrol butonunu aktif et
-                            if (checkAllPropertiesAnswered()) {
-                                checkPropertiesButton.disabled = false;
-                            }
-                        });
-                    });
+                    const selectedOption = card.querySelector('.option.selected');
+                    if (!selectedOption) {
+                        allAnswered = false;
+                    }
                 });
                 
-                // Ana soru seçeneklerinin tıklanma olayı
-                mainOptions.forEach(option => {
+                return allAnswered;
+            }
+            
+            // Özellikler için seçeneklerin tıklanma olayı
+            propertyCards.forEach(card => {
+                const options = card.querySelectorAll('.option');
+                
+                options.forEach(option => {
                     option.addEventListener('click', function() {
-                        // Önceki seçimi temizle
-                        mainOptions.forEach(opt => opt.classList.remove('selected'));
+                        // Aynı karttaki diğer seçimleri temizle
+                        options.forEach(opt => opt.classList.remove('selected'));
                         
                         // Yeni seçimi yap
                         this.classList.add('selected');
-                        mainSelectedOption = this.getAttribute('data-value');
                         
                         // Feedback'leri gizle
-                        mainFeedback.forEach(fb => fb.style.display = 'none');
+                        const feedbacks = card.querySelectorAll('.feedback');
+                        feedbacks.forEach(fb => fb.style.display = 'none');
                         
-                        // Kontrol butonunu aktifleştir
-                        checkMainButton.disabled = false;
+                        // Tüm sorular cevaplandıysa kontrol butonunu aktif et
+                        if (checkAllPropertiesAnswered()) {
+                            checkPropertiesButton.disabled = false;
+                            checkPropertiesButton.style.opacity = '1';
+                        }
                     });
                 });
-                
-                // Ana soru Cevapları Kontrol Et butonu
-                checkMainButton.addEventListener('click', function() {
-                    if (mainSelectedOption === null) return;
+            });
+            
+            // Ana soru seçeneklerinin tıklanma olayı
+            mainOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Önceki seçimi temizle
+                    mainOptions.forEach(opt => opt.classList.remove('selected'));
                     
-                    // Şıkları pasif hale getir
-                    mainOptions.forEach(opt => {
-                        opt.classList.add('disabled');
-                        opt.style.pointerEvents = 'none'; // Tıklanamaz yap
-                    });
+                    // Yeni seçimi yap
+                    this.classList.add('selected');
+                    mainSelectedOption = this.getAttribute('data-value');
                     
                     // Feedback'leri gizle
                     mainFeedback.forEach(fb => fb.style.display = 'none');
                     
-                    // Doğru cevabı göster
-                    if (mainSelectedOption === 'yes') {
-                        document.querySelector('.question-section .feedback.correct').style.display = 'block';
-                        basicQuestionScore = 10;
-                    } else {
-                        document.querySelector('.question-section .feedback.incorrect').style.display = 'block';
-                        basicQuestionScore = 0;
-                    }
-                    
-                    // Butonu güncelle
-                    this.innerHTML = '<i class="fas fa-check"></i> Cevap Verildi';
-                    this.style.background = 'linear-gradient(to right, #6c757d, #495057)';
-                    this.disabled = true;
-                    
-                    // Devam butonunu aktif et
-                    continueButton.disabled = false;
-                });
-
-                // Sınava Devam Et butonu
-                continueButton.addEventListener('click', function() {
-                    propertiesSection.style.display = 'block';
-                    document.querySelector('.question-section').style.display = 'none';
-                    propertiesSection.scrollIntoView({ behavior: 'smooth' });
-                });
-                
-                // Özellikleri Cevapları Kontrol Et butonu
-                checkPropertiesButton.addEventListener('click', function() {
-                    if (!checkAllPropertiesAnswered()) {
-                        showNotification('Lütfen tüm soruları cevaplayın!');
-                        return;
-                    }
-                    
-                    let answeredCount = 0;
-                    propertiesScore = 0;
-                    
-                    propertyCards.forEach(card => {
-                        const selectedOption = card.querySelector('.option.selected');
-                        const feedbacks = card.querySelectorAll('.feedback');
-                        const pointsText = card.querySelector('.points').textContent;
-                        const pointsValue = parseFloat(pointsText.split(' ')[0]);
-                        
-                        // Şıkları pasif hale getir
-                        const options = card.querySelectorAll('.option');
-                        options.forEach(opt => {
-                            opt.classList.add('disabled');
-                            opt.style.pointerEvents = 'none';
-                        });
-                        
-                        // Feedback'leri gizle
-                        feedbacks.forEach(fb => fb.style.display = 'none');
-                        
-                        if (selectedOption) {
-                            answeredCount++;
-                            const isCorrect = checkPropertyAnswer(card, selectedOption.getAttribute('data-value'));
-                            const feedback = isCorrect ? card.querySelector('.feedback.correct') : card.querySelector('.feedback.incorrect');
-                            
-                            if (feedback) {
-                                feedback.style.display = 'block';
-                            }
-                            
-                            if (isCorrect) {
-                                propertiesScore += pointsValue;
-                            }
-                        }
-                    });
-                    
-                    // İlerleme çubuğunu güncelle
-                    const progress = (answeredCount / propertyCards.length) * 100;
-                    progressBar.style.width = `${progress}%`;
-                    
-                    // Butonu güncelle
-                    this.innerHTML = '<i class="fas fa-check-double"></i> Cevaplar Kontrol Edildi!';
-                    this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
-                    this.disabled = true;
-                    
-                    // Sonraki butonu aktif et
-                    nextPropertiesButton.disabled = false;
-                });
-                
-                // Özellik cevap kontrol fonksiyonu
-                function checkPropertyAnswer(card, answer) {
-                    const cardId = card.querySelector('h4').textContent;
-                    
-                    if (cardId.includes('Tanım')) return answer === 'reel';
-                    if (cardId.includes('Görüntü')) return answer === 'interval';
-                    if (cardId.includes('Sıfır')) return answer === '1-3';
-                    if (cardId.includes('Tepe')) return answer === '2-1';
-                    if (cardId.includes('Artan/Azalan')) return answer === 'kismi';
-                    if (cardId.includes('Pozitif')) return answer === 'poz-neg';
-                    if (cardId.includes('Tipi')) return answer === 'karesel';
-                    if (cardId.includes('Bire')) return answer === 'hayir';
-                    if (cardId.includes('Örten')) return answer === 'hayir';
-                    
-                    return false;
-                }
-                
-                // Sınav sonuçlarını gösteren fonksiyon
-                function showExamResult() {
-                    // Toplam puanı hesapla
-                    totalScore = basicQuestionScore + propertiesScore;
-                    
-                    // Puanları göster
-                    basicScoreElement.textContent = `${basicQuestionScore}/10`;
-                    propertiesScoreElement.textContent = `${propertiesScore}/15`;
-                    totalScoreElement.textContent = `${totalScore}/25`;
-                    finalScoreElement.textContent = `${totalScore}/25`;
-                    
-                    // Sonuç mesajını belirle
-                    if (totalScore >= 23) {
-                        resultMessage.textContent = "Mükemmel! Fonksiyon analizinde çok başarılısınız.";
-                        resultMessage.className = "result-message excellent";
-                    } else if (totalScore >= 18) {
-                        resultMessage.textContent = "Tebrikler! Fonksiyon analizini iyi anlamışsınız.";
-                        resultMessage.className = "result-message good";
-                    } else if (totalScore >= 13) {
-                        resultMessage.textContent = "Orta seviyede başarılı oldunuz. Daha fazla çalışmalısınız.";
-                        resultMessage.className = "result-message average";
-                    } else {
-                        resultMessage.textContent = "Fonksiyon analizini daha iyi anlamak için tekrar çalışmalısınız.";
-                        resultMessage.className = "result-message average";
-                    }
-                    
-                    // Sonuç bölümünü göster
-                    examResult.style.display = 'block';
-                    examResult.scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Sonraki sınava geçiş butonunu göster
-                    nextExamButton.style.display = 'block';
-                }
-                
-                // Sınavı tamamla butonu (özellikler bölümü)
-                nextPropertiesButton.addEventListener('click', showExamResult);
-                
-                // 5. Soruya Geç butonu
-                nextExamButton.addEventListener('click', function() {
-                    // Bu fonksiyon sınav tamamlandığında çalışacak
-                    // Gerçek uygulamada burada bir yönlendirme olur
-                    alert('Sınav tamamlandı! 5. soruya yönlendiriliyorsunuz...');
-                    // Gerçek uygulamada: window.location.href = "exam5.html";
+                    // Kontrol butonunu aktifleştir
+                    checkMainButton.disabled = false;
+                    checkMainButton.style.opacity = '1';
                 });
             });
+            
+            // Ana soru Cevapları Kontrol Et butonu
+            checkMainButton.addEventListener('click', function() {
+                if (mainSelectedOption === null) return;
+                
+                // Şıkları pasif hale getir
+                mainOptions.forEach(opt => {
+                    opt.classList.add('disabled');
+                    opt.style.pointerEvents = 'none'; // Tıklanamaz yap
+                });
+                
+                // Feedback'leri gizle
+                mainFeedback.forEach(fb => fb.style.display = 'none');
+                
+                // Doğru cevabı göster
+                if (mainSelectedOption === 'yes') {
+                    document.querySelector('.question-section .feedback.correct').style.display = 'block';
+                    basicQuestionScore = 10;
+                } else {
+                    document.querySelector('.question-section .feedback.incorrect').style.display = 'block';
+                    basicQuestionScore = 0;
+                }
+                
+                // Butonu güncelle
+                this.innerHTML = '<i class="fas fa-check"></i> Cevap Verildi';
+                this.style.background = 'linear-gradient(to right, #6c757d, #495057)';
+                this.disabled = true;
+                
+                // Devam butonunu aktif et
+                continueButton.disabled = false;
+                continueButton.style.opacity = '1';
+            });
+
+            // Sınava Devam Et butonu
+            continueButton.addEventListener('click', function() {
+                propertiesSection.style.display = 'block';
+                document.querySelector('.question-section').style.display = 'none';
+                propertiesSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Özellikleri Cevapları Kontrol Et butonu
+            checkPropertiesButton.addEventListener('click', function() {
+                if (!checkAllPropertiesAnswered()) {
+                    showNotification('Lütfen tüm soruları cevaplayın!');
+                    return;
+                }
+                
+                let answeredCount = 0;
+                propertiesScore = 0;
+                
+                propertyCards.forEach(card => {
+                    const selectedOption = card.querySelector('.option.selected');
+                    const feedbacks = card.querySelectorAll('.feedback');
+                    const pointsText = card.querySelector('.points').textContent;
+                    const pointsValue = parseFloat(pointsText.split(' ')[0]);
+                    
+                    // Şıkları pasif hale getir
+                    const options = card.querySelectorAll('.option');
+                    options.forEach(opt => {
+                        opt.classList.add('disabled');
+                        opt.style.pointerEvents = 'none';
+                    });
+                    
+                    // Feedback'leri gizle
+                    feedbacks.forEach(fb => fb.style.display = 'none');
+                    
+                    if (selectedOption) {
+                        answeredCount++;
+                        const isCorrect = checkPropertyAnswer(card, selectedOption.getAttribute('data-value'));
+                        const feedback = isCorrect ? card.querySelector('.feedback.correct') : card.querySelector('.feedback.incorrect');
+                        
+                        if (feedback) {
+                            feedback.style.display = 'block';
+                        }
+                        
+                        if (isCorrect) {
+                            propertiesScore += pointsValue;
+                        }
+                    }
+                });
+                
+                // İlerleme çubuğunu güncelle
+                const progress = (answeredCount / propertyCards.length) * 100;
+                progressBar.style.width = `${progress}%`;
+                
+                // Butonu güncelle
+                this.innerHTML = '<i class="fas fa-check-double"></i> Cevaplar Kontrol Edildi!';
+                this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
+                this.disabled = true;
+                
+                // Sonraki butonu aktif et
+                nextPropertiesButton.disabled = false;
+                nextPropertiesButton.style.opacity = '1';
+            });
+            
+            // Özellik cevap kontrol fonksiyonu
+            function checkPropertyAnswer(card, answer) {
+                const cardId = card.querySelector('h4').textContent;
+                
+                if (cardId.includes('Tanım')) return answer === 'reel';
+                if (cardId.includes('Görüntü')) return answer === 'interval';
+                if (cardId.includes('Sıfır')) return answer === '1-3';
+                if (cardId.includes('Tepe')) return answer === '2-1';
+                if (cardId.includes('Artan/Azalan')) return answer === 'kismi';
+                if (cardId.includes('Pozitif')) return answer === 'poz-neg';
+                if (cardId.includes('Tipi')) return answer === 'karesel';
+                if (cardId.includes('Bire')) return answer === 'hayir';
+                if (cardId.includes('Örten')) return answer === 'hayir';
+                
+                return false;
+            }
+            
+            // Sınav sonuçlarını gösteren fonksiyon
+            function showExamResult() {
+                // Toplam puanı hesapla
+                totalScore = basicQuestionScore + propertiesScore;
+                
+                // Puanları göster
+                basicScoreElement.textContent = `${basicQuestionScore}/10`;
+                propertiesScoreElement.textContent = `${propertiesScore}/15`;
+                totalScoreElement.textContent = `${totalScore}/25`;
+                finalScoreElement.textContent = `${totalScore}/25`;
+                
+                // Sonuç mesajını belirle
+                if (totalScore >= 23) {
+                    resultMessage.textContent = "Mükemmel! Fonksiyon analizinde çok başarılısınız.";
+                    resultMessage.className = "result-message excellent";
+                } else if (totalScore >= 18) {
+                    resultMessage.textContent = "Tebrikler! Fonksiyon analizini iyi anlamışsınız.";
+                    resultMessage.className = "result-message good";
+                } else if (totalScore >= 13) {
+                    resultMessage.textContent = "Orta seviyede başarılı oldunuz. Daha fazla çalışmalısınız.";
+                    resultMessage.className = "result-message average";
+                } else {
+                    resultMessage.textContent = "Fonksiyon analizini daha iyi anlamak için tekrar çalışmalısınız.";
+                    resultMessage.className = "result-message average";
+                }
+                
+                // Sonuç bölümünü göster
+                examResult.style.display = 'block';
+                examResult.scrollIntoView({ behavior: 'smooth' });
+                
+                // Sonraki sınava geçiş butonunu göster
+                nextExamButton.style.display = 'block';
+            }
+                       function sinavBitir(puan) {
+                // Mevcut sınavın puanını kaydet
+                sessionStorage.setItem("sinav4",puan);
+                
+                // Bir sonraki sınava yönlendir
+                window.location.href = "exam5.html";
+            }
+	
+
+            // Sınavı tamamla butonu
+            nextPropertiesButton.addEventListener('click', showExamResult);
+            
+            // 5. Soruya Geç butonu
+            nextExamButton.addEventListener('click', function() {
+                sinavBitir(totalScore);
+               
+            });
+            
+            // Nasıl Kullanılır Modal İşlevselliği
+            howToBtn.addEventListener('click', function() {
+                howToModal.style.display = 'flex';
+            });
+            
+            closeModal.addEventListener('click', function() {
+                howToModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === howToModal) {
+                    howToModal.style.display = 'none';
+                }
+            });
+            
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    howToModal.style.display = 'none';
+                }
+            });
+        });
+		window.onload = function () {
+     	 // Sınav tamamlandıysa sonuç sayfasına yönlendir
+     	 	if (localStorage.getItem('sinavTamamlandi') === 'true') {
+       		 window.location.href = 'result.html';
+     		 }
+     		 // Geri tuşu engelleme
+     		 window.history.pushState(null, null, window.location.href);
+     		 window.onpopstate = function () {
+       		 window.location.href = 'result.html';
+     			 };
+  		 };
+
     </script>
 </body>
 </html>
