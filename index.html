@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fonksiyon Bilgisi Sınavı</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<script>
+  	// Sınav başladığında çalıştır
+  	sessionStorage.setItem('sinav_aktif', 'evet');
+
+  	// Sınav bittiyse çalıştır
+  	// sessionStorage.removeItem('sinav_aktif');
+
+  	// Her sayfa açıldığında kontrol et
+  	if (sessionStorage.getItem('sinav_aktif') !== 'evet') {
+      	// Sınava izinsiz giriş => yönlendir
+     	 window.location.href = "giris.html"; // veya ana sayfa
+  	}
+	</script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -19,138 +34,143 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 10px;
         }
         
         .container {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 800px;
-            padding: 40px;
-            margin: 20px;
+            padding: 20px;
+            margin: 10px;
             position: relative;
             overflow: hidden;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             position: relative;
         }
         
         .header h1 {
             color: #1a2a6c;
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
         }
         
         .header p {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #555;
-            max-width: 600px;
             margin: 0 auto;
+            line-height: 1.5;
         }
         
         .decorative-line {
-            height: 5px;
+            height: 4px;
             background: linear-gradient(to right, #1a2a6c, #b21f1f);
-            width: 80%;
-            margin: 20px auto;
-            border-radius: 5px;
+            width: 90%;
+            margin: 15px auto;
+            border-radius: 4px;
         }
         
         .exam-info {
             background-color: #f0f8ff;
-            border-left: 5px solid #1a2a6c;
-            padding: 25px;
+            border-left: 4px solid #1a2a6c;
+            padding: 15px;
             border-radius: 8px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
         
         .exam-info h2 {
             color: #1a2a6c;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
         }
         
         .exam-info p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 15px;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
         }
         
         .point-system {
             background-color: #e8f4f8;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 25px 0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
         }
         
         .point-system h3 {
             color: #b21f1f;
             margin-bottom: 15px;
             text-align: center;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
         
         .points-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
         }
         
         .point-card {
             background: white;
             border-radius: 8px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
         .point-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
         
         .point-card .page-number {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             color: #1a2a6c;
         }
         
         .point-card .points {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #b21f1f;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         
         .start-button {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 25px;
         }
         
         .btn {
             background: linear-gradient(to right, #1a2a6c, #b21f1f);
             color: white;
             border: none;
-            padding: 16px 45px;
-            font-size: 1.3rem;
+            padding: 16px 35px;
+            font-size: 1.2rem;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
             background: linear-gradient(to right, #b21f1f, #1a2a6c);
         }
         
@@ -159,62 +179,93 @@
         }
         
         .exam-structure {
-            margin-top: 40px;
+            margin-top: 30px;
         }
         
         .structure-card {
             background-color: #f9f9f9;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
             border: 1px solid #e1e1e1;
         }
         
         .structure-card h3 {
             color: #1a2a6c;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
+            font-size: 1.2rem;
         }
         
         .structure-card p {
-            line-height: 1.6;
+            line-height: 1.5;
             color: #555;
+            font-size: 0.95rem;
         }
         
         .icon {
-            margin-right: 10px;
-            font-size: 1.5rem;
+            margin-right: 8px;
+            font-size: 1.3rem;
         }
         
         .footer {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 25px;
             color: #777;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         
-        @media (max-width: 600px) {
+        /* Mobil için ekstra düzenlemeler */
+        @media (max-width: 480px) {
             .container {
-                padding: 20px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .btn {
-                width: 100%;
                 padding: 15px;
             }
             
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .exam-info {
+                padding: 12px;
+            }
+            
+            .exam-info h2 {
+                font-size: 1.3rem;
+            }
+            
             .points-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                font-size: 1.1rem;
+                padding: 14px 25px;
+            }
+            
+            .structure-card {
+                padding: 12px;
+            }
+            
+            .structure-card h3 {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .points-grid {
+                grid-template-columns: repeat(5, 1fr);
             }
         }
     </style>
 </head>
 <body>
+	<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function(event) {
+    	history.go(1);
+	};
+	</script>
     <div class="container">
         <div class="header">
             <h1>Fonksiyonun Tanımı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</h1>
@@ -262,8 +313,6 @@
                 <p>Sınav, her birinde farklı türde soruların yer aldığı 5 aşamadan oluşur. Sorular, fonksiyon tanımı, özellikleri ve uygulamaları konularını kapsayacaktır. Soruları dikkatle okuyup cevaplamaya çalışın. 'Cevapları Kontrol Et' butonuna tıkladığınızda, cevaplarınız artık değiştirilemez. Lütfen unutmayın: Her sorunun cevaplanması zorunludur.</p>
             </div>
             
-
-            
             <div class="structure-card">
                 <h3><span class="icon">✅</span>Değerlendirme</h3>
                 <p>Sınav sonunda her sayfadaki performansınıza göre puan alacaksınız. Tüm sayfalardan aldığınız puanlar toplanarak toplam puanınız hesaplanacaktır.</p>
@@ -272,7 +321,7 @@
         
         <div class="start-button">
             <a href="exam1.html">
-                <button class="btn">Sınava Başla</button>
+                <button class="btn">Sınava Başla <i class="fas fa-arrow-right"></i></button>
             </a>
         </div>
         

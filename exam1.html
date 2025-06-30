@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sınav 1</title>
+    <title>Fonksiyon Kavramı - Modül 1: Düşey Doğru Testi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        // Sınav tamamlandığında çalışacak fonksiyon
-        function sinavBitir(puan) {
-            // Mevcut sınavın puanını kaydet
-            sessionStorage.setItem("sinav1", puan);
-            
-            // Bir sonraki sınava yönlendir
-            window.location.href = "exam2.html";
-        }
-    </script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script>
+  	// Sınav başladığında çalıştır
+  	sessionStorage.setItem('sinav_aktif', 'evet');
+
+  	// Sınav bittiyse çalıştır
+  	// sessionStorage.removeItem('sinav_aktif');
+
+  	// Her sayfa açıldığında kontrol et
+  	if (sessionStorage.getItem('sinav_aktif') !== 'evet') {
+      	// Sınava izinsiz giriş => yönlendir
+     	 window.location.href = "giris.html"; // veya ana sayfa
+  	}
+	</script>
+
     <style>
         * {
             margin: 0;
@@ -213,7 +217,6 @@
             background-color: #fff;
             border-radius: 4px;
             box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
-            padding: 10px;
         }
         
         #graph-canvas {
@@ -446,37 +449,6 @@
             font-size: 0.85rem;
         }
         
-        .module-nav {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        
-        .module-nav-btn {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-        }
-        
-        .module-nav-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
-        }
-        
-        .module-nav-btn.active {
-            background-color: #FFD700;
-            color: #1a2a6c;
-        }
-        
         /* Modal Styles */
         .modal {
             display: none;
@@ -563,14 +535,6 @@
             border-radius: 8px;
             border-left: 3px solid #ffd600;
             margin-top: 15px;
-        }
-        
-        .geogebra-iframe {
-            width: 100%;
-            height: 500px;
-            border: none;
-            border-radius: 8px;
-            margin: 15px 0;
         }
         
         /* Yeni eklenen sınav sonuç bölümü */
@@ -706,6 +670,13 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
+        .result-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
         @media (max-width: 600px) {
             .controls {
                 flex-direction: column;
@@ -725,17 +696,34 @@
                 margin-right: 0;
                 margin-bottom: 10px;
             }
+            
+            .result-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
         }
         
-        /* Yeni eklenen devre dışı bırakma stili */
-        .option.disabled {
-            opacity: 0.7;
+        /* Yanlış cevap sonrası seçenekleri devre dışı bırakma */
+        .options.disabled .option {
             cursor: not-allowed;
-            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        /* Doğru cevabı vurgulama */
+        .correct-answer {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
     </style>
 </head>
 <body>
+	<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function(event) {
+    	history.go(1);
+	};
+	</script>
     <div class="container">
         <header>
             <div class="logo">
@@ -749,28 +737,22 @@
                 <span><i class="fas fa-star"></i> Toplam 10 Puan</span>
             </div>
             <div class="relation-info">
-               Grafiği Verilen İfade: \( \mathbb{R} \to \mathbb{R} \) tanımlı \( x = y^2 \) bağıntısı
+                Grafikte verilen <span class="math">\( \mathrm{\mathbb{R} \to \mathbb{R}} \)</span> tanımlı <span class="math">\(\mathrm{ x = y^2} \)</span> bağıntısının fonksiyon olup olmadığını inceleyeceğiz. 
             </div>
         </header>
         
         <div class="content">
             
-            
             <div class="canvas-container">
                 <div class="canvas-header">
                     <h3><i class="fas fa-chart-line"></i> İnteraktif Uygulama</h3>
-                    <!-- <div>
-                        <button class="geogebra-btn" id="geogebra-btn">
-                            <i class="fas fa-external-link-alt"></i> Geogebrada İncele
-                        </button>
-                    </div> -->
-		    <div>
-		         <button class="how-to-btn" id="how-to-btn">
+                    <div>
+                        <button class="how-to-btn" id="how-to-btn">
                             <i class="fas fa-question-circle"></i> Nasıl Kullanılır?
                         </button>
-		     </div>
+                    </div>
                 </div>
-                <p>\( x = y^2 \) Bağıntısı ve Düşey Doğru Testi</p>
+                <p>\( \mathrm{x = y^2} \) Bağıntısı ve Düşey Doğru Testi</p>
                 <div class="graph-wrapper">
                     <canvas id="graph-canvas"></canvas>
                 </div>
@@ -778,7 +760,7 @@
                 <div class="controls">
                     <div class="slider-container">
                         <span class="slider-label">x =</span>
-                        <input type="range" min="-5" max="5" step="0.1" value="0" class="vertical-slider" id="vertical-slider">
+                        <input type="range" min="-1" max="10" step="0.1" value="0" class="vertical-slider" id="vertical-slider">
                         <span class="slider-label" id="slider-value">0</span>
                     </div>
                     <button class="reset-btn" id="reset-btn">
@@ -798,7 +780,7 @@
                     <span class="points-badge">10 Puan</span>
                 </h3>
                 <div class="question">
-                   Grafikte gösterilen \( \mathbb{R} \to \mathbb{R} \) tanımlı \( x = y^2 \) bağıntısı bir fonksiyon mudur?
+                   Grafikte gösterilen \( \mathrm{\mathbb{R} \to \mathbb{R}} \) tanımlı \( \mathrm{x = y^2} \) bağıntısı bir fonksiyon mudur?
                 </div>
                 
                 <div class="options">
@@ -806,32 +788,32 @@
                     <div class="option" data-value="no">Hayır, fonksiyon değildir.</div>
                 </div>
                 <div class="feedback correct">
-                    <i class="fas fa-check-circle"></i> Doğru cevap! \( x = y^2 \) bağıntısı bir fonksiyon değildir. 
+                    <i class="fas fa-check-circle"></i> Doğru cevap! \(\mathrm{ x = y^2} \) bağıntısı bir fonksiyon değildir. 
                     <p><strong>10 puan</strong> kazandınız!</p>
                 </div>
                 
                 <div class="feedback incorrect">
-                    <i class="fas fa-times-circle"></i> Yanlış cevap. \( x = y^2 \) bağıntısı bir fonksiyon değildir. 
-                    <p>Lütfen açıklamayı dikkatlice okuyun.</p>
+                    <i class="fas fa-times-circle"></i> Yanlış cevap. Bağıntının fonksiyon olmadığı açıklamada gösterilmektedir.
                 </div>
                 
                 <div class="explanation">
-                    <p><strong>Açıklama:</strong> \( x = y^2 \) bağıntısı fonksiyon değildir çünkü her pozitif x değeri için iki farklı y değeri (\( y = \sqrt{x} \) ve \( y = -\sqrt{x} \)) bulunur. Düşey doğru testinde, x > 0 değerleri için düşey doğru grafiği iki noktada kesmektedir. Bir bağıntının fonksiyon olabilmesi için her x değerine karşılık en fazla bir y değeri olmalıdır.</p>
+                    <p><strong>Açıklama:</strong> \(\mathrm{ x = y^2} \) bağıntısı fonksiyon değildir çünkü her pozitif x değeri için iki farklı y değeri (\( y = \sqrt{x} \) ve \( y = -\sqrt{x} \)) bulunur. Düşey doğru testinde, x > 0 değerleri için düşey doğru grafiği iki noktada kesmektedir. Bir bağıntının fonksiyon olabilmesi için her x değerine karşılık en fazla bir y değeri olmalıdır.</p>
+
                 </div>
                 
                 <div class="buttons">
-                    <button class="btn btn-check" id="check-btn" disabled>
-                        <i class="fas fa-check"></i> Cevapları Kontrol Et
+                    <button class="btn btn-check" id="check-btn">
+                        <i class="fas fa-check"></i> Cevabı Kontrol Et
                     </button>
                     <button class="btn btn-next" id="next-btn" disabled>
-                        <i class="fas fa-arrow-right"></i> 1. soruyu tamamla
+                        <i class="fas fa-arrow-right"></i> 1.Soruyu Tamamla
                     </button>
                 </div>
             </div>
             
             <!-- Sınav Sonuç Bölümü -->
             <div class="exam-result" id="exam-result">
-                <h3><i class="fas fa-award"></i> 1.soru sonucu</h3>
+                <h3><i class="fas fa-award"></i> 1.Soru Sonucu</h3>
                 <div class="score-display" id="total-score">0/10</div>
                 
                 <div class="result-message" id="result-message">
@@ -856,21 +838,15 @@
                     <p>1.soru tamamlandı! Sonuçlarınız yukarıda gösterilmektedir.</p>
                 </div>
                 
-                <!-- Yeni eklenen 2. soruya geç butonu -->
-                <button class="next-exam-btn" id="next-exam-btn">
-                    <i class="fas fa-arrow-right"></i> 2. Soruya Geç
-                </button>
+                <div class="result-buttons">
+                    <button class="next-exam-btn" id="next-exam-btn">
+                        <i class="fas fa-arrow-right"></i> 2. Soruya Geç
+                    </button>
+                </div>
             </div>
         </div>
         
         <footer>
-           <!-- <div class="module-nav">
-                <button class="module-nav-btn active" id="nav-btn-1">1</button>
-                <button class="module-nav-btn" id="nav-btn-2">2</button>
-                <button class="module-nav-btn">3</button>
-                <button class="module-nav-btn">4</button>
-                <button class="module-nav-btn">5</button>
-            </div>-->
             <p>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</p>
         </footer>
     </div>
@@ -893,49 +869,8 @@
                 </ol>
                 
                 <div class="modal-tip">
-                    <p><strong><i class="fas fa-lightbulb"></i> İpucu:</strong> x > 0 değerlerinde düşey doğru grafiği kaç noktada kesiyor? Bu bilgi size bağıntının fonksiyon olup olmadığı konusunda ipucu verecektir.</p>
+                    <p><strong><i class="fas fa-lightbulb"></i> İpucu:</strong> x=4 değerinde düşey doğru grafiği kaç noktada kesiyor? Bu bilgi size bağıntının fonksiyon olup olmadığı konusunda ipucu verecektir.</p>
                 </div>
-                
-                <h3>Uygulama Özellikleri</h3>
-                <ul>
-                    <li>Kaydırıcıyı istediğiniz hızda hareket ettirebilirsiniz</li>
-                    <li>Grafik üzerindeki noktaların koordinatlarını görmek için üzerlerine tıklayabilirsiniz</li>
-                    <li>"Sıfırla" butonu ile kaydırıcıyı başlangıç konumuna getirebilirsiniz</li>
-                    <li>Kesişim noktaları otomatik olarak hesaplanır ve bilgi panelinde gösterilir</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    
-    <!-- GeoGebra Modal -->
-    <div class="modal" id="geogebra-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-external-link-alt"></i> GeoGebra Uygulaması</h2>
-                <button class="close-modal" id="close-geogebra-modal">&times;</button>
-            </div>
-            <div class="modal-instructions">
-                <p>Bu etkileşimli GeoGebra uygulamasında <strong>x = y²</strong> bağıntısını ve düşey doğru testini detaylı bir şekilde inceleyebilirsiniz:</p>
-                
-                <iframe 
-                    scrolling="no" 
-                    title="x=y^2 bağıntısı" 
-                    src="https://www.geogebra.org/material/iframe/id/ydhbwq8r/width/600/height/500/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false" 
-                    class="geogebra-iframe"
-                    allowfullscreen>
-                </iframe>
-                
-                <div class="modal-tip">
-                    <p><strong><i class="fas fa-lightbulb"></i> İpucu:</strong> Bu etkileşimli GeoGebra uygulamasında düşey doğru testini daha detaylı inceleyebilir, grafiği yakınlaştırabilir ve koordinatları tam olarak görebilirsiniz.</p>
-                </div>
-                
-                <h3>GeoGebra Kullanım İpuçları:</h3>
-                <ol>
-                    <li><strong>Düşey doğruyu hareket ettirin:</strong> Kaydırıcıyı kullanarak düşey doğruyu sağa sola hareket ettirebilirsiniz</li>
-                    <li><strong>Yakınlaştırma:</strong> Fare tekerleği ile grafiği yakınlaştırabilir veya uzaklaştırabilirsiniz</li>
-                    <li><strong>Koordinatları görme:</strong> Noktaların üzerine gelerek koordinatlarını görebilirsiniz</li>
-                    <li><strong>Farklı görünümler:</strong> Sağ üstteki menüden farklı görünümler arasında geçiş yapabilirsiniz</li>
-                </ol>
             </div>
         </div>
     </div>
@@ -974,6 +909,26 @@
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(0, 0, width, height);
                 
+                // Izgara çizgileri
+                ctx.strokeStyle = '#f0f0f0';
+                ctx.lineWidth = 1;
+                
+                // Yatay çizgiler
+                for (let y = padding; y < height - padding; y += scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(padding, y);
+                    ctx.lineTo(width - padding, y);
+                    ctx.stroke();
+                }
+                
+                // Dikey çizgiler
+                for (let x = padding; x < width - padding; x += scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, padding);
+                    ctx.lineTo(x, height - padding);
+                    ctx.stroke();
+                }
+                
                 // Koordinat eksenleri
                 ctx.beginPath();
                 ctx.strokeStyle = '#333';
@@ -1009,7 +964,7 @@
                 ctx.textBaseline = 'middle';
                 
                 // X ekseni etiketleri
-                for (let x = -5; x <= 5; x++) {
+                for (let x = -5; x <= 10; x++) {
                     if (x === 0) continue;
                     const xPos = width / 2 + x * scale;
                     ctx.fillText(x, xPos, height / 2 + 20);
@@ -1030,20 +985,28 @@
                     ctx.stroke();
                 }
                 
-                // Orijin noktası etiketi
-                ctx.fillText('0', width / 2 - 15, height / 2 + 15);
+                // Orijin noktasına belirgin bir işaret koy
+                ctx.beginPath();
+                ctx.fillStyle = '#1a2a6c';
+                ctx.arc(width / 2, height / 2, 4, 0, Math.PI * 2);
+                ctx.fill();
                 
-                // Başlık
-
+                // "O" etiketi
+                ctx.fillStyle = '#1a2a6c';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'top';
+                ctx.fillText('O', width / 2 - 8, height / 2 + 8);
                 
-                // x = y² grafiği (parabol)
+                // Parabol grafiği (x = y^2)
                 ctx.beginPath();
                 ctx.strokeStyle = '#1a2a6c';
                 ctx.lineWidth = 2.5;
                 
+                // Parabolün çizimi
                 for (let y = -5; y <= 5; y += 0.05) {
                     const x = y * y;
-                    if (x > 5) continue;
+                    if (x > 10) continue;
                     
                     const plotX = width / 2 + x * scale;
                     const plotY = height / 2 - y * scale;
@@ -1054,7 +1017,6 @@
                         ctx.lineTo(plotX, plotY);
                     }
                 }
-                
                 ctx.stroke();
                 
                 // Düşey doğru (x = c)
@@ -1101,21 +1063,7 @@
                     ctx.fillStyle = '#d9534f';
                     ctx.arc(x, y, 6, 0, Math.PI * 2);
                     ctx.fill();
-                    
-                    ctx.beginPath();
-                    ctx.fillStyle = '#ffffff';
-                    ctx.arc(x, y, 3, 0, Math.PI * 2);
-                    ctx.fill();
                 }
-                
-                // Koordinat bilgisi
-                ctx.fillStyle = '#1a2a6c';
-                ctx.font = '12px Arial';
-                ctx.textAlign = 'right';
-                ctx.fillText('x ekseni', width - padding - 5, height / 2 - 10);
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'top';
-                ctx.fillText('y ekseni', width / 2 + 10, padding + 5);
             }
             
             // Kaydırıcı olayları
@@ -1138,6 +1086,7 @@
             resizeCanvas();
             
             // Soru bölümü işlevselliği
+            const optionsContainer = document.querySelector('.options');
             const options = document.querySelectorAll('.option');
             const checkButton = document.getElementById('check-btn');
             const nextButton = document.getElementById('next-btn');
@@ -1149,8 +1098,6 @@
             const basicScoreElement = document.getElementById('basic-score');
             const finalScoreElement = document.getElementById('final-score');
             const resultMessage = document.getElementById('result-message');
-            const navBtn1 = document.getElementById('nav-btn-1');
-            const navBtn2 = document.getElementById('nav-btn-2');
             
             let selectedOption = null;
             let basicQuestionScore = 0;
@@ -1170,7 +1117,7 @@
                     feedback.forEach(fb => fb.style.display = 'none');
                     explanation.style.display = 'none';
                     
-                    // Kontrol butonunu aktifleştir
+                    // Cevapları Kontrol Et butonunu aktifleştir
                     checkButton.disabled = false;
                 });
             });
@@ -1186,25 +1133,26 @@
                 if (selectedOption === 'no') {
                     document.querySelector('.feedback.correct').style.display = 'block';
                     explanation.style.display = 'block';
+                    nextButton.disabled = false;
                     basicQuestionScore = 10;
                     this.innerHTML = '<i class="fas fa-check-double"></i> Doğru Cevap!';
                     this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
+                    this.disabled = true;
                 } else {
                     document.querySelector('.feedback.incorrect').style.display = 'block';
                     explanation.style.display = 'block';
                     basicQuestionScore = 0;
+                    
+                    // Yanlış cevapta seçenekleri devre dışı bırak
+                    optionsContainer.classList.add('disabled');
+                    this.disabled = true;
+                    
+                    // Doğru cevabı vurgula
+                    document.querySelector('.option[data-value="no"]').classList.add('correct-answer');
+                    
+                    // Sonraki butonunu aktifleştir
+                    nextButton.disabled = false;
                 }
-                
-                // Seçenekleri devre dışı bırak
-                options.forEach(opt => {
-                    opt.classList.add('disabled');
-                });
-                
-                // Cevapları Kontrol Et butonunu devre dışı bırak
-                this.disabled = true;
-                
-                // 1. soruyu tamamla butonunu aktifleştir
-                nextButton.disabled = false;
             });
             
             // Sınavı tamamla butonu
@@ -1221,7 +1169,7 @@
                     resultMessage.textContent = "Tebrikler! Doğru cevap verdiniz.";
                     resultMessage.className = "result-message excellent";
                 } else {
-                    resultMessage.textContent = "Başarısız oldunuz. Lütfen konuyu tekrar gözden geçirin.";
+                    resultMessage.textContent = "Başarısız oldunuz. Lütfen konuyu tekrar edin.";
                     resultMessage.className = "result-message average";
                 }
                 
@@ -1229,33 +1177,16 @@
                 examResult.style.display = 'block';
                 examResult.scrollIntoView({ behavior: 'smooth' });
                 
-                // 2. soruya geç butonunu göster
+                // Sonraki sınava geçiş butonunu göster
                 nextExamButton.style.display = 'block';
-                
-                // Footer navigasyonunu güncelle
-                navBtn1.classList.remove('active');
-                navBtn2.classList.add('active');
-                
-                // 2. sayfa butonunu linke çevir
-                navBtn2.innerHTML = '<a href="exam2.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">2</a>';
             });
             
-            // 2. soruya geç butonu
+            // Sonraki sınava geçiş butonu
             nextExamButton.addEventListener('click', function() {
-                sinavBitir(totalScore);
+                sessionStorage.setItem("sinav1", totalScore);
+                
+                 window.location.href = "exam2.html"; // Gerçek uygulamada bu satır aktif olmalı
             });
-		 window.onload = function () {
-     	 // Sınav tamamlandıysa sonuç sayfasına yönlendir
-     	 	if (localStorage.getItem('sinavTamamlandi') === 'true') {
-       		 window.location.href = 'result.html';
-     		 }
-     		 // Geri tuşu engelleme
-     		 window.history.pushState(null, null, window.location.href);
-     		 window.onpopstate = function () {
-       		 window.location.href = 'result.html';
-     			 };
-  		 };
-		
             
             // Nasıl Kullanılır Modal İşlevselliği
             const howToBtn = document.getElementById('how-to-btn');
@@ -1272,26 +1203,10 @@
                 howToModal.style.display = 'none';
             });
             
-            // GeoGebra Modal İşlevselliği
-            const geogebraBtn = document.getElementById('geogebra-btn');
-            const geogebraModal = document.getElementById('geogebra-modal');
-            const closeGeogebraModal = document.getElementById('close-geogebra-modal');
-            
-            // GeoGebra modal açma
-            geogebraBtn.addEventListener('click', function() {
-                geogebraModal.style.display = 'flex';
-            });
-            
-            // GeoGebra modal kapatma
-            closeGeogebraModal.addEventListener('click', function() {
-                geogebraModal.style.display = 'none';
-            });
-            
             // Modal dışına tıklayarak kapatma
             window.addEventListener('click', function(event) {
-                if (event.target === howToModal || event.target === geogebraModal) {
+                if (event.target === howToModal) {
                     howToModal.style.display = 'none';
-                    geogebraModal.style.display = 'none';
                 }
             });
             
@@ -1299,7 +1214,6 @@
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
                     howToModal.style.display = 'none';
-                    geogebraModal.style.display = 'none';
                 }
             });
         });

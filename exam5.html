@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script>
+  	// Sınav başladığında çalıştır
+  	sessionStorage.setItem('sinav_aktif', 'evet');
+
+  	// Sınav bittiyse çalıştır
+  	// sessionStorage.removeItem('sinav_aktif');
+
+  	// Her sayfa açıldığında kontrol et
+  	if (sessionStorage.getItem('sinav_aktif') !== 'evet') {
+      	// Sınava izinsiz giriş => yönlendir
+     	 window.location.href = "giris.html"; // veya ana sayfa
+  	}
+	</script>
+
     <style>
         * {
             margin: 0;
@@ -187,16 +201,17 @@
             font-size: 0.9rem;
         }
         
+        /* GRAFİK ALANI GÜNCELLEMELERİ */
         .graph-container {
             position: relative;
             width: 100%;
-            padding-top:80%; /* 5:6 aspect ratio */
+            height: 500px;
             margin: 0 auto;
             overflow: hidden;
             background-color: #fff;
             border-radius: 4px;
             box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+            max-width: 100%;
         }
         
         #function-canvas {
@@ -272,7 +287,7 @@
         }
         
         .test-info {
-            display: flex;
+            display: none;
             justify-content: space-between;
             margin-top: 8px;
             font-size: 0.9rem;
@@ -469,27 +484,27 @@
         }
         
         .btn-check:hover:not(:disabled) {
-            background: linear-gradient(to right, #0d1b4d, #2a4bbd);
+             background: linear-gradient(to right, #0d4d1b, #2abd4b);
             transform: translateY(-2px);
         }
         
-        .btn-next {
-            background: linear-gradient(to right, #b21f1f, #d9534f);
-            color: white;
-        }
+    	.btn-next {
+        background: linear-gradient(to right, #b21f1f, #d9534f);
+        color: white;
+    	}
         
-        #continue-btn {
-            background: linear-gradient(to right, #1a6c2a, #3ac55f);
-        }
+   	 #continue-btn {
+        background: linear-gradient(to right, #b21f1f, #d9534f);
+    	}
 
-        #continue-btn:hover:not(:disabled) {
-            background: linear-gradient(to right, #0d4d1b, #2abd4b);
-        }
+    	#continue-btn:hover:not(:disabled) {
+        background: linear-gradient(to right, #8a1919, #c9302c);
+    	}
         
-        .btn-next:hover:not(:disabled) {
-            background: linear-gradient(to right, #8a1919, #c9302c);
-            transform: translateY(-2px);
-        }
+    	.btn-next:hover:not(:disabled) {
+        background: linear-gradient(to right, #8a1919, #c9302c);
+        transform: translateY(-2px);
+    	}
         
         footer {
             text-align: center;
@@ -836,6 +851,26 @@
                 height: 30px;
                 font-size: 0.8rem;
             }
+            
+            /* Mobil için grafik boyutu */
+            .graph-container {
+                height: 400px;
+            }
+            
+            .slider::-webkit-slider-thumb {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .slider-label {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .relation-info {
+                font-size: 0.95rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -847,10 +882,20 @@
             .score-display {
                 font-size: 2.5rem;
             }
+            
+            .graph-container {
+                height: 300px;
+            }
         }
     </style>
 </head>
 <body>
+	<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function(event) {
+    	history.go(1);
+	};
+	</script>
     <!-- Bildirim -->
     <div class="notification" id="notification">
         <i class="fas fa-exclamation-triangle"></i>
@@ -870,8 +915,7 @@
                 <span><i class="fas fa-star"></i> Toplam 30 Puan</span>
             </div>
             <div class="relation-info">
-               Grafikte verilen <span class="math">\( \mathrm{[-2, 3] \to \mathbb{R} }\)</span> tanımlı <span class="math">\( \mathrm{f(x) = 			\frac{1}{4}(x-1)^2 - 5 }\)</span> bağıntısının fonksiyon olup olmadığını inceleyeceğiz.
-              
+               Grafikte verilen <span class="math">\( \mathrm{[-2, 3] \to \mathbb{R} }\)</span> tanımlı <span class="math">\( \mathrm{f(x) = \frac{1}{4}(x-1)^2 - 5 }\)</span> bağıntısının fonksiyon olup olmadığını inceleyeceğiz.
             </div>
         </header>
         
@@ -910,7 +954,7 @@
                             <span id="horizontal-slider-value">y = -4.50</span>
                         </div>
                         <input type="range" min="-5" max="-2.75" step="0.01" value="-4.50" class="slider" id="horizontal-slider">
-                        <div class="test-info">
+                        <div class="test-info" >
                             <span>Birebir Fonksiyon Testi</span>
                             <span id="horizontal-test-result">✗ Birebir Değil</span>
                         </div>
@@ -1050,7 +1094,6 @@
                         <div class="options">
                             <div class="option" data-value="dogrusal">Doğrusal fonksiyon</div>
                             <div class="option" data-value="karesel">Karesel fonksiyon</div>
-
                         </div>
                         <div class="feedback correct">
                             <i class="fas fa-check-circle"></i> Doğru! y = a(x-h)^2 + k formundadır, karesel fonksiyondur.
@@ -1127,15 +1170,19 @@
                     Şimdi fonksiyonun özelliklerini inceleyebilirsiniz.
                 </div>
                 
-                <div class="feedback incorrect">
-                    <i class="fas fa-times-circle"></i> Yanlış cevap. Lütfen tekrar deneyin.
+                 <div class="feedback incorrect">
+                    <i class="fas fa-times-circle"></i> Yanlış cevap.\(\mathrm{ y = \frac{1}{4}(x-1)^2 - 5 }\)  ifadesi bir fonksiyondur çünkü:<br><br>
+                    - Her x değeri için tam olarak bir y değeri vardır<br>
+                    - Düşey doğru testini geçer (her dikey çizgi grafiği sadece bir noktada keser)<br>
+                    - Tanım kümesindeki her eleman, değer kümesinde yalnızca bir elemanla eşleşir<br><br>
+                    Lütfen fonksiyon tanımını tekrar gözden geçirin ve sınava devam edin.
                 </div>
                 
                 <div class="buttons">
                     <button class="btn btn-check" id="check-main">
                         <i class="fas fa-check"></i> Cevapları Kontrol Et
                     </button>
-                    <button class="btn" id="continue-btn" disabled>
+                    <button class="btn btn-next " id="continue-btn"  disabled>
                         <i class="fas fa-arrow-right"></i> Sınava Devam Et
                     </button>
                 </div>
@@ -1144,7 +1191,7 @@
             <!-- Sınav Sonuç Bölümü -->
             <div class="exam-result" id="exam-result">
                 <h3><i class="fas fa-award"></i> Sınav Sonucu</h3>
-                <div class="score-display" id="total-score">0/25</div>
+                <div class="score-display" id="total-score">0/30</div>
                 
                 <div class="result-message" id="result-message">
                     Sınavınız değerlendiriliyor...
@@ -1181,22 +1228,7 @@
         </div>
         
         <footer>
-            <!-- <div class="module-nav">
-                <button class="module-nav-btn">
-                    <a href="exam1.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">1</a>
-                </button>
-                <button class="module-nav-btn">
-                    <a href="exam2.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">2</a>
-                </button>
-                <button class="module-nav-btn">
-                    <a href="exam3.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">3</a>
-                </button>
-                <button class="module-nav-btn">
-                    <a href="exam4.html" style="color:inherit; text-decoration:none; display:block; width:100%; height:100%;">4</a>
-                </button>
-                <button class="module-nav-btn active">5</button>
-            </div> -->
-            <p>Fonksiyon Kavramı Analiz Sınavı &copy; 2023</p>
+            <p>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Sınavı</p>
         </footer>
     </div>
     
@@ -1251,33 +1283,40 @@
             const DOMAIN_START = -2;
             const DOMAIN_END = 3;
             
+            // Y ekseni aralığı: -6 ile 2 arasında (8 birim)
+            const MIN_Y = -6;
+            const MAX_Y = 2;
+            const Y_RANGE = MAX_Y - MIN_Y;
+            
             // Initialize canvas size
             function resizeCanvas() {
                 const container = canvas.parentElement;
                 const width = container.clientWidth;
-                const height = container.clientHeight;
                 
                 canvas.width = width;
-                canvas.height = height;
+                canvas.height = container.clientHeight;
                 
                 drawGraph();
             }
             
-            // Coordinate conversion functions
-            function toMathX(pixelX) {
-                return (pixelX - canvas.width/2) / GRID_SIZE;
-            }
-            
-            function toMathY(pixelY) {
-                return (canvas.height/2 - pixelY) / GRID_SIZE - 2;
-            }
-            
+            // Yeni koordinat dönüşüm fonksiyonları
             function toPixelX(mathX) {
-                return mathX * GRID_SIZE + canvas.width/2;
+                const visibleRange = 7; // -3'ten 4'e kadar (7 birim)
+                return ((mathX + 3) / visibleRange) * canvas.width;
             }
             
             function toPixelY(mathY) {
-                return canvas.height/2 - (mathY + 2) * GRID_SIZE;
+                // Y ekseni: -6 ile 2 arasında (8 birim)
+                return ((MAX_Y - mathY) / Y_RANGE) * canvas.height;
+            }
+            
+            function toMathX(pixelX) {
+                const visibleRange = 7; // -3'ten 4'e kadar
+                return (pixelX / canvas.width) * visibleRange - 3;
+            }
+            
+            function toMathY(pixelY) {
+                return MAX_Y - (pixelY / canvas.height) * Y_RANGE;
             }
             
             // Draw grid and axes
@@ -1330,11 +1369,12 @@
                 ctx.fillStyle = AXIS_COLOR;
                 ctx.fill();
                 
-                // Y-axis arrow
+                // Y-axis arrow (2 noktasının üzerine çiziliyor)
+                const arrowY = toPixelY(MAX_Y) - 15;
                 ctx.beginPath();
-                ctx.moveTo(toPixelX(0) - 8, 15);
-                ctx.lineTo(toPixelX(0), 0);
-                ctx.lineTo(toPixelX(0) + 8, 15);
+                ctx.moveTo(toPixelX(0) - 8, arrowY);
+                ctx.lineTo(toPixelX(0), arrowY - 15);
+                ctx.lineTo(toPixelX(0) + 8, arrowY);
                 ctx.fill();
                 
                 // Draw axis labels
@@ -1344,7 +1384,7 @@
                 ctx.textBaseline = 'middle';
                 
                 // X-axis labels
-                for (let x = -4; x <= 4; x++) {
+                for (let x = -3; x <= 4; x++) {
                     if (x === 0) continue;
                     const pixelX = toPixelX(x);
                     ctx.fillText(x, pixelX, toPixelY(0) + 20);
@@ -1357,7 +1397,7 @@
                 }
                 
                 // Y-axis labels
-                for (let y = -6; y <= 2; y++) {
+                for (let y = MIN_Y; y <= MAX_Y; y++) {
                     if (y === 0) continue;
                     const pixelY = toPixelY(y);
                     ctx.fillText(y, toPixelX(0) + 20, pixelY);
@@ -1369,13 +1409,14 @@
                     ctx.stroke();
                 }
                 
-                // Origin label
-                ctx.fillText('0', toPixelX(0) + 20, toPixelY(0) + 20);
+                // Origin label - 20px boyutunda
+                ctx.font = 'bold 20px Arial';
+                ctx.fillText('O', toPixelX(0) + 20, toPixelY(0) + 20);
                 
                 // Axis titles
                 ctx.font = 'bold 16px Arial';
                 ctx.fillText('x', canvas.width - 20, toPixelY(0) + 30);
-                ctx.fillText('y', toPixelX(0) + 30, 20);
+                ctx.fillText('y', toPixelX(0) + 30, arrowY - 25);
             }
             
             // Function definition
@@ -1465,8 +1506,8 @@
                 // Draw endpoint labels
                 ctx.fillStyle = ENDPOINT_COLOR;
                 ctx.font = 'bold 14px Arial';
-                ctx.fillText(`(-2, ${startY.toFixed(2)})`, startPixelX - 60, startPixelY - 20);
-                ctx.fillText(`(3, ${endY.toFixed(2)})`, endPixelX + 60, endPixelY - 20);
+                //ctx.fillText(`(-2, ${startY.toFixed(2)})`, startPixelX - 60, startPixelY - 20);
+                //ctx.fillText(`(3, ${endY.toFixed(2)})`, endPixelX + 60, endPixelY - 20);
                 
                 // Draw domain boundaries
                 ctx.strokeStyle = 'rgba(225, 65, 65, 0.4)';
@@ -1486,8 +1527,6 @@
                 ctx.stroke();
                 
                 ctx.setLineDash([]);
-                
-
             }
             
             // Draw vertical line from slider
@@ -1512,9 +1551,6 @@
                 ctx.beginPath();
                 ctx.arc(pixelX, pixelY, 4, 0, Math.PI * 2);
                 ctx.fill();
-                
-                // Draw coordinates
-
                 
                 // Update vertical test result
                 verticalTestResult.textContent = '✓ Fonksiyon';
@@ -1562,9 +1598,6 @@
                     ctx.beginPath();
                     ctx.arc(pixelX, pixelY, 4, 0, Math.PI * 2);
                     ctx.fill();
-                    
-                    // Draw coordinates
-
                 }
             }
             
@@ -1824,9 +1857,9 @@
                 
                 // Puanları göster
                 basicScoreElement.textContent = `${basicQuestionScore}/10`;
-                propertiesScoreElement.textContent = `${propertiesScore}/15`;
-                totalScoreElement.textContent = `${totalScore}/25`;
-                finalScoreElement.textContent = `${totalScore}/25`;
+                propertiesScoreElement.textContent = `${propertiesScore}/20`;
+                totalScoreElement.textContent = `${totalScore}/30`;
+                finalScoreElement.textContent = `${totalScore}/30`;
                 
                 // Sonuç mesajını belirle
                 if (totalScore >= 23) {
@@ -1850,7 +1883,6 @@
                 // Butonu göster
                 nextExamButton.style.display = 'block';
             }
-            
 		function sinavBitir(puan) {
                     // Mevcut sınavın puanını kaydet
                     sessionStorage.setItem("sinav5", puan);
@@ -1858,25 +1890,12 @@
                     // Bir sonraki sınava yönlendir
                     window.location.href = "result.html";
                 }
-		 window.onload = function () {
-     	 // Sınav tamamlandıysa sonuç sayfasına yönlendir
-     	 	if (localStorage.getItem('sinavTamamlandi') === 'true') {
-       		 window.location.href = 'result.html';
-     		 }
-     		 // Geri tuşu engelleme
-     		 window.history.pushState(null, null, window.location.href);
-     		 window.onpopstate = function () {
-       		 window.location.href = 'result.html';
-     			 };
-  		 };
+
             // Sınavı tamamla butonu (özellikler bölümü)
             nextPropertiesButton.addEventListener('click', showExamResult);
             
             // Sınavı tamamla butonu (sonuç bölümü)
             nextExamButton.addEventListener('click', function() {
-                // Sınav tamamlandığında çalışacak fonksiyon
-                
-                
                 sinavBitir(totalScore);
             });
         });

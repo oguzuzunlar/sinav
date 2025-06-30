@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script>
+  	// Sınav başladığında çalıştır
+  	sessionStorage.setItem('sinav_aktif', 'evet');
+
+  	// Sınav bittiyse çalıştır
+  	// sessionStorage.removeItem('sinav_aktif');
+
+  	// Her sayfa açıldığında kontrol et
+  	if (sessionStorage.getItem('sinav_aktif') !== 'evet') {
+      	// Sınava izinsiz giriş => yönlendir
+     	 window.location.href = "giris.html"; // veya ana sayfa
+  	}
+	</script>
+
     <style>
         * {
             margin: 0;
@@ -81,8 +95,8 @@
         
         .math {
             font-weight: bold;
-            font-size: 1.4rem;
-            color: #8257d2;
+            font-size: 1.2rem;
+            color: #FFD700;
         }
         
         .content {
@@ -791,6 +805,12 @@
     </style>
 </head>
 <body>
+	<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function(event) {
+    	history.go(1);
+	};
+	</script>
     <div class="container">
         <header>
             <div class="logo">
@@ -804,8 +824,8 @@
                 <span><i class="fas fa-star"></i> Toplam 25 Puan</span>
             </div>
             <div class="relation-info">
-                <p>Grafikte verilen \( \mathrm{\mathbb{R} \to \mathbb{R} }\) tanımlı \(\mathrm{ f(x) = 2x-3 }\)
-                bağıntısının özelliklerini inceleyeceğiz ve fonksiyon olup olmadığını test edeceğiz.</p>
+                <p>Grafikte verilen <span class='math'>\( \mathrm{\mathbb{R} \to \mathbb{R} }\)</span> tanımlı <span class='math'>\(\mathrm{ f(x) = 2x-3 }\)</span>
+                bağıntısının fonksiyon olup olmadığını inceleyeceğiz.</p>
             </div>
         </header>
         
@@ -861,14 +881,18 @@
                 </div>
                 
                 <div class="feedback incorrect">
-                    <i class="fas fa-times-circle"></i> Yanlış cevap. Lütfen tekrar deneyin.
+                    <i class="fas fa-times-circle"></i> Yanlış cevap. \( y = 2x-3 \) ifadesi bir fonksiyondur çünkü:<br><br>
+                    - Her x değeri için tam olarak bir y değeri vardır<br>
+                    - Düşey doğru testini geçer (her dikey çizgi grafiği sadece bir noktada keser)<br>
+                    - Tanım kümesindeki her eleman, değer kümesinde yalnızca bir elemanla eşleşir<br><br>
+                    Lütfen fonksiyon tanımını tekrar gözden geçirin ve sınava devam edin.
                 </div>
                 
                 <div class="buttons">
                     <button class="btn btn-check" id="check-main">
                         <i class="fas fa-check"></i> Kontrol Et
                     </button>
-                    <button class="btn" id="continue-btn" disabled>
+                    <button class="btn btn-next" id="continue-btn" disabled>
                         <i class="fas fa-arrow-right"></i> Sınava Devam Et
                     </button>
                 </div>
@@ -1231,8 +1255,15 @@
                     ctx.stroke();
                 }
                 
-                // Orijin etiketi (0,0)
-                ctx.fillText('0', originX + 5, originY + 20);
+                ctx.fillStyle = '#000000'; // Turuncu renk
+    ctx.beginPath();
+    ctx.arc(originX, originY, 5, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Orijin etiketi "O" harfi
+    ctx.fillStyle = '#1a2a6c';
+    ctx.font = 'bold 20px Arial';
+    ctx.fillText('O', originX + 8, originY + 15);
             }
             
             function drawFunction() {
@@ -1259,7 +1290,7 @@
                 
                 ctx.stroke();
                 
-                // Fonksiyonun sıfır noktasını işaretle (x = 1.5)
+                // Fonksiyonun sıfır noktasını işaretle (x = 1,5)
                 const zeroX = originX + 1.5 * scale;
                 const zeroY = originY - 0 * scale;
                 ctx.fillStyle = '#b21f1f';
@@ -1270,7 +1301,7 @@
                 // Sıfır noktası etiketi
                 ctx.fillStyle = '#b21f1f';
                 ctx.font = 'bold 14px Arial';
-                ctx.fillText('Sıfır Noktası (1.5, 0)', zeroX + 10, zeroY - 10);
+                ctx.fillText('Sıfır Noktası (1,5, 0)', zeroX + 10, zeroY - 10);
             }
             
             function drawVerticalLine() {
@@ -1624,17 +1655,7 @@
                 window.location.href = "exam3.html";
             }
             
-		window.onload = function () {
-     	 // Sınav tamamlandıysa sonuç sayfasına yönlendir
-     	 	if (localStorage.getItem('sinavTamamlandi') === 'true') {
-       		 window.location.href = 'result.html';
-     		 }
-     		 // Geri tuşu engelleme
-     		 window.history.pushState(null, null, window.location.href);
-     		 window.onpopstate = function () {
-       		 window.location.href = 'result.html';
-     			 };
-  		 };
+
             // Nasıl Kullanılır Modal İşlevselliği
             howToBtn.addEventListener('click', function() {
                 howToModal.style.display = 'flex';
@@ -1669,6 +1690,8 @@
                 }
             });
         });
+
+
     </script>
 </body>
 </html>
