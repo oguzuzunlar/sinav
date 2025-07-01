@@ -1292,7 +1292,7 @@ function drawGrid() {
     ctx.font = 'bold 16px Arial';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'top';
-    ctx.fillText('O', originX - 8, originY + 8);
+    ctx.fillText('O', originX - 2, originY + 4);
 	    // X ekseni etiketi (sağ üst)
     ctx.fillStyle = '#1a2a6c';
     ctx.font = 'bold 16px Arial';
@@ -1343,7 +1343,7 @@ function drawGrid() {
                 // Sıfır noktası etiketi
                 ctx.fillStyle = '#b21f1f';
                 ctx.font = 'bold 18px Arial';
-                ctx.fillText('Sıfır Noktası (1,5, 0)', zeroX + 65, zeroY - 20);
+                ctx.fillText('(1,5, 0)', zeroX + 65, zeroY - 20);
             }
             
             function drawVerticalLine() {
