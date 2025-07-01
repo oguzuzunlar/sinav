@@ -188,27 +188,6 @@
             transition: all 0.3s ease;
         }
         
-        .geogebra-btn {
-            background: linear-gradient(to right, #1a6c2a, #3ac55f);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s ease;
-            margin-right: 10px;
-        }
-        
-        .geogebra-btn:hover {
-            background: linear-gradient(to right, #0d4d1b, #2abd4b);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
         .how-to-btn:hover {
             background: linear-gradient(to right, #0d1b4d, #2a4bbd);
             transform: translateY(-2px);
@@ -702,11 +681,6 @@
                 align-items: flex-start;
             }
             
-            .geogebra-btn {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-            
             .result-buttons {
                 flex-direction: column;
                 align-items: center;
@@ -910,7 +884,7 @@
                 const height = canvas.height;
                 const padding = 0;
                 const scale = 40;
-                const xSliderValue = parseFloat(slider.value);
+                const xSliderValue = parseFloat(slider.value.replace(',', '.'));
                 
                 // Temizle
                 ctx.clearRect(0, 0, width, height);
@@ -977,34 +951,33 @@
 
                 ctx.stroke();
                 
-                // Eksen etiketleri
-                ctx.fillStyle = '#333';
-                ctx.font = '14px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                
-                // X ekseni etiketleri
-                for (let x = -5; x <= 5; x++) {
-                    if (x === 0) continue;
-                    const xPos = width / 2 + x * scale;
-                    ctx.fillText(x, xPos, height / 2 + 20);
-                    ctx.beginPath();
-                    ctx.moveTo(xPos, height / 2 - 5);
-                    ctx.lineTo(xPos, height / 2 + 5);
-                    ctx.stroke();
-                }
-                
-                // Y ekseni etiketleri
-                for (let y = -4; y <= 4; y++) {
-                    if (y === 0) continue;
-                    if (y === 4) continue;
-                    const yPos = height / 2 - y * scale;
-                    ctx.fillText(y, width / 2 - 20, yPos);
-                    ctx.beginPath();
-                    ctx.moveTo(width / 2 - 5, yPos);
-                    ctx.lineTo(width / 2 + 5, yPos);
-                    ctx.stroke();
-                }
+                 // Eksen etiketleri
+		ctx.fillStyle = '#333';
+		ctx.font = '14px Arial';
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+
+		// X ekseni etiketleri (nokta şeklinde)
+		for (let x = -5; x <= 5; x++) {
+    		if (x === 0) continue;
+    		const xPos = width / 2 + x * scale;
+    		ctx.fillText(x, xPos, height / 2 + 20);
+    		ctx.beginPath();
+    		ctx.fillStyle = '#333';
+    		ctx.arc(xPos, height / 2, 3, 0, Math.PI * 2);
+    		ctx.fill();
+		}
+
+		// Y ekseni etiketleri (nokta şeklinde)
+		for (let y = -4; y <= 4; y++) {
+    		if (y === 0) continue;
+    		const yPos = height / 2 - y * scale;
+    		ctx.fillText(y, width / 2 - 20, yPos);
+    		ctx.beginPath();
+    		ctx.fillStyle = '#333';
+    		ctx.arc(width / 2, yPos, 3, 0, Math.PI * 2);
+    		ctx.fill();
+		}
                 
                 // Orijin noktasına belirgin bir işaret koy
                 ctx.beginPath();
@@ -1072,7 +1045,7 @@
             
             // Kaydırıcı olayları
             slider.addEventListener('input', function() {
-                sliderValue.textContent = this.value;
+                sliderValue.textContent = this.value.replace('.', ',');
                 drawGraph();
             });
             

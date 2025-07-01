@@ -1408,29 +1408,31 @@
                 ctx.textBaseline = 'middle';
                 
                 // X-axis labels (with comma for decimal separator)
-                for (let x = -3; x <= 4; x++) {
+                for (let x = -2; x <= 3; x++) {
                     if (x === 0) continue;
                     const pixelX = toPixelX(x);
                     ctx.fillText(x.toString().replace('.', ','), pixelX, originY + 20);
                     
-                    // Add small tick marks
-                    ctx.beginPath();
-                    ctx.moveTo(pixelX, originY - 5);
-                    ctx.lineTo(pixelX, originY + 5);
-                    ctx.stroke();
+        		// Çizgi yerine nokta çiz
+        		ctx.fillStyle = AXIS_COLOR;
+        		ctx.beginPath();
+        		ctx.arc(pixelX, originY, 3, 0, Math.PI * 2);
+        		ctx.fill();
                 }
                 
                 // Y-axis labels (with comma for decimal separator)
                 for (let y = MIN_Y; y <= MAX_Y; y++) {
                     if (y === 0) continue;
+		     if (y === 2) continue;
+		     if (y ===-6) continue;
                     const pixelY = toPixelY(y);
                     ctx.fillText(y.toString().replace('.', ','), originX + 20, pixelY);
                     
-                    // Add small tick marks
-                    ctx.beginPath();
-                    ctx.moveTo(originX - 5, pixelY);
-                    ctx.lineTo(originX + 5, pixelY);
-                    ctx.stroke();
+        		// Çizgi yerine nokta çiz
+        		ctx.fillStyle = AXIS_COLOR;
+        		ctx.beginPath();
+        		ctx.arc(originX, pixelY, 3, 0, Math.PI * 2);
+        		ctx.fill();
                 }
                 
                 // Origin label - 20px boyutunda
