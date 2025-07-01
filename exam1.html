@@ -7,19 +7,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-	<script>
-  	// Sınav başladığında çalıştır
-  	sessionStorage.setItem('sinav_aktif', 'evet');
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      }
+    };
+    
+    // Sınav başladığında çalıştır
+    sessionStorage.setItem('sinav_aktif', 'evet');
 
-  	// Sınav bittiyse çalıştır
-  	// sessionStorage.removeItem('sinav_aktif');
+    // Sınav bittiyse çalıştır
+    // sessionStorage.removeItem('sinav_aktif');
 
-  	// Her sayfa açıldığında kontrol et
-  	if (sessionStorage.getItem('sinav_aktif') !== 'evet') {
-      	// Sınava izinsiz giriş => yönlendir
-     	 window.location.href = "giris.html"; // veya ana sayfa
-  	}
-	</script>
+    // Her sayfa açıldığında kontrol et
+    if (sessionStorage.getItem('sinav_aktif') !== 'evet') {
+        if (confirm('Sınava giriş izniniz yok. Ana sayfaya yönlendirileceksiniz.')) {
+            window.location.href = "giris.html";
+        }
+    }
+    </script>
 
     <style>
         * {
@@ -48,7 +56,18 @@
             overflow: hidden;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
-        
+            .function-display {
+            text-align: center;
+            font-size: 1.4rem;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f0f7ff;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+	
+	
         header {
             background: linear-gradient(to right, #1a2a6c, #b21f1f);
             color: white;
@@ -707,6 +726,7 @@
         .options.disabled .option {
             cursor: not-allowed;
             opacity: 0.7;
+            pointer-events: none;
         }
         
         /* Doğru cevabı vurgulama */
@@ -718,12 +738,12 @@
     </style>
 </head>
 <body>
-	<script>
-	history.pushState(null, null, location.href);
-	window.onpopstate = function(event) {
-    	history.go(1);
-	};
-	</script>
+    <script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function(event) {
+        history.go(1);
+    };
+    </script>
     <div class="container">
         <header>
             <div class="logo">
@@ -747,23 +767,25 @@
                 <div class="canvas-header">
                     <h3><i class="fas fa-chart-line"></i> İnteraktif Uygulama</h3>
                     <div>
-                        <button class="how-to-btn" id="how-to-btn">
+                        <button class="how-to-btn" id="how-to-btn" aria-label="Nasıl kullanılır açıklamasını göster">
                             <i class="fas fa-question-circle"></i> Nasıl Kullanılır?
                         </button>
                     </div>
                 </div>
+		<div class="function-display">
                 <p>\( \mathrm{x = y^2} \) Bağıntısı ve Düşey Doğru Testi</p>
+		</div>
                 <div class="graph-wrapper">
-                    <canvas id="graph-canvas"></canvas>
+                    <canvas id="graph-canvas" aria-label="x = y^2 grafiği ve düşey doğru testi uygulaması"></canvas>
                 </div>
                 
                 <div class="controls">
                     <div class="slider-container">
                         <span class="slider-label">x =</span>
-                        <input type="range" min="-1" max="10" step="0.1" value="0" class="vertical-slider" id="vertical-slider">
+                        <input type="range" min="-1" max="10" step="0.1" value="0" class="vertical-slider" id="vertical-slider" aria-label="Düşey doğru pozisyonu ayarı">
                         <span class="slider-label" id="slider-value">0</span>
                     </div>
-                    <button class="reset-btn" id="reset-btn">
+                    <button class="reset-btn" id="reset-btn" aria-label="Düşey doğruyu sıfırla">
                         <i class="fas fa-sync-alt"></i> Sıfırla
                     </button>
                 </div>
@@ -802,10 +824,10 @@
                 </div>
                 
                 <div class="buttons">
-                    <button class="btn btn-check" id="check-btn">
+                    <button class="btn btn-check" id="check-btn" aria-label="Cevabı kontrol et">
                         <i class="fas fa-check"></i> Cevabı Kontrol Et
                     </button>
-                    <button class="btn btn-next" id="next-btn" disabled>
+                    <button class="btn btn-next" id="next-btn" disabled aria-label="Sonraki adıma geç">
                         <i class="fas fa-arrow-right"></i> 1.Soruyu Tamamla
                     </button>
                 </div>
@@ -839,7 +861,7 @@
                 </div>
                 
                 <div class="result-buttons">
-                    <button class="next-exam-btn" id="next-exam-btn">
+                    <button class="next-exam-btn" id="next-exam-btn" aria-label="2. soruya geç">
                         <i class="fas fa-arrow-right"></i> 2. Soruya Geç
                     </button>
                 </div>
@@ -856,16 +878,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-question-circle"></i> Nasıl Kullanılır?</h2>
-                <button class="close-modal" id="close-modal">&times;</button>
+                <button class="close-modal" id="close-modal" aria-label="Modal penceresini kapat">&times;</button>
             </div>
             <div class="modal-instructions">
                 <h3>Düşey Doğru Testi Nasıl Uygulanır?</h3>
                 <ol>
                     <li><strong>Kaydırıcıyı</strong> sağa ve sola hareket ettirerek düşey doğruyu kontrol edin</li>
                     <li>Düşey doğrunun (kırmızı çizgi) grafiği kaç noktada kestiğine dikkat edin</li>
-                    <li><strong>Bir x değeri için birden fazla y değeri</strong> varsa fonksiyon değildir</li>
-                    <li><strong>Her x değeri için en fazla bir y değeri</strong> varsa fonksiyondur</li>
-                    <li>Özellikle pozitif x değerlerinde (sağ tarafta) kesişim noktalarını gözlemleyin</li>
                 </ol>
                 
                 <div class="modal-tip">
@@ -888,187 +907,206 @@
             
             // Canvas boyutlarını ayarla
             function resizeCanvas() {
-                const container = canvas.parentElement;
-                canvas.width = container.clientWidth;
-                canvas.height = 400;
-                drawGraph();
+                try {
+                    const container = canvas.parentElement;
+                    canvas.width = container.clientWidth;
+                    canvas.height = 400;
+                    drawGraph();
+                } catch (error) {
+                    console.error('Canvas boyutlandırma hatası:', error);
+                }
             }
             
             // Grafik çizim fonksiyonu
             function drawGraph() {
-                const width = canvas.width;
-                const height = canvas.height;
-                const padding = 40;
-                const scale = 40;
-                const xSliderValue = parseFloat(slider.value);
-                
-                // Temizle
-                ctx.clearRect(0, 0, width, height);
-                
-                // Arka plan
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, width, height);
-                
-                // Izgara çizgileri
-                ctx.strokeStyle = '#f0f0f0';
-                ctx.lineWidth = 1;
-                
-                // Yatay çizgiler
-                for (let y = padding; y < height - padding; y += scale) {
-                    ctx.beginPath();
-                    ctx.moveTo(padding, y);
-                    ctx.lineTo(width - padding, y);
-                    ctx.stroke();
-                }
-                
-                // Dikey çizgiler
-                for (let x = padding; x < width - padding; x += scale) {
-                    ctx.beginPath();
-                    ctx.moveTo(x, padding);
-                    ctx.lineTo(x, height - padding);
-                    ctx.stroke();
-                }
-                
-                // Koordinat eksenleri
-                ctx.beginPath();
-                ctx.strokeStyle = '#333';
-                ctx.lineWidth = 1.5;
-                
-                // X ekseni
-                ctx.moveTo(padding, height / 2);
-                ctx.lineTo(width - padding, height / 2);
-                
-                // Y ekseni
-                ctx.moveTo(width / 2, padding);
-                ctx.lineTo(width / 2, height - padding);
-                
-                // Ok uçları
-                // X ekseni ok
-                ctx.moveTo(width - padding, height / 2);
-                ctx.lineTo(width - padding - 10, height / 2 - 5);
-                ctx.moveTo(width - padding, height / 2);
-                ctx.lineTo(width - padding - 10, height / 2 + 5);
-                
-                // Y ekseni ok
-                ctx.moveTo(width / 2, padding);
-                ctx.lineTo(width / 2 - 5, padding + 10);
-                ctx.moveTo(width / 2, padding);
-                ctx.lineTo(width / 2 + 5, padding + 10);
-                
-                ctx.stroke();
-                
-                // Eksen etiketleri
-                ctx.fillStyle = '#333';
-                ctx.font = '14px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                
-                // X ekseni etiketleri
-                for (let x = -5; x <= 10; x++) {
-                    if (x === 0) continue;
-                    const xPos = width / 2 + x * scale;
-                    ctx.fillText(x, xPos, height / 2 + 20);
-                    ctx.beginPath();
-                    ctx.moveTo(xPos, height / 2 - 5);
-                    ctx.lineTo(xPos, height / 2 + 5);
-                    ctx.stroke();
-                }
-                
-                // Y ekseni etiketleri
-                for (let y = -5; y <= 5; y++) {
-                    if (y === 0) continue;
-                    const yPos = height / 2 - y * scale;
-                    ctx.fillText(y, width / 2 - 20, yPos);
-                    ctx.beginPath();
-                    ctx.moveTo(width / 2 - 5, yPos);
-                    ctx.lineTo(width / 2 + 5, yPos);
-                    ctx.stroke();
-                }
-                
-                // Orijin noktasına belirgin bir işaret koy
-                ctx.beginPath();
-                ctx.fillStyle = '#1a2a6c';
-                ctx.arc(width / 2, height / 2, 4, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // "O" etiketi
-                ctx.fillStyle = '#1a2a6c';
-                ctx.font = 'bold 16px Arial';
-                ctx.textAlign = 'right';
-                ctx.textBaseline = 'top';
-                ctx.fillText('O', width / 2 - 8, height / 2 + 8);
-                
-                // Parabol grafiği (x = y^2)
-                ctx.beginPath();
-                ctx.strokeStyle = '#1a2a6c';
-                ctx.lineWidth = 2.5;
-                
-                // Parabolün çizimi
-                for (let y = -5; y <= 5; y += 0.05) {
-                    const x = y * y;
-                    if (x > 10) continue;
+                try {
+                    const width = canvas.width;
+                    const height = canvas.height;
+                    const padding = 2;
+                    const scale = 40;
+                    const xSliderValue = parseFloat(slider.value);
                     
-                    const plotX = width / 2 + x * scale;
-                    const plotY = height / 2 - y * scale;
+                    // Temizle
+                    ctx.clearRect(0, 0, width, height);
                     
-                    if (y === -5) {
-                        ctx.moveTo(plotX, plotY);
-                    } else {
-                        ctx.lineTo(plotX, plotY);
+                    // Arka plan
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
+                    
+                    // Izgara çizgileri
+                    ctx.strokeStyle = '#f0f0f0';
+                    ctx.lineWidth = 1;
+                    
+                    // Yatay çizgiler
+                    for (let y = padding; y < height - padding; y += scale) {
+                        ctx.beginPath();
+                        ctx.moveTo(padding, y);
+                        ctx.lineTo(width - padding, y);
+                        ctx.stroke();
                     }
-                }
-                ctx.stroke();
-                
-                // Düşey doğru (x = c)
-                ctx.beginPath();
-                ctx.strokeStyle = '#b21f1f';
-                ctx.lineWidth = 2;
-                ctx.setLineDash([5, 5]);
-                
-                const lineX = width / 2 + xSliderValue * scale;
-                ctx.moveTo(lineX, padding);
-                ctx.lineTo(lineX, height - padding);
-                ctx.stroke();
-                ctx.setLineDash([]);
-                
-                // Kesişim noktalarını hesapla ve çiz
-                let count = 0;
-                
-                if (xSliderValue >= 0) {
-                    const y1 = Math.sqrt(xSliderValue);
-                    const y2 = -Math.sqrt(xSliderValue);
                     
-                    // Pozitif y noktası
-                    const plotX1 = width / 2 + xSliderValue * scale;
-                    const plotY1 = height / 2 - y1 * scale;
-                    drawIntersectionPoint(plotX1, plotY1);
-                    count++;
-                    
-                    // Negatif y noktası (x>0 ise)
-                    if (xSliderValue > 0) {
-                        const plotX2 = width / 2 + xSliderValue * scale;
-                        const plotY2 = height / 2 - y2 * scale;
-                        drawIntersectionPoint(plotX2, plotY2);
-                        count++;
+                    // Dikey çizgiler
+                    for (let x = padding; x < width - padding; x += scale) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, padding);
+                        ctx.lineTo(x, height - padding);
+                        ctx.stroke();
                     }
-                }
-                
-                // Kesişim bilgilerini güncelle
-                currentX.textContent = xSliderValue;
-                intersectionCount.textContent = count;
-                
-                // Kesişim noktası çizim fonksiyonu
-                function drawIntersectionPoint(x, y) {
+                    
+                    // Koordinat eksenleri
                     ctx.beginPath();
-                    ctx.fillStyle = '#d9534f';
-                    ctx.arc(x, y, 6, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 1.5;
+                    
+                    // X ekseni
+                    ctx.moveTo(padding, height / 2);
+                    ctx.lineTo(width - padding, height / 2);
+                    
+                    // Y ekseni
+                    ctx.moveTo(width / 2, padding);
+                    ctx.lineTo(width / 2, height - padding);
+                    
+                    // Ok uçları
+                    // X ekseni sağ ok
+                    ctx.moveTo(width - padding, height / 2);
+                    ctx.lineTo(width - padding - 10, height / 2 - 5);
+                    ctx.moveTo(width - padding, height / 2);
+                    ctx.lineTo(width - padding - 10, height / 2 + 5);
+                    
+                    // X ekseni sol ok
+                    ctx.moveTo(padding, height / 2);
+                    ctx.lineTo(padding + 10, height / 2 - 5);
+                    ctx.moveTo(padding, height / 2);
+                    ctx.lineTo(padding + 10, height / 2 + 5);
+                    
+                    // Y ekseni üst ok
+                    ctx.moveTo(width / 2, padding);
+                    ctx.lineTo(width / 2 - 5, padding + 10);
+                    ctx.moveTo(width / 2, padding);
+                    ctx.lineTo(width / 2 + 5, padding + 10);
+                    
+                    // Y ekseni alt ok
+                    ctx.moveTo(width / 2, height - padding);
+                    ctx.lineTo(width / 2 - 5, height - padding - 10);
+                    ctx.moveTo(width / 2, height - padding);
+                    ctx.lineTo(width / 2 + 5, height - padding - 10);
+                    
+                    ctx.stroke();
+                    
+                    // Eksen etiketleri
+                    ctx.fillStyle = '#1a2a6c';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    // X ekseni etiketleri
+                    for (let x = -8; x <= 8; x++) {
+                        if (x === 0) continue;
+                        const xPos = width / 2 + x * scale;
+                        ctx.fillText(x.toString(), xPos, height / 2 + 20);
+                        ctx.beginPath();
+                        ctx.arc(xPos, height / 2, 3, 0, Math.PI * 2); 
+                        ctx.fill();
+                    }
+                    
+                    // Y ekseni etiketleri
+                    ctx.fillStyle = '#1a2a6c';
+                    for (let y = -4; y <= 4; y++) {
+                        if (y === 0) continue;
+                        const yPos = height / 2 - y * scale;
+                        ctx.fillText(y.toString(), width / 2 - 20, yPos);
+                        ctx.beginPath();
+                        ctx.arc(width / 2, yPos, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    
+                    // Orijin noktasına belirgin bir işaret koy
+                    ctx.beginPath();
+                    ctx.fillStyle = '#1a2a6c';
+                    ctx.arc(width / 2, height / 2, 4, 0, Math.PI * 2);
                     ctx.fill();
+                    
+                    // "O" etiketi
+                    ctx.fillStyle = '#1a2a6c';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText('O', width / 2 - 8, height / 2 + 8);
+                    
+                    // Parabol grafiği (x = y^2)
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#1a2a6c';
+                    ctx.lineWidth = 2.5;
+                    
+                    // Parabolün çizimi
+                    for (let y = -5; y <= 5; y += 0.05) {
+                        const x = y * y;
+                        if (x > 10) continue;
+                        
+                        const plotX = width / 2 + x * scale;
+                        const plotY = height / 2 - y * scale;
+                        
+                        if (y === -5) {
+                            ctx.moveTo(plotX, plotY);
+                        } else {
+                            ctx.lineTo(plotX, plotY);
+                        }
+                    }
+                    ctx.stroke();
+                    
+                    // Düşey doğru (x = c)
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#b21f1f';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    
+                    const lineX = width / 2 + xSliderValue * scale;
+                    ctx.moveTo(lineX, padding);
+                    ctx.lineTo(lineX, height - padding);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    // Kesişim noktalarını hesapla ve çiz
+                    let count = 0;
+                    
+                    if (xSliderValue >= 0) {
+                        const y1 = Math.sqrt(xSliderValue);
+                        const y2 = -Math.sqrt(xSliderValue);
+                        
+                        // Pozitif y noktası
+                        const plotX1 = width / 2 + xSliderValue * scale;
+                        const plotY1 = height / 2 - y1 * scale;
+                        drawIntersectionPoint(plotX1, plotY1);
+                        count++;
+                        
+                        // Negatif y noktası (x>0 ise)
+                        if (xSliderValue > 0) {
+                            const plotX2 = width / 2 + xSliderValue * scale;
+                            const plotY2 = height / 2 - y2 * scale;
+                            drawIntersectionPoint(plotX2, plotY2);
+                            count++;
+                        }
+                    }
+                    
+                    // Kesişim bilgilerini güncelle
+                    currentX.textContent = parseFloat(xSliderValue).toLocaleString('tr-TR');
+                    intersectionCount.textContent = count;
+                    
+                    // Kesişim noktası çizim fonksiyonu
+                    function drawIntersectionPoint(x, y) {
+                        ctx.beginPath();
+                        ctx.fillStyle = '#d9534f';
+                        ctx.arc(x, y, 6, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                } catch (error) {
+                    console.error('Grafik çizim hatası:', error);
                 }
             }
             
             // Kaydırıcı olayları
             slider.addEventListener('input', function() {
-                sliderValue.textContent = this.value;
+                sliderValue.textContent = parseFloat(this.value).toLocaleString('tr-TR');
                 drawGraph();
             });
             
@@ -1080,7 +1118,9 @@
             });
             
             // Pencere boyutu değiştiğinde canvas'ı yeniden boyutlandır
-            window.addEventListener('resize', resizeCanvas);
+            window.addEventListener('resize', function() {
+                requestAnimationFrame(resizeCanvas);
+            });
             
             // Başlangıçta canvas boyutunu ayarla ve grafiği çiz
             resizeCanvas();
@@ -1119,12 +1159,22 @@
                     
                     // Cevapları Kontrol Et butonunu aktifleştir
                     checkButton.disabled = false;
+                    checkButton.innerHTML = '<i class="fas fa-check"></i> Cevabı Kontrol Et';
+                    checkButton.style.background = 'linear-gradient(to right, #1a2a6c, #3a5fc5)';
                 });
             });
             
             // Cevapları Kontrol Et butonu
             checkButton.addEventListener('click', function() {
                 if (selectedOption === null) return;
+                
+                // Seçenekleri devre dışı bırak
+                optionsContainer.classList.add('disabled');
+                options.forEach(opt => {
+                    opt.style.cursor = 'not-allowed';
+                    opt.style.opacity = '0.7';
+                    opt.style.pointerEvents = 'none';
+                });
                 
                 // Feedback'leri gizle
                 feedback.forEach(fb => fb.style.display = 'none');
@@ -1184,8 +1234,7 @@
             // Sonraki sınava geçiş butonu
             nextExamButton.addEventListener('click', function() {
                 sessionStorage.setItem("sinav1", totalScore);
-                
-                 window.location.href = "exam2.html"; // Gerçek uygulamada bu satır aktif olmalı
+                window.location.href = "exam2.html";
             });
             
             // Nasıl Kullanılır Modal İşlevselliği
@@ -1196,17 +1245,20 @@
             // Modal açma
             howToBtn.addEventListener('click', function() {
                 howToModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
             });
             
             // Modal kapatma
             closeModal.addEventListener('click', function() {
                 howToModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
             });
             
             // Modal dışına tıklayarak kapatma
             window.addEventListener('click', function(event) {
                 if (event.target === howToModal) {
                     howToModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
                 }
             });
             
@@ -1214,6 +1266,7 @@
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
                     howToModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
                 }
             });
         });

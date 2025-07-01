@@ -691,69 +691,6 @@
             border: 1px solid #f5c6cb;
         }
         
-        /* Responsive tasarım için medya sorguları */
-        @media (max-width: 768px) {
-            .graph-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .graph-header .btn-group {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .graph-header h3 {
-                text-align: center;
-            }
-            
-            .instructions ol {
-                padding-left: 15px;
-            }
-            
-            .property-card {
-                min-width: 100%;
-            }
-            
-            .buttons {
-                flex-direction: column;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .module-info {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .graph-header .btn-group {
-                flex-direction: column;
-            }
-            
-            .how-to-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            /* Optimize grid for mobile */
-            .graph-area {
-                padding: 0;
-            }
-            
-            .canvas-wrapper {
-                aspect-ratio: 1/1;
-            }
-            
-            .function-display {
-                font-size: 1.1rem;
-                padding: 10px;
-            }
-            
-            .slider-label {
-                font-size: 0.9rem;
-            }
-        }
-        
         /* Yeni eklenen buton stili */
         .next-exam-btn {
             display: none;
@@ -871,7 +808,7 @@
                 <div class="slider-container">
                     <div class="slider-label">
                         <span><i class="fas fa-arrows-alt-v"></i> Düşey Doğru Konumu:</span>
-                        <span id="vertical-slider-value">x = 2.00</span>
+                        <span id="vertical-slider-value">x = 2,00</span>
                     </div>
                     <input type="range" min="-3" max="7" step="0.01" value="2" class="slider" id="vertical-slider">
                 </div>
@@ -879,7 +816,7 @@
                 <div class="slider-container">
                     <div class="slider-label">
                         <span><i class="fas fa-arrows-alt-h"></i> Yatay Doğru Konumu:</span>
-                        <span id="horizontal-slider-value">y = 0.00</span>
+                        <span id="horizontal-slider-value">y = 0,00</span>
                     </div>
                     <input type="range" min="-5" max="5" step="0.01" value="0" class="slider" id="horizontal-slider">
                 </div>
@@ -905,16 +842,16 @@
                         <h4><i class="fas fa-calculator"></i> Tanım Kümesi</h4>
                         <p>Fonksiyonun tanımlı olduğu x değerleri hangi aralıktadır?</p>
                         <div class="options">
-                            <div class="option" data-value="reel">Tüm reel sayılar</div>
+                            <div class="option" data-value="reel">Reel sayılar</div>
                             <div class="option" data-value="positive">Pozitif reel sayılar</div>
                             <div class="option" data-value="negative">Negatif reel sayılar</div>
                             <div class="option" data-value="interval">[0, ∞)</div>
                         </div>
                         <div class="feedback correct">
-                            <i class="fas fa-check-circle"></i> Doğru! Tanım kümesi tüm reel sayılardır.
+                            <i class="fas fa-check-circle"></i> Doğru! Tanım kümesi Reel sayılardır.
                         </div>
                         <div class="feedback incorrect">
-                            <i class="fas fa-times-circle"></i> Yanlış. Karesel fonksiyonlar tüm reel sayılarda tanımlıdır.
+                            <i class="fas fa-times-circle"></i> Yanlış. Karesel fonksiyonlar Reel sayılarda tanımlıdır.
                         </div>
                     </div>
                     
@@ -924,7 +861,7 @@
                         <h4><i class="fas fa-chart-bar"></i> Görüntü Kümesi</h4>
                         <p>Fonksiyonun alabileceği y değerleri hangi aralıktadır?</p>
                         <div class="options">
-                            <div class="option" data-value="reel">Tüm reel sayılar</div>
+                            <div class="option" data-value="reel">Reel sayılar</div>
                             <div class="option" data-value="positive">Pozitif reel sayılar</div>
                             <div class="option" data-value="interval">[-1, ∞)</div>
                             <div class="option" data-value="negative">(-∞, 0]</div>
@@ -981,8 +918,8 @@
                         <h4><i class="fas fa-arrow-up"></i> Artan/Azalan Aralıklar</h4>
                         <p>Fonksiyon hangi aralıklarda artan/azalandır?</p>
                         <div class="options">
-                            <div class="option" data-value="artan">Tüm tanım kümesinde artan</div>
-                            <div class="option" data-value="azalan">Tüm tanım kümesinde azalan</div>
+                            <div class="option" data-value="artan">Tanım kümesinde artan</div>
+                            <div class="option" data-value="azalan">Tanım kümesinde azalan</div>
                             <div class="option" data-value="kismi">(-∞, 2] azalan, [2, ∞) artan</div>
                             <div class="option" data-value="sabit">Sabit</div>
                         </div>
@@ -1001,8 +938,8 @@
                         <p>Fonksiyon hangi aralıklarda pozitif/negatiftir?</p>
                         <div class="options">
                             <div class="option" data-value="poz-neg">(-∞, 1) ve (3, ∞) pozitif, (1, 3) negatif</div>
-                            <div class="option" data-value="poz">Tüm tanım kümesinde pozitif</div>
-                            <div class="option" data-value="neg">Tüm tanım kümesinde negatif</div>
+                            <div class="option" data-value="poz">Tanım kümesinde pozitif</div>
+                            <div class="option" data-value="neg">Tanım kümesinde negatif</div>
                             <div class="option" data-value="neg-poz">(-∞, 0)'da negatif, (0, ∞)'da pozitif</div>
                         </div>
                         <div class="feedback correct">
@@ -1058,7 +995,7 @@
                             <div class="option" data-value="hayir">Hayır, örten değildir</div>
                         </div>
                         <div class="feedback correct">
-                            <i class="fas fa-check-circle"></i> Doğru! Görüntü kümesi [-1, ∞) olduğu için tüm reel sayıları kapsamaz, bu nedenle örten değildir.
+                            <i class="fas fa-check-circle"></i> Doğru! Görüntü kümesi [-1, ∞) olduğu için Reel sayıları kapsamaz, bu nedenle örten değildir.
                         </div>
                         <div class="feedback incorrect">
                             <i class="fas fa-times-circle"></i> Yanlış. Görüntü kümesi ile değer kümesini karşılaştırın.
@@ -1121,10 +1058,7 @@
                 <h3><i class="fas fa-award"></i> 4.Soru Sonucu</h3>
                 <div class="score-display" id="total-score">0/25</div>
                 
-                <div class="result-message" id="result-message">
-                    Sınavınız değerlendiriliyor...
-                </div>
-                
+
                 <div class="score-details">
                     <h4>Puan Dağılımı</h4>
                     <ul>
@@ -1173,12 +1107,12 @@
                 
                 <ol>
                     <li><strong>Düşey Doğru Testi:</strong> Düşey doğru sürgüsünü hareket ettirerek fonksiyon olma özelliğini test edin.</li>
-                    <li><strong>Yatay Doğru Testi:</strong> Yatay doğru sürgüsünü hareket ettirerek birebir olma özelliğini test edin.</li>
+                    <li><strong>Yatay Doğru Testi:</strong> Yatay doğru sürgüsünü hareket ettirerek bire bir olma özelliğini test edin.</li>
                  
                 </ol>
                 
                 <div class="modal-tip">
-                    <p><strong><i class="fas fa-lightbulb"></i> İpucu:</strong> Düşey doğru testi ile fonksiyon olma özelliğini, yatay doğru testi ile birebir olma özelliğini kontrol edebilirsiniz. Bu testler fonksiyon kavramını anlamanıza yardımcı olacaktır.</p>
+                    <p><strong><i class="fas fa-lightbulb"></i> İpucu:</strong> Düşey doğru testi ile fonksiyon olma özelliğini, yatay doğru testi ile bire bir olma özelliğini kontrol edebilirsiniz. Bu testler fonksiyon kavramını anlamanıza yardımcı olacaktır.</p>
                 </div>
             </div>
         </div>
@@ -1187,7 +1121,7 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Canvas ile grafik çizimi (güncellenmiş)
+            // Canvas ile grafik çizimi (exam2.html model alınarak güncellendi)
             const canvas = document.getElementById('function-canvas');
             const ctx = canvas.getContext('2d');
             const verticalSlider = document.getElementById('vertical-slider');
@@ -1196,137 +1130,194 @@
             const horizontalSliderValue = document.getElementById('horizontal-slider-value');
             const canvasWrapper = document.querySelector('.canvas-wrapper');
             
-            // Grafik sınırları (cep telefonu için optimize edildi)
-            const mathXMin = -3;
-            const mathXMax = 7;
-            const mathYMin = -5;
-            const mathYMax = 5;
-            
-            // GRID AND AXIS SETTINGS
-            const AXIS_COLOR = '#000';
-            const GRID_COLOR = '#e0e0e0';
-            const FUNCTION_COLOR = '#1a2a6c';
-            const VERTICAL_LINE_COLOR = '#d9534f';
-            const HORIZONTAL_LINE_COLOR = '#5bc0de';
-            const POINT_COLOR = '#FF6B6B';
-            
-            // Initialize canvas size
+            // Canvas boyutlandırma fonksiyonu
             function resizeCanvas() {
                 const width = canvasWrapper.clientWidth;
-                const height = width * 0.9; // Telefonlar için daha uygun oran
+                const height = width * 9 / 16; // 16:9 en boy oranı
                 
                 canvas.width = width;
                 canvas.height = height;
                 
-                drawGraph();
+                drawAll();
             }
             
-            // Coordinate conversion functions
+            // Koordinat dönüşüm fonksiyonları
             function toPixelX(mathX) {
-                return ((mathX - mathXMin) / (mathXMax - mathXMin)) * canvas.width;
+                const originX = canvas.width / 2;
+                const scale = canvas.width / 20;
+                return originX + mathX * scale;
             }
             
             function toPixelY(mathY) {
-                return canvas.height - ((mathY - mathYMin) / (mathYMax - mathYMin)) * canvas.height;
+                const originY = canvas.height / 2;
+                const scale = canvas.width / 20;
+                return originY - mathY * scale;
             }
             
             function toMathX(pixelX) {
-                return mathXMin + (pixelX / canvas.width) * (mathXMax - mathXMin);
+                const originX = canvas.width / 2;
+                const scale = canvas.width / 20;
+                return (pixelX - originX) / scale;
             }
             
             function toMathY(pixelY) {
-                return mathYMin + ((canvas.height - pixelY) / canvas.height) * (mathYMax - mathYMin);
+                const originY = canvas.height / 2;
+                const scale = canvas.width / 20;
+                return (originY - pixelY) / scale;
             }
             
-            // Draw grid and axes
-            function drawGridAndAxes() {
-                // Draw grid
-                ctx.strokeStyle = GRID_COLOR;
-                ctx.lineWidth = 1;
+            // Grid çizimi
+            function drawGrid() {
+                const originX = canvas.width / 2;
+                const originY = canvas.height / 2;
+                const scale = canvas.width / 20;
                 
-                // Vertical grid lines
-                for (let x = Math.floor(mathXMin); x <= Math.ceil(mathXMax); x++) {
-                    const pixelX = toPixelX(x);
+                ctx.strokeStyle = '#f0f0f0';
+                ctx.lineWidth = 0.5;
+                
+                // Yatay çizgiler
+                for (let y = 0; y <= canvas.height; y += scale) {
                     ctx.beginPath();
-                    ctx.moveTo(pixelX, 0);
-                    ctx.lineTo(pixelX, canvas.height);
-                    ctx.stroke();
-                    
-                    // Draw x-axis labels
-                    if (x !== 0) {
-                        ctx.fillStyle = AXIS_COLOR;
-                        ctx.font = '12px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.fillText(x.toString(), pixelX, toPixelY(-0.2));
-                    }
-                }
-                
-                // Horizontal grid lines
-                for (let y = Math.floor(mathYMin); y <= Math.ceil(mathYMax); y++) {
-                    const pixelY = toPixelY(y);
-                    ctx.beginPath();
-                    ctx.moveTo(0, pixelY);
-                    ctx.lineTo(canvas.width, pixelY);
-                    ctx.stroke();
-                    
-                    // Draw y-axis labels
-                    if (y !== 0) {
-                        ctx.fillStyle = AXIS_COLOR;
-                        ctx.font = '12px Arial';
-                        ctx.textAlign = 'right';
-                        ctx.fillText(y.toString(), toPixelX(-0.1), pixelY + 4);
-                    }
-                }
-                
-                // Draw axes
-                ctx.strokeStyle = AXIS_COLOR;
-                ctx.lineWidth = 2;
-                
-                // X-axis (y=0)
-                if (mathYMin <= 0 && mathYMax >= 0) {
-                    const pixelY0 = toPixelY(0);
-                    ctx.beginPath();
-                    ctx.moveTo(0, pixelY0);
-                    ctx.lineTo(canvas.width, pixelY0);
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
                     ctx.stroke();
                 }
                 
-                // Y-axis (x=0)
-                if (mathXMin <= 0 && mathXMax >= 0) {
-                    const pixelX0 = toPixelX(0);
+                // Dikey çizgiler
+                for (let x = 0; x <= canvas.width; x += scale) {
                     ctx.beginPath();
-                    ctx.moveTo(pixelX0, 0);
-                    ctx.lineTo(pixelX0, canvas.height);
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvas.height);
                     ctx.stroke();
-                }
-                
-                // Draw origin label (0,0)
-                if (mathXMin <= 0 && mathXMax >= 0 && mathYMin <= 0 && mathYMax >= 0) {
-                    const pixelX0 = toPixelX(0);
-                    const pixelY0 = toPixelY(0);
-                    ctx.fillStyle = AXIS_COLOR;
-                    ctx.font = '20px Arial';
-                    ctx.textAlign = 'right';
-                    ctx.fillText('O', pixelX0 - 5, pixelY0 + 15);
                 }
             }
             
-            // Function definition
-            function f(x) {
-                return Math.pow(x - 2, 2) - 1;
+            // Eksen çizimi
+            function drawAxes() {
+                const originX = canvas.width / 2;
+                const originY = canvas.height / 2;
+                const scale = canvas.width / 20;
+                
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1.5;
+                
+                // X ekseni
+                ctx.beginPath();
+                ctx.moveTo(0, originY);
+                ctx.lineTo(canvas.width, originY);
+                ctx.stroke();
+                
+                // Y ekseni
+                ctx.beginPath();
+                ctx.moveTo(originX, 0);
+                ctx.lineTo(originX, canvas.height);
+                ctx.stroke();
+
+                // X ekseni sağ ok
+                ctx.beginPath();
+                ctx.moveTo(canvas.width - 10, originY - 5);
+                ctx.lineTo(canvas.width, originY);
+                ctx.lineTo(canvas.width - 10, originY + 5);
+                ctx.fillStyle = '#000';
+                ctx.fill();
+                
+                // X ekseni sol ok
+                ctx.beginPath();
+                ctx.moveTo(10, originY - 5);
+                ctx.lineTo(0, originY);
+                ctx.lineTo(10, originY + 5);
+                ctx.fillStyle = '#000';
+                ctx.fill();
+                
+                // Y ekseni üst ok
+                ctx.beginPath();
+                ctx.moveTo(originX - 5, 10);
+                ctx.lineTo(originX, 0);
+                ctx.lineTo(originX + 5, 10);
+                ctx.fillStyle = '#000';
+                ctx.fill();
+                
+                // Y ekseni alt ok
+                ctx.beginPath();
+                ctx.moveTo(originX - 5, canvas.height - 10);
+                ctx.lineTo(originX, canvas.height);
+                ctx.lineTo(originX + 5, canvas.height - 10);
+                ctx.fillStyle = '#000';
+                ctx.fill();
+                
+                // Eksen etiketleri (nokta şeklinde)
+                ctx.fillStyle = '#333';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // X ekseni etiketleri
+                for (let x = -8; x <= 8; x++) {
+                    if (x === 0) continue;
+                    const pixelX = originX + x * scale;
+                    // Nokta çiz
+                    ctx.beginPath();
+                    ctx.arc(pixelX, originY, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    // Etiket yaz
+                    ctx.fillText(x, pixelX, originY + 15);
+                }
+                
+                // Y ekseni etiketleri
+                for (let y = -8; y <= 8; y++) {
+                    if (y === 0) continue;
+                    const pixelY = originY - y * scale;
+                    // Nokta çiz
+                    ctx.beginPath();
+                    ctx.arc(originX, pixelY, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    // Etiket yaz
+                    ctx.fillText(y, originX - 15, pixelY);
+                }
+                
+                // Orijin noktasına belirgin bir işaret koy
+                ctx.beginPath();
+                ctx.fillStyle = '#1a2a6c';
+                ctx.arc(originX, originY, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // "O" etiketi
+                ctx.fillStyle = '#1a2a6c';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'top';
+                ctx.fillText('O', originX - 8, originY + 8);
+                
+                // X ekseni etiketi (sağ üst)
+                ctx.fillStyle = '#1a2a6c';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText('x', canvas.width - 5, originY - 10);
+                
+                // Y ekseni etiketi (sağ üst)
+                ctx.fillStyle = '#1a2a6c';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+                ctx.fillText('y', originX + 10, 5);
             }
             
-            // Draw function graph
+            // Fonksiyon çizimi
             function drawFunction() {
-                ctx.strokeStyle = FUNCTION_COLOR;
+                const originX = canvas.width / 2;
+                const originY = canvas.height / 2;
+                const scale = canvas.width / 20;
+                
+                ctx.strokeStyle = '#1a2a6c';
                 ctx.lineWidth = 3;
                 ctx.beginPath();
                 
-                // Draw the function
+                // Fonksiyonu çiz: y = (x-2)^2 - 1
                 for (let pixelX = 0; pixelX <= canvas.width; pixelX++) {
-                    const x = toMathX(pixelX);
-                    const y = f(x);
-                    const pixelY = toPixelY(y);
+                    const x = (pixelX - originX) / scale;
+                    const y = Math.pow(x - 2, 2) - 1;
+                    const pixelY = originY - y * scale;
                     
                     if (pixelX === 0) {
                         ctx.moveTo(pixelX, pixelY);
@@ -1337,32 +1328,50 @@
                 
                 ctx.stroke();
                 
-                // Draw vertex point
-                const vertexX = 2;
-                const vertexY = f(vertexX);
-                const vertexPixelX = toPixelX(vertexX);
-                const vertexPixelY = toPixelY(vertexY);
+                // Tepe noktasını işaretle (2, -1)
+                const vertexX = originX + 2 * scale;
+                const vertexY = originY - (-1) * scale;
+                ctx.fillStyle = '#b21f1f';
+                ctx.beginPath();
+                ctx.arc(vertexX, vertexY, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Tepe noktası etiketi
+                ctx.fillStyle = '#b21f1f';
+                ctx.font = 'bold 18px Arial';
+                ctx.fillText('(2, -1)', vertexX-20 , vertexY +10);
+                
+                // Sıfır noktalarını işaretle (1,0) ve (3,0)
+                const zeroX1 = originX + 1 * scale;
+                const zeroY1 = originY - 0 * scale;
+                const zeroX2 = originX + 3 * scale;
+                const zeroY2 = originY - 0 * scale;
                 
                 ctx.fillStyle = '#b21f1f';
                 ctx.beginPath();
-                ctx.arc(vertexPixelX, vertexPixelY, 4, 0, Math.PI * 2);
+                ctx.arc(zeroX1, zeroY1, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(zeroX2, zeroY2, 5, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // Draw vertex label
+                // Sıfır noktaları etiketi
                 ctx.fillStyle = '#b21f1f';
-                ctx.font = 'bold 14px Arial';
-                ctx.fillText(`Tepe Noktası (2, -1)`, vertexPixelX + 5, vertexPixelY - 10);
+                ctx.font = 'bold 16px Arial';
+                ctx.fillText(' (1,0)', zeroX1 - 40, zeroY1 - 20);
+                ctx.fillText(' (3,0)', zeroX2 + 10, zeroY2 - 20);
             }
             
-            // Draw vertical line from slider
+            // Düşey doğru çizimi
             function drawVerticalLine() {
-                const xValue = parseFloat(verticalSlider.value);
-                const pixelX = toPixelX(xValue);
-                const y = f(xValue);
-                const pixelY = toPixelY(y);
+                const originX = canvas.width / 2;
+                const originY = canvas.height / 2;
+                const scale = canvas.width / 20;
                 
-                // Draw vertical line
-                ctx.strokeStyle = VERTICAL_LINE_COLOR;
+                const xValue = parseFloat(verticalSlider.value);
+                const pixelX = originX + xValue * scale;
+                
+                ctx.strokeStyle = '#d9534f';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([5, 5]);
                 ctx.beginPath();
@@ -1371,25 +1380,27 @@
                 ctx.stroke();
                 ctx.setLineDash([]);
                 
-                // Draw intersection point
-                ctx.fillStyle = POINT_COLOR;
-                ctx.beginPath();
-                ctx.arc(pixelX, pixelY, 4, 0, Math.PI * 2);
-                ctx.fill();
+                // Kesişim noktasını hesapla
+                const y = Math.pow(xValue - 2, 2) - 1;
+                const pixelY = originY - y * scale;
                 
-                // Draw coordinates
-                ctx.fillStyle = '#333';
-                ctx.font = 'bold 12px Arial';
-                //ctx.fillText(`(${xValue.toFixed(2)}, ${y.toFixed(2)})`, pixelX + 8, pixelY - 8);
+                // Kesişim noktasını işaretle
+                ctx.fillStyle = '#d9534f';
+                ctx.beginPath();
+                ctx.arc(pixelX, pixelY, 6, 0, Math.PI * 2);
+                ctx.fill();
             }
             
-            // Draw horizontal line from slider
+            // Yatay doğru çizimi
             function drawHorizontalLine() {
-                const yValue = parseFloat(horizontalSlider.value);
-                const pixelY = toPixelY(yValue);
+                const originX = canvas.width / 2;
+                const originY = canvas.height / 2;
+                const scale = canvas.width / 20;
                 
-                // Draw horizontal line
-                ctx.strokeStyle = HORIZONTAL_LINE_COLOR;
+                const yValue = parseFloat(horizontalSlider.value);
+                const pixelY = originY - yValue * scale;
+                
+                ctx.strokeStyle = '#5bc0de';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([5, 5]);
                 ctx.beginPath();
@@ -1398,59 +1409,62 @@
                 ctx.stroke();
                 ctx.setLineDash([]);
                 
-                // Calculate intersection points
-                const discriminant = yValue + 1;
-                let solutions = [];
-                
-                if (discriminant >= 0) {
-                    const root = Math.sqrt(discriminant);
-                    solutions.push(2 - root);
-                    solutions.push(2 + root);
-                }
-                
-                // Draw intersection points
-                solutions.forEach(x => {
-                    const pixelX = toPixelX(x);
-                    const y = f(x);
+                // Kesişim noktalarını hesapla (y = (x-2)^2 - 1)
+                if (yValue >= -1) {
+                    const x1 = 2 - Math.sqrt(yValue + 1);
+                    const x2 = 2 + Math.sqrt(yValue + 1);
                     
-                    ctx.fillStyle = POINT_COLOR;
+                    const pixelX1 = originX + x1 * scale;
+                    const pixelX2 = originX + x2 * scale;
+                    
+                    // Kesişim noktalarını işaretle
+                    ctx.fillStyle = '#5bc0de';
                     ctx.beginPath();
-                    ctx.arc(pixelX, pixelY, 4, 0, Math.PI * 2);
+                    ctx.arc(pixelX1, pixelY, 6, 0, Math.PI * 2);
                     ctx.fill();
-                    
-                    // Draw coordinates
-                    ctx.fillStyle = '#333';
-                    ctx.font = 'bold 12px Arial';
-                    //ctx.fillText(`(${x.toFixed(2)}, ${yValue.toFixed(2)})`, pixelX + 8, pixelY - 8);
-                });
+                    ctx.beginPath();
+                    ctx.arc(pixelX2, pixelY, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
             
-            // Main draw function
-            function drawGraph() {
+            // Fonksiyon bilgisi
+            function drawInfo() {
+                ctx.fillStyle = '#1a2a6c';
+                ctx.font = 'bold 18px Arial';
+                ctx.fillText('y = (x-2)² - 1', canvas.width - 150, 30);
+            }
+            
+            // Tüm çizimleri yap
+            function drawAll() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawGridAndAxes();
+                drawGrid();
+                drawAxes();
                 drawFunction();
                 drawVerticalLine();
                 drawHorizontalLine();
+                drawInfo();
             }
             
-            // Initialize
+            // İlk boyutlandırma ve çizim
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
             
-            // Slider events
+            // Sürgü olayları
             verticalSlider.addEventListener('input', function() {
                 const xValue = parseFloat(this.value);
-                verticalSliderValue.textContent = `x = ${xValue.toFixed(2)}`;
-                drawGraph();
+                verticalSliderValue.textContent = `x = ${xValue.toFixed(2).replace('.',',')}`;
+                drawAll();
             });
             
             horizontalSlider.addEventListener('input', function() {
                 const yValue = parseFloat(this.value);
-                horizontalSliderValue.textContent = `y = ${yValue.toFixed(2)}`;
-                drawGraph();
+                horizontalSliderValue.textContent = `y = ${yValue.toFixed(2).replace('.',',')}`;
+                drawAll();
             });
-            
+                        function formatDecimal(number) {
+                return number.toString().replace('.', ',');
+            }
             // Ana soru için elemanlar
             const mainOptions = document.querySelectorAll('.question-section .option');
             const checkMainButton = document.getElementById('check-main');
@@ -1677,21 +1691,7 @@
                 totalScoreElement.textContent = `${totalScore}/25`;
                 finalScoreElement.textContent = `${totalScore}/25`;
                 
-                // Sonuç mesajını belirle
-                if (totalScore >= 23) {
-                    resultMessage.textContent = "Mükemmel! Fonksiyon analizinde çok başarılısınız.";
-                    resultMessage.className = "result-message excellent";
-                } else if (totalScore >= 18) {
-                    resultMessage.textContent = "Tebrikler! Fonksiyon analizini iyi anlamışsınız.";
-                    resultMessage.className = "result-message good";
-                } else if (totalScore >= 13) {
-                    resultMessage.textContent = "Orta seviyede başarılı oldunuz. Daha fazla çalışmalısınız.";
-                    resultMessage.className = "result-message average";
-                } else {
-                    resultMessage.textContent = "Fonksiyon analizini daha iyi anlamak için tekrar çalışmalısınız.";
-                    resultMessage.className = "result-message average";
-                }
-                
+                               
                 // Sonuç bölümünü göster
                 examResult.style.display = 'block';
                 examResult.scrollIntoView({ behavior: 'smooth' });

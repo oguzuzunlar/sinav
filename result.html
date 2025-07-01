@@ -429,9 +429,7 @@
                 <div class="total-score" id="total-score">0</div>
                 <div class="max-score">100 puan üzerinden</div>
                 
-                <div class="result-message excellent" id="result-message">
-                    <i class="fas fa-star"></i> Değerlendirme yapılıyor...
-                </div>
+
             </div>
             
             <div class="exam-details">
@@ -492,19 +490,23 @@
             </div>
             
             <div class="summary">
-                <h3><i class="fas fa-chart-pie"></i> Performans Özeti</h3>
+                <h3>Performans Özeti</h3>
                 <div class="summary-content">
                     <div class="summary-item">
                         <div class="summary-value" id="correct-answers">0</div>
-                        <div class="summary-label">Doğru Cevap</div>
+                        <div class="summary-label">Doğru Cevaplar</div>
                     </div>
                     <div class="summary-item">
                         <div class="summary-value" id="wrong-answers">0</div>
-                        <div class="summary-label">Yanlış Cevap</div>
+                        <div class="summary-label">Yanlış Cevaplar</div>
                     </div>
                     <div class="summary-item">
                         <div class="summary-value" id="success-rate">0%</div>
                         <div class="summary-label">Başarı Oranı</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="basamak-puan">0</div>
+                        <div class="summary-label">1. Basamak Sınavı Puanı</div>
                     </div>
                 </div>
             </div>
@@ -555,20 +557,18 @@
             document.getElementById('progress-5').style.width = `${(scores.exam5 / 30) * 100}%`;
             
             // Sonuç mesajını belirleme
-            const resultMessage = document.getElementById('result-message');
-            if (totalScore >= 80) {
-                resultMessage.className = "result-message excellent";
-                resultMessage.innerHTML = '<i class="fas fa-star"></i> Mükemmel! Fonksiyon analizi konusunda çok başarılısınız.';
-            } else if (totalScore >= 65) {
-                resultMessage.className = "result-message good";
-                resultMessage.innerHTML = '<i class="fas fa-thumbs-up"></i> Tebrikler! Fonksiyon konusunu iyi anlamışsınız.';
-            } else if (totalScore >= 50) {
-                resultMessage.className = "result-message average";
-                resultMessage.innerHTML = '<i class="fas fa-lightbulb"></i> Orta düzeyde başarılı oldunuz. Konuyu tekrar etmeniz faydalı olacaktır.';
-            } else {
-                resultMessage.className = "result-message average";
-                resultMessage.innerHTML = '<i class="fas fa-book"></i> Daha fazla çalışmalısınız. Konuyu tekrar gözden geçirin.';
-            }
+ 
+            
+            // Gerçekçi performans özeti hesaplama
+            const correctAnswers = Math.floor(totalScore / 2.1);
+            const wrongAnswers = Math.floor(50 - (totalScore / 2.1));
+            const successRate = Math.round((totalScore / 100) * 100);
+            const basamakPuan = (totalScore * 0.1).toFixed(1);
+            
+            document.getElementById('correct-answers').textContent = correctAnswers;
+            document.getElementById('wrong-answers').textContent = wrongAnswers;
+            document.getElementById('success-rate').textContent = `${successRate}%`;
+            document.getElementById('basamak-puan').textContent = basamakPuan;
             
             // Buton işlevleri
             document.querySelector('.restart-btn').addEventListener('click', function() {
@@ -584,15 +584,6 @@
             document.querySelector('.home-btn').addEventListener('click', function() {
                 window.location.href = "index.html";
             });
-            
-            // Gerçekçi performans özeti hesaplama
-            const correctAnswers = Math.floor(totalScore / 2.1);
-            const wrongAnswers = Math.floor(50 - (totalScore / 2.1));
-            const successRate = Math.round((totalScore / 100) * 100);
-            
-            document.getElementById('correct-answers').textContent = correctAnswers;
-            document.getElementById('wrong-answers').textContent = wrongAnswers;
-            document.getElementById('success-rate').textContent = `${successRate}%`;
         });
     </script>
 </body>
