@@ -7,20 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
-        // Sınav başladığında çalıştır
-        sessionStorage.setItem('sinav_aktif', 'evet');
-
-        // Sınav bittiyse çalıştır
-        // sessionStorage.removeItem('sinav_aktif');
-
-        // Her sayfa açıldığında kontrol et
-        if (sessionStorage.getItem('sinav_aktif') !== 'evet') {
-            // Sınava izinsiz giriş => yönlendir
-            window.location.href = "giris.html"; // veya ana sayfa
-        }
-    </script>
-
     <style>
         * {
             margin: 0;
@@ -56,7 +42,7 @@
             text-align: center;
         }
         
-	    .function-display {
+        .function-display {
             text-align: center;
             font-size: 1.4rem;
             margin: 15px 0;
@@ -65,7 +51,8 @@
             border-radius: 8px;
             font-weight: 600;
             color: #1a2a6c;
-		}
+        }
+        
         .logo {
             display: flex;
             align-items: center;
@@ -744,11 +731,9 @@
                         </button>
                     </div>
                 </div>
-		<div class="function-display">
-		
-                <p>\( \mathrm{x^2 + y^2 = 9} \) Bağıntısı ve Düşey Doğru Testi</p>
-
-		</div>
+                <div class="function-display">
+                    <p>\( \mathrm{x^2 + y^2 = 9} \) Bağıntısı ve Düşey Doğru Testi</p>
+                </div>
                 <div class="graph-wrapper">
                     <canvas id="graph-canvas"></canvas>
                 </div>
@@ -763,7 +748,6 @@
                         <i class="fas fa-sync-alt"></i> Sıfırla
                     </button>
                 </div>
-           
             </div>
             
             <div class="question-section">
@@ -806,8 +790,6 @@
             <div class="exam-result" id="exam-result">
                 <h3><i class="fas fa-award"></i> 3.Soru Sonucu</h3>
                 <div class="score-display" id="total-score">0/10</div>
-                
-   
                 
                 <div class="score-details">
                     <h4>Puan Dağılımı</h4>
@@ -882,9 +864,9 @@
             function drawGraph() {
                 const width = canvas.width;
                 const height = canvas.height;
-                const padding = 0;
+                const padding = 20;
                 const scale = 40;
-                const xSliderValue = parseFloat(slider.value.replace(',', '.'));
+                const xSliderValue = parseFloat(slider.value);
                 
                 // Temizle
                 ctx.clearRect(0, 0, width, height);
@@ -897,31 +879,34 @@
                 ctx.strokeStyle = '#f0f0f0';
                 ctx.lineWidth = 1;
                 
-                // Yatay çizgiler
-                for (let y = padding; y < height - padding; y += scale) {
+                // Yatay çizgiler (y ekseni paralelleri)
+                for (let y = -4; y <= 4; y++) {
+                    const yPos = height / 2 - y * scale;
                     ctx.beginPath();
-                    ctx.moveTo(padding, y);
-                    ctx.lineTo(width - padding, y);
+                    ctx.moveTo(padding, yPos);
+                    ctx.lineTo(width - padding, yPos);
                     ctx.stroke();
                 }
                 
-                // Dikey çizgiler
-                for (let x = padding; x < width - padding; x += scale) {
+                // Dikey çizgiler (x ekseni paralelleri)
+                for (let x = -5; x <= 5; x++) {
+                    const xPos = width / 2 + x * scale;
                     ctx.beginPath();
-                    ctx.moveTo(x, padding);
-                    ctx.lineTo(x, height - padding);
+                    ctx.moveTo(xPos, padding);
+                    ctx.lineTo(xPos, height - padding);
                     ctx.stroke();
                 }
                 
+                // Eksenler
                 ctx.beginPath();
                 ctx.strokeStyle = '#333';
                 ctx.lineWidth = 1.5;
 
-                // X ekseni
+                // X ekseni (y=0)
                 ctx.moveTo(padding, height / 2);
                 ctx.lineTo(width - padding, height / 2);
 
-                // Y ekseni
+                // Y ekseni (x=0)
                 ctx.moveTo(width / 2, padding);
                 ctx.lineTo(width / 2, height - padding);
 
@@ -931,11 +916,18 @@
                 ctx.moveTo(width - padding, height / 2);
                 ctx.lineTo(width - padding - 10, height / 2 + 5);
 
-                // X ekseni ok (sol uç)
+		 // X ekseni ok (sol uç)
                 ctx.moveTo(padding, height / 2);
                 ctx.lineTo(padding + 10, height / 2 - 5);
                 ctx.moveTo(padding, height / 2);
                 ctx.lineTo(padding + 10, height / 2 + 5);
+		
+		ctx.fillStyle = '#1a2a6c';
+		ctx.font = 'bold 14px Arial';
+		ctx.textAlign = 'right';
+		ctx.textBaseline = 'middle';
+		ctx.fillText('x', width - padding - 15, height / 2 - 15)
+
 
                 // Y ekseni ok (üst uç)
                 ctx.moveTo(width / 2, padding);
@@ -943,41 +935,52 @@
                 ctx.moveTo(width / 2, padding);
                 ctx.lineTo(width / 2 + 5, padding + 10);
 
-                // Y ekseni ok (alt uç)
+                ctx.stroke();
+		
+		                // Y ekseni ok (alt uç)
                 ctx.moveTo(width / 2, height - padding);
                 ctx.lineTo(width / 2 - 5, height - padding - 10);
                 ctx.moveTo(width / 2, height - padding);
                 ctx.lineTo(width / 2 + 5, height - padding - 10);
 
                 ctx.stroke();
+			ctx.fillStyle = '#1a2a6c';
+			ctx.font = 'bold 14px Arial';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'bottom';
+			ctx.fillText('y', width / 2 + 15, padding + 15);
                 
-                 // Eksen etiketleri
-		ctx.fillStyle = '#333';
-		ctx.font = '14px Arial';
-		ctx.textAlign = 'center';
-		ctx.textBaseline = 'middle';
+                // Eksen etiketleri
+                ctx.fillStyle = '#333';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
 
-		// X ekseni etiketleri (nokta şeklinde)
-		for (let x = -5; x <= 5; x++) {
-    		if (x === 0) continue;
-    		const xPos = width / 2 + x * scale;
-    		ctx.fillText(x, xPos, height / 2 + 20);
-    		ctx.beginPath();
-    		ctx.fillStyle = '#333';
-    		ctx.arc(xPos, height / 2, 3, 0, Math.PI * 2);
-    		ctx.fill();
-		}
+                // X ekseni etiketleri
+                for (let x = -4; x <= 4; x++) {
+                    if (x === 0) continue;
+                    const xPos = width / 2 + x * scale;
+                    ctx.fillText(x, xPos, height / 2 + 20);
+                    
+                    // X ekseni noktaları
+                    ctx.beginPath();
+                    ctx.fillStyle = '#333';
+                    ctx.arc(xPos, height / 2, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
 
-		// Y ekseni etiketleri (nokta şeklinde)
-		for (let y = -4; y <= 4; y++) {
-    		if (y === 0) continue;
-    		const yPos = height / 2 - y * scale;
-    		ctx.fillText(y, width / 2 - 20, yPos);
-    		ctx.beginPath();
-    		ctx.fillStyle = '#333';
-    		ctx.arc(width / 2, yPos, 3, 0, Math.PI * 2);
-    		ctx.fill();
-		}
+                // Y ekseni etiketleri
+                for (let y = -4; y <= 4; y++) {
+                    if (y === 0) continue;
+                    const yPos = height / 2 - y * scale;
+                    ctx.fillText(y, width / 2 - 20, yPos);
+                    
+                    // Y ekseni noktaları
+                    ctx.beginPath();
+                    ctx.fillStyle = '#333';
+                    ctx.arc(width / 2, yPos, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
                 
                 // Orijin noktasına belirgin bir işaret koy
                 ctx.beginPath();
@@ -1045,7 +1048,7 @@
             
             // Kaydırıcı olayları
             slider.addEventListener('input', function() {
-                sliderValue.textContent = this.value.replace('.', ',');
+                sliderValue.textContent = this.value;
                 drawGraph();
             });
             
@@ -1074,7 +1077,6 @@
             const totalScoreElement = document.getElementById('total-score');
             const basicScoreElement = document.getElementById('basic-score');
             const finalScoreElement = document.getElementById('final-score');
-            const resultMessage = document.getElementById('result-message');
             
             let selectedOption = null;
             let basicQuestionScore = 0;
@@ -1147,8 +1149,6 @@
                 totalScoreElement.textContent = `${totalScore}/10`;
                 basicScoreElement.textContent = `${basicQuestionScore}/10`;
                 finalScoreElement.textContent = `${totalScore}/10`;
-                
-
                 
                 // Sonuç bölümünü göster
                 examResult.style.display = 'block';

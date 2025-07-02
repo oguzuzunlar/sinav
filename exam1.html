@@ -978,12 +978,19 @@
                     ctx.lineTo(padding + 10, height / 2 - 5);
                     ctx.moveTo(padding, height / 2);
                     ctx.lineTo(padding + 10, height / 2 + 5);
+			
+		ctx.fillStyle = '#1a2a6c';
+		ctx.font = 'bold 14px Arial';
+		ctx.textAlign = 'right';
+		ctx.textBaseline = 'middle';
+		ctx.fillText('x', width - padding - 15, height / 2 - 15);
                     
                     // Y ekseni üst ok
                     ctx.moveTo(width / 2, padding);
                     ctx.lineTo(width / 2 - 5, padding + 10);
                     ctx.moveTo(width / 2, padding);
                     ctx.lineTo(width / 2 + 5, padding + 10);
+		    
                     
                     // Y ekseni alt ok
                     ctx.moveTo(width / 2, height - padding);
@@ -992,6 +999,11 @@
                     ctx.lineTo(width / 2 + 5, height - padding - 10);
                     
                     ctx.stroke();
+			ctx.fillStyle = '#1a2a6c';
+			ctx.font = 'bold 14px Arial';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'bottom';
+			ctx.fillText('y', width / 2 + 15, padding + 15);
                     
                     // Eksen etiketleri
                     ctx.fillStyle = '#1a2a6c';
@@ -1005,7 +1017,8 @@
                         const xPos = width / 2 + x * scale;
                         ctx.fillText(x.toString(), xPos, height / 2 + 20);
                         ctx.beginPath();
-                        ctx.arc(xPos, height / 2, 3, 0, Math.PI * 2); 
+                        ctx.arc(xPos, height / 2, 3, 0, Math.PI * 2);
+			
                         ctx.fill();
                     }
                     
@@ -1017,6 +1030,7 @@
                         ctx.fillText(y.toString(), width / 2 - 20, yPos);
                         ctx.beginPath();
                         ctx.arc(width / 2, yPos, 3, 0, Math.PI * 2);
+			
                         ctx.fill();
                     }
                     

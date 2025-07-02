@@ -1333,7 +1333,7 @@
                 const vertexY = originY - (-1) * scale;
                 ctx.fillStyle = '#b21f1f';
                 ctx.beginPath();
-                ctx.arc(vertexX, vertexY, 5, 0, Math.PI * 2);
+                ctx.arc(vertexX, vertexY, 4, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // Tepe noktası etiketi
@@ -1349,14 +1349,14 @@
                 
                 ctx.fillStyle = '#b21f1f';
                 ctx.beginPath();
-                ctx.arc(zeroX1, zeroY1, 5, 0, Math.PI * 2);
+                ctx.arc(zeroX1, zeroY1, 4, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.beginPath();
-                ctx.arc(zeroX2, zeroY2, 5, 0, Math.PI * 2);
+                ctx.arc(zeroX2, zeroY2, 4, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // Sıfır noktaları etiketi
-                ctx.fillStyle = '#b21f1f';
+                ctx.fillStyle = '#000000';
                 ctx.font = 'bold 16px Arial';
                 ctx.fillText(' (1,0)', zeroX1 - 40, zeroY1 - 20);
                 ctx.fillText(' (3,0)', zeroX2 + 10, zeroY2 - 20);
@@ -1387,7 +1387,7 @@
                 // Kesişim noktasını işaretle
                 ctx.fillStyle = '#d9534f';
                 ctx.beginPath();
-                ctx.arc(pixelX, pixelY, 6, 0, Math.PI * 2);
+                ctx.arc(pixelX, pixelY, 4, 0, Math.PI * 2);
                 ctx.fill();
             }
             
@@ -1420,20 +1420,16 @@
                     // Kesişim noktalarını işaretle
                     ctx.fillStyle = '#5bc0de';
                     ctx.beginPath();
-                    ctx.arc(pixelX1, pixelY, 6, 0, Math.PI * 2);
+                    ctx.arc(pixelX1, pixelY, 4, 0, Math.PI * 2);
                     ctx.fill();
                     ctx.beginPath();
-                    ctx.arc(pixelX2, pixelY, 6, 0, Math.PI * 2);
+                    ctx.arc(pixelX2, pixelY, 4, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
             
             // Fonksiyon bilgisi
-            function drawInfo() {
-                ctx.fillStyle = '#1a2a6c';
-                ctx.font = 'bold 18px Arial';
-                ctx.fillText('y = (x-2)² - 1', canvas.width - 150, 30);
-            }
+
             
             // Tüm çizimleri yap
             function drawAll() {
