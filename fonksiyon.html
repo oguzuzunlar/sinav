@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fonksiyon Testi - 5 Soruluk Uygulama</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['\\(', '\\)']],
+          displayMath: [['\\[', '\\]']],
+          processEscapes: true,
+          packages: {'[+]': ['ams']}
+        },
+        options: {
+          ignoreHtmlClass: 'tex2jax_ignore',
+          processHtmlClass: 'tex2jax_process'
+        },
+        loader: {
+          load: ['[tex]/ams']
+        },
+        startup: {
+          ready: () => {
+            MathJax.startup.defaultReady();
+            console.log('MathJax is ready');
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .function-display {
+            text-align: center;
+            font-size: 1.4rem;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f0f7ff;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+        
+        header {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+            color: #FFD700;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .module-info {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .relation-info {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 8px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
+        .math {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #FFD700;
+        }
+        
+        .content {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .instructions {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #1a2a6c;
+        }
+        
+        .instructions h2 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .instructions h2 i {
+            color: #b21f1f;
+        }
+        
+        .canvas-container {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .canvas-header h3 {
+            color: #1a2a6c;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        
+        .how-to-btn {
+            background: linear-gradient(to right, #1a2a6c, #3a5fc5);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .how-to-btn:hover {
+            background: linear-gradient(to right, #0d1b4d, #2a4bbd);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .graph-wrapper {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        #graph-canvas {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .slider-container {
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .slider-label {
+            font-weight: bold;
+            color: #1a2a6c;
+            min-width: 40px;
+        }
+        
+        .vertical-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            outline: none;
+        }
+        
+        .vertical-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #FFD700;
+            cursor: pointer;
+            border: 2px solid #1a2a6c;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(to right, #b21f1f, #d9534f);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            background: linear-gradient(to right, #8a1919, #c9302c);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .intersection-info {
+            margin-top: 10px;
+            padding: 8px;
+            background-color: rgba(26, 42, 108, 0.1);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #1a2a6c;
+        }
+        
+        .question-section {
+            grid-column: 1 / -1;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border-top: 3px solid #b21f1f;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question-section h3 {
+            color: #b21f1f;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .question {
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #1a2a6c;
+            text-align: center;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 480px) {
+            .options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .option {
+            padding: 12px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background-color: #1a2a6c;
+            color: white;
+            border-color: #1a2a6c;
+            box-shadow: 0 4px 8px rgba(26, 42, 108, 0.2);
+        }
+        
+        .feedback {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .explanation {
+            margin-top: 10px;
+            padding: 12px;
+            background-color: #e2e3e5;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-check {
+            background: linear-gradient(to right, #1a2a6c, #3a5fc5);
+            color: white;
+        }
+        
+        .btn-check:hover:not(:disabled) {
+            background: linear-gradient(to right, #0d1b4d, #2a4bbd);
+            transform: translateY(-2px);
+        }
+        
+        .btn-next {
+            background: linear-gradient(to right, #b21f1f, #d9534f);
+            color: white;
+        }
+        
+        .btn-next:hover:not(:disabled) {
+            background: linear-gradient(to right, #8a1919, #c9302c);
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #1a2a6c;
+            color: white;
+            font-size: 0.85rem;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a2a6c;
+        }
+        
+        .modal-header h2 {
+            color: #1a2a6c;
+            font-size: 1.5rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #b21f1f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            transform: scale(1.2);
+            color: #8a1919;
+        }
+        
+        .modal-instructions {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #1a2a6c;
+        }
+        
+        .modal-instructions ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        
+        .modal-instructions li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+        
+        .modal-instructions li strong {
+            color: #1a2a6c;
+        }
+        
+        .modal-tip {
+            background-color: #fffde7;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #ffd600;
+            margin-top: 15px;
+        }
+        
+        /* Sınav sonuç bölümü */
+        .exam-result {
+            display: none;
+            background-color: #e2f0ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            border: 2px solid #1a2a6c;
+        }
+        
+        .exam-result h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #1a2a6c;
+        }
+        
+        .score-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .score-details {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        
+        .score-details h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .score-details ul {
+            padding-left: 20px;
+        }
+        
+        .score-details li {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .score-details .score-value {
+            font-weight: bold;
+        }
+        
+        .result-message {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .excellent {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .good {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        
+        .average {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .points-badge {
+            background: #b21f1f;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #1a2a6c, #3a5fc5);
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+        
+        .next-exam-btn {
+            display: none;
+            background: linear-gradient(to right, #1a6c2a, #3ac55f);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+            max-width: 250px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .next-exam-btn:hover {
+            background: linear-gradient(to right, #0d4d1b, #2abd4b);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .result-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .slider-container {
+                width: 100%;
+            }
+            
+            .canvas-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .result-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        /* Yanlış cevap sonrası seçenekleri devre dışı bırakma */
+        .options.disabled .option {
+            cursor: not-allowed;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        /* Doğru cevabı vurgulama */
+        .correct-answer {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        /* Soru ilerleme çubuğu */
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #1a2a6c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-function"></i>
+                <div>
+                    <h1>Fonksiyon Testi - 5 Soruluk Uygulama</h1>
+                </div>
+            </div>
+            <div class="module-info">
+                <span><i class="fas fa-book-open"></i> Soru: <span id="current-question">1</span>/5</span>
+                <span><i class="fas fa-star"></i> Toplam Puan: <span id="total-points">0</span>/50</span>
+            </div>
+            <div class="relation-info">
+                Grafikte verilen <span class="math" id="relation-definition">\( \mathrm{[0,∞) \to \mathbb{R}} \)</span> tanımlı <span class="math" id="relation-formula">\(\mathrm{ x = y^2} \)</span> bağıntısının fonksiyon olup olmadığını inceleyeceğiz.
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar" style="width: 20%"></div>
+            </div>
+            <div class="progress-info">
+                <span>Soru: <span id="current-question-info">1</span>/5</span>
+                <span>Puan: <span id="current-score">0</span>/50</span>
+            </div>
+            
+            <div class="canvas-container">
+                <div class="canvas-header">
+                    <h3><i class="fas fa-chart-line"></i> İnteraktif Uygulama</h3>
+                    <div>
+                        <button class="how-to-btn" id="how-to-btn" aria-label="Nasıl kullanılır açıklamasını göster">
+                            <i class="fas fa-question-circle"></i> Nasıl Kullanılır?
+                        </button>
+                    </div>
+                </div>
+                <div class="function-display">
+                    <p id="function-display-text">\( \mathrm{x = y^2} \) Bağıntısı ve Düşey Doğru Testi</p>
+                </div>
+                <div class="graph-wrapper">
+                    <canvas id="graph-canvas" aria-label="Grafik ve düşey doğru testi uygulaması"></canvas>
+                </div>
+                
+                <div class="controls">
+                    <div class="slider-container">
+                        <span class="slider-label">x =</span>
+                        <input type="range" min="-1" max="10" step="0.1" value="0" class="vertical-slider" id="vertical-slider" aria-label="Düşey doğru pozisyonu ayarı">
+                        <span class="slider-label" id="slider-value">0</span>
+                    </div>
+                    <button class="reset-btn" id="reset-btn" aria-label="Düşey doğruyu sıfırla">
+                        <i class="fas fa-sync-alt"></i> Sıfırla
+                    </button>
+                </div>
+                
+                <div class="intersection-info">
+                    <i class="fas fa-info-circle"></i> Düşey doğru: x = <span id="current-x">0</span> 
+                    | Kesişim noktaları: <span id="intersection-count">1</span>
+                </div>
+            </div>
+            
+            <div class="question-section">
+                <h3>
+                    <i class="fas fa-question-circle"></i> Soru 
+                    <span class="points-badge" id="question-points">10 Puan</span>
+                </h3>
+                <div class="question" id="question-text">
+                   Grafikte gösterilen \( \mathrm{[0,∞) \to \mathbb{R}} \) tanımlı \( \mathrm{x = y^2} \) bağıntısı bir fonksiyon mudur?
+                </div>
+                
+                <div class="options" id="options-container">
+                    <div class="option" data-value="yes">Evet, fonksiyondur.</div>
+                    <div class="option" data-value="no">Hayır, fonksiyon değildir.</div>
+                </div>
+                <div class="feedback correct">
+                    <i class="fas fa-check-circle"></i> Doğru cevap! 
+                    <span id="correct-feedback-text">\(\mathrm{ x = y^2} \) bağıntısı bir fonksiyon değildir.</span> 
+                    <p><strong><span id="points-earned">10</span> puan</strong> kazandınız!</p>
+                </div>
+                
+                <div class="feedback incorrect">
+                    <i class="fas fa-times-circle"></i> Yanlış cevap. Bağıntının fonksiyon olmadığı açıklamada gösterilmektedir.
+                </div>
+                
+                <div class="explanation">
+                    <p><strong>Açıklama:</strong> <span id="explanation-text">\(\mathrm{ x = y^2} \) bağıntısı fonksiyon değildir çünkü her pozitif x değeri için iki farklı y değeri (\( y = \sqrt{x} \) ve \( y = -\sqrt{x} \)) bulunur. Düşey doğru testinde, x > 0 değerleri için düşey doğru grafiği iki noktada kesmektedir. Bir bağıntının fonksiyon olabilmesi için her x değerine karşılık en fazla bir y değeri olmalıdır.</span></p>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn btn-check" id="check-btn" aria-label="Cevabı kontrol et">
+                        <i class="fas fa-check"></i> Cevabı Kontrol Et
+                    </button>
+                    <button class="btn btn-next" id="next-btn" disabled aria-label="Sonraki soruya geç">
+                        <i class="fas fa-arrow-right"></i> Sonraki Soru
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Sınav Sonuç Bölümü -->
+            <div class="exam-result" id="exam-result">
+                <h3><i class="fas fa-award"></i> Test Sonucu</h3>
+                <div class="score-display" id="total-score">0/50</div>
+                
+                <div class="result-message" id="result-message">
+                    Testi tamamladınız! Sonuçlarınız aşağıda gösterilmektedir.
+                </div>
+                
+                <div class="score-details">
+                    <h4>Puan Dağılımı</h4>
+                    <ul id="score-details-list">
+                        <!-- JS ile dinamik olarak eklenecek -->
+                    </ul>
+                </div>
+                
+                <div class="score-text">
+                    <p>Tebrikler! 5 soruluk testi tamamladınız.</p>
+                </div>
+                
+                <div class="result-buttons">
+                    <button class="next-exam-btn" id="restart-btn" aria-label="Testi yeniden başlat">
+                        <i class="fas fa-redo"></i> Testi Yeniden Başlat
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Fonksiyon Kavramı ve Fonksiyonun Nitel Özellikleri Değerlendirme Testi</p>
+        </footer>
+    </div>
+    
+    <!-- Nasıl Kullanılır Modal -->
+    <div class="modal" id="how-to-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> Nasıl Kullanılır?</h2>
+                <button class="close-modal" id="close-modal" aria-label="Modal penceresini kapat">&times;</button>
+            </div>
+            <div class="modal-instructions">
+                <h3>Düşey Doğru Testi Nasıl Uygulanır?</h3>
+                <ol>
+                    <li><strong>Kaydırıcıyı</strong> sağa ve sola hareket ettirerek düşey doğruyu kontrol edin</li>
+                    <li>Düşey doğrunun (kırmızı çizgi) grafiği kaç noktada kestiğine dikkat edin</li>
+                    <li>Bir fonksiyonda, her x değeri için en fazla bir y değeri olmalıdır</li>
+                    <li>Düşey doğru grafiği birden fazla noktada kesiyorsa, bu bir fonksiyon değildir</li>
+                </ol>
+                
+                <div class="modal-tip">
+                    <p><strong><i class="fas fa-lightbulb"></i> İpucu:</strong> Düşey doğru testinde, grafiği birden fazla noktada kesen herhangi bir düşey doğru bulursanız, bu bir fonksiyon değildir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Soru verileri
+            const questions = [
+                {
+                    definition: "\( \\mathrm{[-5,5] \\to \\mathbb{R}} \)",
+                    formula: "\( \\mathrm{x = y^2} \)",
+                    displayText: "\( \\mathrm{x = y^2} \) Bağıntısı ve Düşey Doğru Testi",
+                    question: "Grafikte gösterilen \( \\mathrm{[-5,5] \\to \\mathbb{R}} \) tanımlı \( \\mathrm{x = y^2} \) bağıntısı bir fonksiyon mudur?",
+                    options: [
+                        { text: "Evet, fonksiyondur.", value: "yes", correct: false },
+                        { text: "Hayır, fonksiyon değildir.", value: "no", correct: true }
+                    ],
+                    correctFeedback: "\(\\mathrm{ x = y^2} \) bağıntısı bir fonksiyon değildir.",
+                    explanation: "\(\\mathrm{ x = y^2} \) bağıntısı fonksiyon değildir çünkü her pozitif x değeri için iki farklı y değeri (\( y = \\sqrt{x} \) ve \( y = -\\sqrt{x} \)) bulunur. Düşey doğru testinde, x > 0 değerleri için düşey doğru grafiği iki noktada kesmektedir. Bir bağıntının fonksiyon olabilmesi için her x değerine karşılık en fazla bir y değeri olmalıdır.",
+                    points: 10,
+                    graphFunction: function(ctx, width, height, scale, xSliderValue) {
+                        // Parabol grafiği (x = y^2)
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#1a2a6c';
+                        ctx.lineWidth = 2.5;
+                        
+                        for (let y = -5; y <= 5; y += 0.05) {
+                            const x = y * y;
+                            if (x > 10) continue;
+                            
+                            const plotX = width / 2 + x * scale;
+                            const plotY = height / 2 - y * scale;
+                            
+                            if (y === -5) {
+                                ctx.moveTo(plotX, plotY);
+                            } else {
+                                ctx.lineTo(plotX, plotY);
+                            }
+                        }
+                        ctx.stroke();
+                        
+                        // Ok uçları
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#1a2a6c';
+                        ctx.lineWidth = 2.5;
+                        
+                        // Sağ üst ok (y = 5 noktası)
+                        const yTop = 5;
+                        const xTop = yTop * yTop;
+                        const plotXTop = width / 2 + xTop * scale;
+                        const plotYTop = height / 2 - yTop * scale;
+                        
+                        ctx.moveTo(plotXTop, plotYTop);
+                        ctx.lineTo(plotXTop - 10, plotYTop + 5);
+                        ctx.moveTo(plotXTop, plotYTop);
+                        ctx.lineTo(plotXTop - 5, plotYTop + 10);
+                        
+                        // Sağ alt ok (y = -5 noktası)
+                        const yBottom = -5;
+                        const xBottom = yBottom * yBottom;
+                        const plotXBottom = width / 2 + xBottom * scale;
+                        const plotYBottom = height / 2 - yBottom * scale;
+                        
+                        ctx.moveTo(plotXBottom, plotYBottom);
+                        ctx.lineTo(plotXBottom - 10, plotYBottom - 5);
+                        ctx.moveTo(plotXBottom, plotYBottom);
+                        ctx.lineTo(plotXBottom - 5, plotYBottom - 10);
+                        
+                        ctx.stroke();
+                        
+                        // Kesişim noktalarını hesapla ve çiz
+                        let count = 0;
+                        
+                        if (xSliderValue >= 0) {
+                            const y1 = Math.sqrt(xSliderValue);
+                            const y2 = -Math.sqrt(xSliderValue);
+                            
+                            // Pozitif y noktası
+                            const plotX1 = width / 2 + xSliderValue * scale;
+                            const plotY1 = height / 2 - y1 * scale;
+                            drawIntersectionPoint(ctx, plotX1, plotY1);
+                            count++;
+                            
+                            // Negatif y noktası (x>0 ise)
+                            if (xSliderValue > 0) {
+                                const plotX2 = width / 2 + xSliderValue * scale;
+                                const plotY2 = height / 2 - y2 * scale;
+                                drawIntersectionPoint(ctx, plotX2, plotY2);
+                                count++;
+                            }
+                        }
+                        
+                        return count;
+                    }
+                },
+                {
+                    definition: "\( \\mathrm{[-5,5] \\to \\mathbb{R}} \)",
+                    formula: "\( \\mathrm{y = x^2} \)",
+                    displayText: "\( \\mathrm{y = x^2} \) Bağıntısı ve Düşey Doğru Testi",
+                    question: "Grafikte gösterilen \( \\mathrm{[-5,5] \\to \\mathbb{R}} \) tanımlı \( \\mathrm{y = x^2} \) bağıntısı bir fonksiyon mudur?",
+                    options: [
+                        { text: "Evet, fonksiyondur.", value: "yes", correct: true },
+                        { text: "Hayır, fonksiyon değildir.", value: "no", correct: false }
+                    ],
+                    correctFeedback: "\(\\mathrm{ y = x^2} \) bağıntısı bir fonksiyondur.",
+                    explanation: "\(\\mathrm{ y = x^2} \) bağıntısı bir fonksiyondur çünkü her x değeri için tam olarak bir y değeri vardır. Düşey doğru testinde, herhangi bir düşey doğru grafiği en fazla bir noktada keser. Bu, bir bağıntının fonksiyon olması için gerekli koşuldur.",
+                    points: 10,
+                    graphFunction: function(ctx, width, height, scale, xSliderValue) {
+                        // Parabol grafiği (y = x^2)
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#1a2a6c';
+                        ctx.lineWidth = 2.5;
+                        
+                        for (let x = -5; x <= 5; x += 0.05) {
+                            const y = x * x;
+                            if (y > 10) continue;
+                            
+                            const plotX = width / 2 + x * scale;
+                            const plotY = height / 2 - y * scale;
+                            
+                            if (x === -5) {
+                                ctx.moveTo(plotX, plotY);
+                            } else {
+                                ctx.lineTo(plotX, plotY);
+                            }
+                        }
+                        ctx.stroke();
+                        
+                        // Ok uçları
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#1a2a6c';
+                        ctx.lineWidth = 2.5;
+                        
+                        // Sağ ok (x = 5 noktası)
+                        const xRight = 5;
+                        const yRight = xRight * xRight;
+                        const plotXRight = width / 2 + xRight * scale;
+                        const plotYRight = height / 2 - yRight * scale;
+                        
+                        ctx.moveTo(plotXRight, plotYRight);
+                        ctx.lineTo(plotXRight - 5, plotYRight + 10);
+                        ctx.moveTo(plotXRight, plotYRight);
+                        ctx.lineTo(plotXRight - 10, plotYRight + 5);
+                        
+                        // Sol ok (x = -5 noktası)
+                        const xLeft = -5;
+                        const yLeft = xLeft * xLeft;
+                        const plotXLeft = width / 2 + xLeft * scale;
+                        const plotYLeft = height / 2 - yLeft * scale;
+                        
+                        ctx.moveTo(plotXLeft, plotYLeft);
+                        ctx.lineTo(plotXLeft + 5, plotYLeft + 10);
+                        ctx.moveTo(plotXLeft, plotYLeft);
+                        ctx.lineTo(plotXLeft + 10, plotYLeft + 5);
+                        
+                        ctx.stroke();
+                        
+                        // Kesişim noktalarını hesapla ve çiz
+                        let count = 0;
+                        const yValue = xSliderValue * xSliderValue;
+                        
+                        // Düşey doğrunun grafikle kesişimini kontrol et
+                        if (xSliderValue >= -5 && xSliderValue <= 5) {
+                            const plotX = width / 2 + xSliderValue * scale;
+                            const plotY = height / 2 - yValue * scale;
+                            drawIntersectionPoint(ctx, plotX, plotY);
+                            count = 1;
+                        }
+                        
+                        return count;
+                    }
+                },
+                {
+                    definition: "\( \\mathrm{[-5,5] \\to \\mathbb{R}} \)",
+                    formula: "\( \\mathrm{x^2 + y^2 = 9} \)",
+                    displayText: "\( \\mathrm{x^2 + y^2 = 9} \) Bağıntısı ve Düşey Doğru Testi",
+                    question: "Grafikte gösterilen \( \\mathrm{[-5,5] \\to \\mathbb{R}} \) tanımlı \( \\mathrm{x^2 + y^2 = 9} \) (birim çember) bağıntısı bir fonksiyon mudur?",
+                    options: [
+                        { text: "Evet, fonksiyondur.", value: "yes", correct: false },
+                        { text: "Hayır, fonksiyon değildir.", value: "no", correct: true }
+                    ],
+                    correctFeedback: "\(\\mathrm{ x^2 + y^2 = 9} \) bağıntısı bir fonksiyon değildir.",
+                    explanation: "\(\\mathrm{ x^2 + y^2 = 9} \) bağıntısı (birim çember) fonksiyon değildir çünkü -3 < x < 3 aralığındaki her x değeri için iki farklı y değeri (\( y = \\sqrt{9 - x^2} \) ve \( y = -\\sqrt{9 - x^2} \)) bulunur. Düşey doğru testinde, bu aralıktaki x değerleri için düşey doğru grafiği iki noktada kesmektedir.",
+                    points: 10,
+                    graphFunction: function(ctx, width, height, scale, xSliderValue) {
+                        // Çember grafiği (x^2 + y^2 = 9)
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#1a2a6c';
+                        ctx.lineWidth = 2.5;
+                        
+                        const radius = 3;
+                        const centerX = width / 2;
+                        const centerY = height / 2;
+                        
+                        ctx.arc(centerX, centerY, radius * scale, 0, Math.PI * 2);
+                        ctx.stroke();
+                        
+                        // Kesişim noktalarını hesapla ve çiz
+                        let count = 0;
+                        
+                        if (Math.abs(xSliderValue) <= radius) {
+                            const y1 = Math.sqrt(radius * radius - xSliderValue * xSliderValue);
+                            const y2 = -y1;
+                            
+                            // Pozitif y noktası
+                            const plotX1 = width / 2 + xSliderValue * scale;
+                            const plotY1 = height / 2 - y1 * scale;
+                            drawIntersectionPoint(ctx, plotX1, plotY1);
+                            count++;
+                            
+                            // Negatif y noktası
+                            const plotX2 = width / 2 + xSliderValue * scale;
+                            const plotY2 = height / 2 - y2 * scale;
+                            drawIntersectionPoint(ctx, plotX2, plotY2);
+                            count++;
+                        }
+                        
+                        return count;
+                    }
+                },
+                {
+                    definition: "\( \\mathrm{[-5,5] \\to \\mathbb{R}} \)",
+                    formula: "\( \\mathrm{y = \\sqrt{x}} \)",
+                    displayText: "\( \\mathrm{y = \\sqrt{x}} \) Bağıntısı ve Düşey Doğru Testi",
+                    question: "Grafikte gösterilen \( \\mathrm{[0,5] \\to \\mathbb{R}} \) tanımlı \( \\mathrm{y = \\sqrt{x}} \) bağıntısı bir fonksiyon mudur?",
+                    options: [
+                        { text: "Evet, fonksiyondur.", value: "yes", correct: true },
+                        { text: "Hayır, fonksiyon değildir.", value: "no", correct: false }
+                    ],
+                    correctFeedback: "\(\\mathrm{ y = \\sqrt{x}} \) bağıntısı bir fonksiyondur.",
+                    explanation: "\(\\mathrm{ y = \\sqrt{x}} \) bağıntısı bir fonksiyondur çünkü tanım kümesindeki (x ≥ 0) her x değeri için tam olarak bir y değeri vardır. Düşey doğru testinde, herhangi bir düşey doğru grafiği en fazla bir noktada keser. Negatif y değerlerini içermediği için (karekök fonksiyonu) her x değeri için tek bir y değeri üretir.",
+                    points: 10,
+                    graphFunction: function(ctx, width, height, scale, xSliderValue) {
+                        // Karekök fonksiyonu grafiği (y = sqrt(x))
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#1a2a6c';
+                        ctx.lineWidth = 2.5;
+                        
+                        for (let x = 0; x <= 5; x += 0.05) {
+                            const y = Math.sqrt(x);
+                            if (y > 5) continue;
+                            
+                            const plotX = width / 2 + x * scale;
+                            const plotY = height / 2 - y * scale;
+                            
+                            if (x === 0) {
+                                ctx.moveTo(plotX, plotY);
+                            } else {
+                                ctx.lineTo(plotX, plotY);
+                            }
+                        }
+                        ctx.stroke();
+                        
+                        // Ok ucu (x = 5 noktası)
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#1a2a6c';
+                        ctx.lineWidth = 2.5;
+                        
+                        const xEnd = 5;
+                        const yEnd = Math.sqrt(xEnd);
+                        const plotXEnd = width / 2 + xEnd * scale;
+                        const plotYEnd = height / 2 - yEnd * scale;
+                        
+                        ctx.moveTo(plotXEnd, plotYEnd);
+                        ctx.lineTo(plotXEnd - 5, plotYEnd + 5);
+                        ctx.moveTo(plotXEnd, plotYEnd);
+                        ctx.lineTo(plotXEnd - 10, plotYEnd + 2);
+                        
+                        ctx.stroke();
+                        
+                        // Kesişim noktalarını hesapla ve çiz
+                        let count = 0;
+                        
+                        if (xSliderValue >= 0) {
+                            const y = Math.sqrt(xSliderValue);
+                            const plotX = width / 2 + xSliderValue * scale;
+                            const plotY = height / 2 - y * scale;
+                            drawIntersectionPoint(ctx, plotX, plotY);
+                            count = 1;
+                        }
+                        
+                        return count;
+                    }
+                },
+                {
+                    definition: "\( \\mathrm{[-5,5] \\to \\mathbb{R}} \)",
+                    formula: "\( \\mathrm{|y| = x} \)",
+                    displayText: "\( \\mathrm{|y| = x} \) Bağıntısı ve Düşey Doğru Testi",
+                    question: "Grafikte gösterilen \( \\mathrm{[0,5] \\to \\mathbb{R}} \) tanımlı \( \\mathrm{|y| = x} \) bağıntısı bir fonksiyon mudur?",
+                    options: [
+                        { text: "Evet, fonksiyondur.", value: "yes", correct: false },
+                        { text: "Hayır, fonksiyon değildir.", value: "no", correct: true }
+                    ],
+                    correctFeedback: "\(\\mathrm{ |y| = x} \) bağıntısı bir fonksiyon değildir.",
+                    explanation: "\(\\mathrm{ |y| = x} \) bağıntısı fonksiyon değildir çünkü x > 0 değerleri için iki farklı y değeri (\( y = x \) ve \( y = -x \)) bulunur. Düşey doğru testinde, x > 0 değerleri için düşey doğru grafiği iki noktada kesmektedir. Sadece x = 0 noktasında tek bir y değeri (y = 0) vardır, ancak bu tek başına bağıntının fonksiyon olması için yeterli değildir.",
+                    points: 10,
+                    graphFunction: function(ctx, width, height, scale, xSliderValue) {
+                        // Mutlak değer fonksiyonu grafiği (|y| = x)
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#1a2a6c';
+                        ctx.lineWidth = 2.5;
+                        
+                        // y = x kısmı
+                        for (let x = 0; x <= 5; x += 0.05) {
+                            const y = x;
+                            const plotX = width / 2 + x * scale;
+                            const plotY = height / 2 - y * scale;
+                            
+                            if (x === 0) {
+                                ctx.moveTo(plotX, plotY);
+                            } else {
+                                ctx.lineTo(plotX, plotY);
+                            }
+                        }
+                        
+                        // y = -x kısmı
+                        for (let x = 0; x <= 5; x += 0.05) {
+                            const y = -x;
+                            const plotX = width / 2 + x * scale;
+                            const plotY = height / 2 - y * scale;
+                            
+                            if (x === 0) {
+                                ctx.moveTo(plotX, plotY);
+                            } else {
+                                ctx.lineTo(plotX, plotY);
+                            }
+                        }
+                        
+                        ctx.stroke();
+                        
+                        // Ok uçları
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#1a2a6c';
+                        ctx.lineWidth = 2.5;
+                        
+                        // Sağ üst ok (x = 5, y = 5 noktası)
+                        const xTop = 5;
+                        const yTop = xTop;
+                        const plotXTop = width / 2 + xTop * scale;
+                        const plotYTop = height / 2 - yTop * scale;
+                        
+                        ctx.moveTo(plotXTop, plotYTop);
+                        ctx.lineTo(plotXTop - 5, plotYTop + 5);
+                        ctx.moveTo(plotXTop, plotYTop);
+                        ctx.lineTo(plotXTop - 10, plotYTop + 2);
+                        
+                        // Sağ alt ok (x = 5, y = -5 noktası)
+                        const xBottom = 5;
+                        const yBottom = -xBottom;
+                        const plotXBottom = width / 2 + xBottom * scale;
+                        const plotYBottom = height / 2 - yBottom * scale;
+                        
+                        ctx.moveTo(plotXBottom, plotYBottom);
+                        ctx.lineTo(plotXBottom - 5, plotYBottom - 5);
+                        ctx.moveTo(plotXBottom, plotYBottom);
+                        ctx.lineTo(plotXBottom - 10, plotYBottom - 2);
+                        
+                        ctx.stroke();
+                        
+                        // Kesişim noktalarını hesapla ve çiz
+                        let count = 0;
+                        
+                        if (xSliderValue >= 0) {
+                            // y = x kısmı
+                            const y1 = xSliderValue;
+                            const plotX1 = width / 2 + xSliderValue * scale;
+                            const plotY1 = height / 2 - y1 * scale;
+                            drawIntersectionPoint(ctx, plotX1, plotY1);
+                            count++;
+                            
+                            // y = -x kısmı (x > 0 ise)
+                            if (xSliderValue > 0) {
+                                const y2 = -xSliderValue;
+                                const plotX2 = width / 2 + xSliderValue * scale;
+                                const plotY2 = height / 2 - y2 * scale;
+                                drawIntersectionPoint(ctx, plotX2, plotY2);
+                                count++;
+                            }
+                        }
+                        
+                        return count;
+                    }
+                }
+            ];
+            
+            // Kesişim noktası çizim fonksiyonu
+            function drawIntersectionPoint(ctx, x, y) {
+                ctx.beginPath();
+                ctx.fillStyle = '#d9534f';
+                ctx.arc(x, y, 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Canvas ve grafik çizimleri
+            const canvas = document.getElementById('graph-canvas');
+            const ctx = canvas.getContext('2d');
+            const slider = document.getElementById('vertical-slider');
+            const sliderValue = document.getElementById('slider-value');
+            const currentX = document.getElementById('current-x');
+            const intersectionCount = document.getElementById('intersection-count');
+            const resetBtn = document.getElementById('reset-btn');
+            
+            // Soru elemanları
+            const currentQuestionElement = document.getElementById('current-question');
+            const totalPointsElement = document.getElementById('total-points');
+            const relationDefinitionElement = document.getElementById('relation-definition');
+            const relationFormulaElement = document.getElementById('relation-formula');
+            const functionDisplayTextElement = document.getElementById('function-display-text');
+            const questionTextElement = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const correctFeedbackTextElement = document.getElementById('correct-feedback-text');
+            const pointsEarnedElement = document.getElementById('points-earned');
+            const explanationTextElement = document.getElementById('explanation-text');
+            const questionPointsElement = document.getElementById('question-points');
+            
+            // İlerleme çubuğu
+            const progressBar = document.getElementById('progress-bar');
+            const currentQuestionInfoElement = document.getElementById('current-question-info');
+            const currentScoreElement = document.getElementById('current-score');
+            
+            // Sonuç bölümü
+            const examResult = document.getElementById('exam-result');
+            const totalScoreElement = document.getElementById('total-score');
+            const resultMessageElement = document.getElementById('result-message');
+            const scoreDetailsList = document.getElementById('score-details-list');
+            const restartBtn = document.getElementById('restart-btn');
+            
+            // Butonlar
+            const checkButton = document.getElementById('check-btn');
+            const nextButton = document.getElementById('next-btn');
+            
+            // Modal
+            const howToBtn = document.getElementById('how-to-btn');
+            const howToModal = document.getElementById('how-to-modal');
+            const closeModal = document.getElementById('close-modal');
+            
+            // Sınav durumu
+            let currentQuestionIndex = 0;
+            let userAnswers = [];
+            let scores = [];
+            let totalScore = 0;
+            let selectedOption = null;
+            
+            // Canvas boyutlarını ayarla
+            function resizeCanvas() {
+                try {
+                    const container = canvas.parentElement;
+                    canvas.width = container.clientWidth;
+                    canvas.height = 400;
+                    drawGraph();
+                } catch (error) {
+                    console.error('Canvas boyutlandırma hatası:', error);
+                }
+            }
+            
+            // Grafik çizim fonksiyonu
+            function drawGraph() {
+                try {
+                    const width = canvas.width;
+                    const height = canvas.height;
+                    const padding = 2;
+                    const scale = 40;
+                    const xSliderValue = parseFloat(slider.value);
+                    const currentQuestion = questions[currentQuestionIndex];
+                    
+                    // Temizle
+                    ctx.clearRect(0, 0, width, height);
+                    
+                    // Arka plan
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
+                    
+                    // Izgara çizgileri
+                    ctx.strokeStyle = '#f0f0f0';
+                    ctx.lineWidth = 1;
+                    
+                    // Yatay çizgiler
+                    for (let y = padding; y < height - padding; y += scale) {
+                        ctx.beginPath();
+                        ctx.moveTo(padding, y);
+                        ctx.lineTo(width - padding, y);
+                        ctx.stroke();
+                    }
+                    
+                    // Dikey çizgiler
+                    for (let x = padding; x < width - padding; x += scale) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, padding);
+                        ctx.lineTo(x, height - padding);
+                        ctx.stroke();
+                    }
+                    
+                    // Koordinat eksenleri
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 1.5;
+                    
+                    // X ekseni
+                    ctx.moveTo(padding, height / 2);
+                    ctx.lineTo(width - padding, height / 2);
+                    
+                    // Y ekseni
+                    ctx.moveTo(width / 2, padding);
+                    ctx.lineTo(width / 2, height - padding);
+                    
+                    // Ok uçları
+                    // X ekseni sağ ok
+                    ctx.moveTo(width - padding, height / 2);
+                    ctx.lineTo(width - padding - 10, height / 2 - 5);
+                    ctx.moveTo(width - padding, height / 2);
+                    ctx.lineTo(width - padding - 10, height / 2 + 5);
+                    
+                    // X ekseni sol ok
+                    ctx.moveTo(padding, height / 2);
+                    ctx.lineTo(padding + 10, height / 2 - 5);
+                    ctx.moveTo(padding, height / 2);
+                    ctx.lineTo(padding + 10, height / 2 + 5);
+                    
+                    ctx.fillStyle = '#1a2a6c';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('x', width - padding - 15, height / 2 - 15);
+                    
+                    // Y ekseni üst ok
+                    ctx.moveTo(width / 2, padding);
+                    ctx.lineTo(width / 2 - 5, padding + 10);
+                    ctx.moveTo(width / 2, padding);
+                    ctx.lineTo(width / 2 + 5, padding + 10);
+                    
+                    // Y ekseni alt ok
+                    ctx.moveTo(width / 2, height - padding);
+                    ctx.lineTo(width / 2 - 5, height - padding - 10);
+                    ctx.moveTo(width / 2, height - padding);
+                    ctx.lineTo(width / 2 + 5, height - padding - 10);
+                    
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = '#1a2a6c';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText('y', width / 2 + 15, padding + 15);
+                    
+                    // Eksen etiketleri
+                    ctx.fillStyle = '#1a2a6c';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    // X ekseni etiketleri
+                    for (let x = -8; x <= 8; x++) {
+                        if (x === 0) continue;
+                        const xPos = width / 2 + x * scale;
+                        ctx.fillText(x.toString(), xPos, height / 2 + 20);
+                        ctx.beginPath();
+                        ctx.arc(xPos, height / 2, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    
+                    // Y ekseni etiketleri
+                    ctx.fillStyle = '#1a2a6c';
+                    for (let y = -4; y <= 4; y++) {
+                        if (y === 0) continue;
+                        const yPos = height / 2 - y * scale;
+                        ctx.fillText(y.toString(), width / 2 - 20, yPos);
+                        ctx.beginPath();
+                        ctx.arc(width / 2, yPos, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    
+                    // Orijin noktasına belirgin bir işaret koy
+                    ctx.beginPath();
+                    ctx.fillStyle = '#1a2a6c';
+                    ctx.arc(width / 2, height / 2, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // "O" etiketi
+                    ctx.fillStyle = '#1a2a6c';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText('O', width / 2 - 8, height / 2 + 8);
+                    
+                    // Mevcut sorunun grafik fonksiyonunu çağır
+                    const intersectionCount = currentQuestion.graphFunction(ctx, width, height, scale, xSliderValue);
+                    
+                    // Düşey doğru (x = c)
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#b21f1f';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    
+                    const lineX = width / 2 + xSliderValue * scale;
+                    ctx.moveTo(lineX, padding);
+                    ctx.lineTo(lineX, height - padding);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    // Kesişim bilgilerini güncelle
+                    currentX.textContent = parseFloat(xSliderValue).toLocaleString('tr-TR');
+                    document.getElementById('intersection-count').textContent = intersectionCount;
+                } catch (error) {
+                    console.error('Grafik çizim hatası:', error);
+                }
+            }
+            
+            // Yeni soru yükle
+            function loadQuestion(index) {
+                if (index >= questions.length) {
+                    showFinalResults();
+                    return;
+                }
+                
+                const question = questions[index];
+                
+                // Soru bilgilerini güncelle
+                currentQuestionIndex = index;
+                currentQuestionElement.textContent = index + 1;
+                currentQuestionInfoElement.textContent = index + 1;
+                relationDefinitionElement.innerHTML = question.definition;
+                relationFormulaElement.innerHTML = question.formula;
+                functionDisplayTextElement.innerHTML = question.displayText;
+                questionTextElement.innerHTML = question.question;
+                correctFeedbackTextElement.innerHTML = question.correctFeedback;
+                explanationTextElement.innerHTML = question.explanation;
+                pointsEarnedElement.textContent = question.points;
+                questionPointsElement.textContent = question.points + " Puan";
+                
+                // Seçenekleri oluştur
+                optionsContainer.innerHTML = '';
+                question.options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option';
+                    optionElement.setAttribute('data-value', option.value);
+                    optionElement.textContent = option.text;
+                    optionsContainer.appendChild(optionElement);
+                });
+                
+                // Slider'ı sıfırla
+                slider.value = 0;
+                sliderValue.textContent = '0';
+                
+                // Durumu sıfırla
+                selectedOption = null;
+                optionsContainer.classList.remove('disabled');
+                document.querySelectorAll('.feedback').forEach(fb => fb.style.display = 'none');
+                document.querySelector('.explanation').style.display = 'none';
+                document.querySelectorAll('.option.correct-answer').forEach(el => el.classList.remove('correct-answer'));
+                
+                // Butonları sıfırla
+                checkButton.disabled = true;
+                checkButton.innerHTML = '<i class="fas fa-check"></i> Cevabı Kontrol Et';
+                checkButton.style.background = 'linear-gradient(to right, #1a2a6c, #3a5fc5)';
+                nextButton.disabled = true;
+                
+                // İlerleme çubuğunu güncelle
+                progressBar.style.width = `${(index / questions.length) * 100}%`;
+                
+                // Grafiği çiz
+                resizeCanvas();
+            }
+            
+            // Sonuçları göster
+            function showFinalResults() {
+                // Soru bölümünü gizle
+                document.querySelector('.question-section').style.display = 'none';
+                document.querySelector('.canvas-container').style.display = 'none';
+                
+                // Sonuç bölümünü göster
+                examResult.style.display = 'block';
+                
+                // Toplam puanı hesapla
+                totalScore = scores.reduce((sum, score) => sum + score, 0);
+                totalScoreElement.textContent = `${totalScore}/50`;
+                
+                // Sonuç mesajını ayarla
+                if (totalScore >= 45) {
+                    resultMessageElement.textContent = "Mükemmel! Tüm soruları doğru cevapladınız.";
+                    resultMessageElement.className = "result-message excellent";
+                } else if (totalScore >= 30) {
+                    resultMessageElement.textContent = "İyi iş çıkardınız! Fonksiyon kavramını anlamış görünüyorsunuz.";
+                    resultMessageElement.className = "result-message good";
+                } else {
+                    resultMessageElement.textContent = "Daha fazla çalışmaya ihtiyacınız var. Fonksiyon kavramını tekrar gözden geçirin.";
+                    resultMessageElement.className = "result-message average";
+                }
+                
+                // Puan detaylarını oluştur
+                scoreDetailsList.innerHTML = '';
+                questions.forEach((question, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>Soru ${index + 1}: ${question.formula}</span>
+                        <span class="score-value">${scores[index]}/${question.points}</span>
+                    `;
+                    scoreDetailsList.appendChild(li);
+                });
+                
+                // Toplam puanı ekle
+                const totalLi = document.createElement('li');
+                totalLi.style.marginTop = '10px';
+                totalLi.style.paddingTop = '10px';
+                totalLi.style.borderTop = '1px solid #dee2e6';
+                totalLi.innerHTML = `
+                    <span><strong>Toplam Puan:</strong></span>
+                    <span class="score-value"><strong>${totalScore}/50</strong></span>
+                `;
+                scoreDetailsList.appendChild(totalLi);
+                
+                // Sayfayı sonuçlara kaydır
+                examResult.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Kaydırıcı olayları
+            slider.addEventListener('input', function() {
+                sliderValue.textContent = parseFloat(this.value).toLocaleString('tr-TR');
+                drawGraph();
+            });
+            
+            // Sıfırla butonu
+            resetBtn.addEventListener('click', function() {
+                slider.value = 0;
+                sliderValue.textContent = '0';
+                drawGraph();
+            });
+            
+            // Seçeneklerin tıklanma olayı
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('option')) {
+                    // Önceki seçimi temizle
+                    document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Yeni seçimi yap
+                    e.target.classList.add('selected');
+                    selectedOption = e.target.getAttribute('data-value');
+                    
+                    // Feedback'leri gizle
+                    document.querySelectorAll('.feedback').forEach(fb => fb.style.display = 'none');
+                    document.querySelector('.explanation').style.display = 'none';
+                    
+                    // Cevapları Kontrol Et butonunu aktifleştir
+                    checkButton.disabled = false;
+                    checkButton.innerHTML = '<i class="fas fa-check"></i> Cevabı Kontrol Et';
+                    checkButton.style.background = 'linear-gradient(to right, #1a2a6c, #3a5fc5)';
+                }
+            });
+            
+            // Cevapları Kontrol Et butonu
+            checkButton.addEventListener('click', function() {
+                if (selectedOption === null) return;
+                
+                const currentQuestion = questions[currentQuestionIndex];
+                const isCorrect = currentQuestion.options.find(opt => opt.value === selectedOption).correct;
+                
+                // Seçenekleri devre dışı bırak
+                optionsContainer.classList.add('disabled');
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.style.cursor = 'not-allowed';
+                    opt.style.opacity = '0.7';
+                    opt.style.pointerEvents = 'none';
+                });
+                
+                // Feedback'leri gizle
+                document.querySelectorAll('.feedback').forEach(fb => fb.style.display = 'none');
+                
+                // Doğru cevabı göster
+                if (isCorrect) {
+                    document.querySelector('.feedback.correct').style.display = 'block';
+                    document.querySelector('.explanation').style.display = 'block';
+                    nextButton.disabled = false;
+                    this.innerHTML = '<i class="fas fa-check-double"></i> Doğru Cevap!';
+                    this.style.background = 'linear-gradient(to right, #28a745, #4caf50)';
+                    this.disabled = true;
+                    
+                    // Puanı kaydet
+                    scores[currentQuestionIndex] = currentQuestion.points;
+                } else {
+                    document.querySelector('.feedback.incorrect').style.display = 'block';
+                    document.querySelector('.explanation').style.display = 'block';
+                    
+                    // Puanı kaydet (0 puan)
+                    scores[currentQuestionIndex] = 0;
+                    
+                    // Doğru cevabı vurgula
+                    const correctOptionValue = currentQuestion.options.find(opt => opt.correct).value;
+                    document.querySelector(`.option[data-value="${correctOptionValue}"]`).classList.add('correct-answer');
+                    
+                    // Sonraki butonunu aktifleştir
+                    nextButton.disabled = false;
+                    this.disabled = true;
+                }
+                
+                // Toplam puanı güncelle
+                totalScore = scores.reduce((sum, score) => sum + (score || 0), 0);
+                currentScoreElement.textContent = totalScore;
+                totalPointsElement.textContent = totalScore;
+            });
+            
+            // Sonraki soru butonu
+            nextButton.addEventListener('click', function() {
+                loadQuestion(currentQuestionIndex + 1);
+            });
+            
+            // Testi yeniden başlat butonu
+            restartBtn.addEventListener('click', function() {
+                // Durumu sıfırla
+                currentQuestionIndex = 0;
+                userAnswers = [];
+                scores = [];
+                totalScore = 0;
+                
+                // Soru bölümünü göster
+                document.querySelector('.question-section').style.display = 'block';
+                document.querySelector('.canvas-container').style.display = 'block';
+                
+                // Sonuç bölümünü gizle
+                examResult.style.display = 'none';
+                
+                // İlk soruyu yükle
+                loadQuestion(0);
+                
+                // Sayfayı başa kaydır
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            // Modal açma
+            howToBtn.addEventListener('click', function() {
+                howToModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Modal kapatma
+            closeModal.addEventListener('click', function() {
+                howToModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Modal dışına tıklayarak kapatma
+            window.addEventListener('click', function(event) {
+                if (event.target === howToModal) {
+                    howToModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // ESC tuşu ile kapatma
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    howToModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Pencere boyutu değiştiğinde canvas'ı yeniden boyutlandır
+            window.addEventListener('resize', function() {
+                requestAnimationFrame(resizeCanvas);
+            });
+            
+            // Başlangıçta ilk soruyu yükle
+            loadQuestion(0);
+        });
+    </script>
+</body>
+</html>
