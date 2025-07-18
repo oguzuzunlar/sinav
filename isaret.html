@@ -781,6 +781,15 @@
             
             <div class="panel">
                 <h2><span>📈</span> Fonksiyon Grafiği</h2>
+                <!-- Mobil için grafik yenileme butonu -->
+                <div id="graphRefreshSection" style="display: none; text-align: center; margin-bottom: 10px;">
+                    <button id="refreshGraphBtn" style="background: #27ae60; font-size: 12px; padding: 6px 12px;">
+                        <span>🔄</span> Grafiği Yenile
+                    </button>
+                    <small style="display: block; color: #7f8c8d; margin-top: 5px; font-size: 11px;">
+                        Grafik görünmüyorsa bu butona tıklayın
+                    </small>
+                </div>
                 <canvas id="functionCanvas" width="600" height="500"></canvas>
             </div>
             
@@ -1116,14 +1125,169 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', () => {
         adjustCanvasSize();
         updatePointSizes(); // Nokta boyutlarını güncelle
+        
+        // Canvas içeriğini yeniden çiz
+        setTimeout(() => {
+            if (polynomialFunction) {
+                drawGrid();
+                if (currentStage === 'practice') {
+                    // Practice modunda statik çizim
+                    drawFunctionStatic();
+                } else if (!animationFrameId) {
+                    // Eğer animasyon bittiyse fonksiyonu yeniden çiz
+                    animate();
+                }
+            } else {
+                drawGrid();
+            }
+        }, 100); // Kısa gecikme ile boyut ayarlamasının tamamlanmasını bekle
+    });
+
+    // Canvas görünürlük kontrolü ve yeniden çizim
+    let canvasVisible = true;
+    let lastDrawnFunction = null;
+    
+    // Intersection Observer ile canvas görünürlüğünü takip et
+    const canvasObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            canvasVisible = entry.isIntersecting;
+            if (canvasVisible && lastDrawnFunction && currentStage === 'practice') {
+                // Canvas görünür hale geldiğinde ve practice modundaysa yeniden çiz
+                setTimeout(() => {
+                    drawGrid();
+                    drawFunctionStatic();
+                }, 100);
+            }
+        });
+    }, {
+        threshold: 0.1 // Canvas'ın %10'u görünür olduğunda tetiklenir
+    });
+
+    // Canvas'ı gözlemle
+    canvasObserver.observe(canvas);
+
+    // Grafik yenileme butonu event handler'ı
+    const refreshGraphBtn = document.getElementById('refreshGraphBtn');
+    const graphRefreshSection = document.getElementById('graphRefreshSection');
+    
+    refreshGraphBtn.addEventListener('click', () => {
         if (polynomialFunction) {
             drawGrid();
-            // Eğer animasyon bittiyse fonksiyonu yeniden çiz
-            if (!animationFrameId) {
-                animate();
+            drawFunctionStatic();
+            
+            // Başarı mesajı göster
+            refreshGraphBtn.innerHTML = '<span>✅</span> Yenilendi';
+            refreshGraphBtn.style.background = '#27ae60';
+            
+            setTimeout(() => {
+                refreshGraphBtn.innerHTML = '<span>🔄</span> Grafiği Yenile';
+                refreshGraphBtn.style.background = '#27ae60';
+            }, 1500);
+        }
+    });
+
+    // Mobil cihazları tespit et ve refresh butonunu göster
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                          window.innerWidth <= 768;
+    
+    if (isMobileDevice) {
+        graphRefreshSection.style.display = 'block';
+    }
+
+    // Scroll event listener'ı ekle - mobil için ek güvenlik
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            if (canvasVisible && polynomialFunction && currentStage === 'practice') {
+                const isEmpty = isCanvasEmpty();
+                if (isEmpty) {
+                    console.log('Canvas boş tespit edildi, yeniden çiziliyor...');
+                    drawGrid();
+                    drawFunctionStatic();
+                    
+                    // Kullanıcıya bilgilendirme göster
+                    showCanvasRefreshNotification();
+                }
             }
-        } else {
-            drawGrid();
+        }, 250);
+    });
+
+    // Canvas'ın boş olup olmadığını kontrol eden fonksiyon
+    function isCanvasEmpty() {
+        const imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+        const data = imageData.data;
+        
+        // Tüm pikselleri kontrol et
+        for (let i = 0; i < data.length; i += 4) {
+            // Alpha kanalı 0 değilse (transparan değilse) içerik var
+            if (data[i + 3] !== 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Kullanıcıya canvas yenileme bildirimi göster
+    function showCanvasRefreshNotification() {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out;
+        `;
+        notification.innerHTML = '📈 Grafik yenilendi';
+        
+        // Animasyon CSS'i ekle
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(notification);
+        
+        // 2 saniye sonra kaldır
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 2000);
+    }
+
+    // Page Visibility API ile sayfa görünürlüğünü takip et
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && polynomialFunction && currentStage === 'practice') {
+            // Sayfa görünür hale geldiğinde canvas'ı kontrol et ve gerekirse yeniden çiz
+            setTimeout(() => {
+                const isEmpty = isCanvasEmpty();
+                if (isEmpty) {
+                    console.log('Sayfa görünür hale geldi, canvas yeniden çiziliyor...');
+                    drawGrid();
+                    drawFunctionStatic();
+                }
+            }, 200);
         }
     });
 
@@ -1333,6 +1497,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Statik fonksiyon çizimi (animasyon olmadan)
     function drawFunctionStatic() {
+        // Fonksiyonu kaydet
+        lastDrawnFunction = {
+            domainStart,
+            domainEnd,
+            roots: [...roots],
+            tangentPoints: [...tangentPoints],
+            leadingCoefficient: currentLeadingCoefficient
+        };
+        
         // Fonksiyon grafiğini çiz
         ctx.beginPath();
         let hasValidPoint = false;
