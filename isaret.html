@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fonksiyon İşareti Etkinliği</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global mobile optimizations */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Prevent zoom on input focus for mobile */
+        input, select, textarea {
+            font-size: 16px !important;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            margin: 0 auto 25px auto; /* Ortalama için margin değişti */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-bottom: 5px solid #3498db;
+            max-width: 800px; /* Masaüstünde maksimum 800px */
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+        
+        .learning-stages {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px auto;
+            flex-wrap: wrap;
+            max-width: 800px; /* Masaüstünde maksimum 800px */
+        }
+        
+        .stage {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 15px;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid;
+            transition: transform 0.3s ease;
+        }
+        
+        .stage:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stage h3 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stage-icon {
+            font-size: 1.4rem;
+        }
+        
+        .exploration { border-color: #3498db; }
+        .assumption { border-color: #e74c3c; }
+        .justification { border-color: #2ecc71; }
+        .generalization { border-color: #f39c12; }
+        
+        /* CSS overflow kontrolü - içeriklerin taşmasını önle */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 800px; /* Masaüstünde maksimum 800px */
+            margin: 0 auto;
+            overflow-x: auto; /* Yatay kaydırma */
+            overflow-y: visible; /* Dikey overflow görünür */
+            box-sizing: border-box; /* Border box model */
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            flex: 1;
+            min-width: 300px;
+            max-width: 100%;
+            overflow: hidden; /* İçerik taşmasını önle */
+            word-wrap: break-word; /* Uzun kelimeleri böl */
+            box-sizing: border-box; /* Border box model */
+        }
+        
+        .panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden; /* Başlık taşmasını önle */
+            text-overflow: ellipsis; /* Uzun başlıkları ... ile göster */
+            white-space: nowrap; /* Tek satırda tut */
+        }
+        
+        canvas {
+            display: block;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin: 0 auto;
+            width: 100% !important;
+            max-width: min(800px, calc(100% - 20px)); /* Masa üstünde maksimum 800px, container içinde marj bırak */
+            height: auto; /* Otomatik yükseklik */
+            max-height: 450px; /* Masaüstünde daha küçük maksimum yükseklik */
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            min-height: 44px; /* Apple'ın önerdiği minimum dokunma hedefi */
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.25);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #resetButton {
+            background: #e74c3c;
+        }
+        
+        #resetButton:hover {
+            background: #c0392b;
+        }
+        
+        #checkSignTable {
+            background: #9b59b6;
+        }
+        
+        #checkSignTable:hover {
+            background: #8e44ad;
+        }
+        
+        #saveButton {
+            background: #27ae60;
+        }
+        
+        #saveButton:hover {
+            background: #219653;
+        }
+        
+        /* Stage Selection Styles */
+        .stage-selection {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 3px solid #3498db;
+        }
+        
+        .stage-selection h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        
+        .stage-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stage-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 20px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 250px;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .stage-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(135deg, #2980b9, #3498db);
+        }
+        
+        .stage-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .stage-btn small {
+            display: block;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            font-weight: normal;
+            opacity: 0.9;
+        }
+        
+        .progress-info {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .current-stage-info {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid #3498db;
+        }
+        
+        .current-stage-info h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 1.3rem;
+        }
+        
+        #functionProgress {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        /* Sign table styles - overflow kontrolü */
+        .sign-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            table-layout: fixed; /* Sabit tablo düzeni */
+            max-width: 100%; /* Maksimum genişlik */
+            box-sizing: border-box; /* Border box model */
+        }
+        
+        .sign-table th, .sign-table td {
+            border: 1px solid #ddd;
+            padding: 12px 8px;
+            text-align: center;
+            min-width: 40px;
+            height: 40px;
+            overflow: hidden; /* İçerik taşmasını önle */
+            text-overflow: ellipsis; /* Uzun metinleri ... ile göster */
+            white-space: nowrap; /* Tek satırda tut */
+        }
+        
+        .sign-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .sign-select {
+            width: 50px;
+            padding: 4px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+        }
+        
+        .positive { background: #d4edda; color: #155724; font-weight: bold; }
+        .negative { background: #f8d7da; color: #721c24; font-weight: bold; }
+        .correct { background: #d1ecf1; border: 2px solid #0c5460; }
+        .incorrect { background: #f5c6cb; border: 2px solid #721c24; }
+        .hatched { background: #f8f9fa; color: #6c757d; }
+        .pending { background: #fff3cd; }
+        .root-cell-x { background: #fff3cd; font-weight: bold; }
+        .root-cell-fx { background: #fff3cd; font-weight: bold; }
+        .boundary-cell-x { background: #e2e3e5; font-weight: bold; }
+        .boundary-cell-fx { background: #e2e3e5; font-weight: bold; }
+        .tangent-cell { border: 2px solid #9b59b6; }
+        
+        /* Analysis box styles - overflow kontrolü */
+        .analysis-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow: hidden; /* İçerik taşmasını önle */
+            word-wrap: break-word; /* Uzun kelimeleri böl */
+            max-width: 100%; /* Maksimum genişlik */
+        }
+        
+        .analysis-box h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden; /* Başlık taşmasını önle */
+            text-overflow: ellipsis; /* Uzun başlıkları ... ile göster */
+        }
+        
+        /* Feedback box styles */
+        .feedback-box {
+            background: #e8f4fc;
+            border: 1px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px auto; /* Ortalama için margin değişti */
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+            max-width: 800px; /* Masaüstünde maksimum 800px */
+        }
+        
+        .info-text {
+            font-family: 'Courier New', Courier, monospace;
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+            line-height: 1.6;
+            overflow: hidden; /* İçerik taşmasını önle */
+            word-wrap: break-word; /* Uzun kelimeleri böl */
+            max-width: 100%; /* Maksimum genişlik */
+        }
+        
+        /* Loading indicator styles */
+        #loadingIndicator {
+            max-width: 800px; /* Masaüstünde maksimum 800px */
+            margin: 0 auto; /* Ortalama */
+        }
+        
+        .loading-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+                font-size: 14px;
+            }
+            
+            .header {
+                margin-bottom: 15px;
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+                margin-bottom: 8px;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .learning-stages {
+                flex-direction: column;
+                gap: 10px;
+                margin: 15px auto;
+            }
+            
+            .stage {
+                padding: 5px;
+                min-width: auto;
+            }
+            
+            .stage h3 {
+                font-size: 1rem;
+            }
+            
+            .stage p {
+                font-size: 0.85rem;
+            }
+            
+            .container {
+                flex-direction: column;
+                gap: 5px;
+                overflow-x: hidden; /* Mobilde yatay kaydırmayı tamamen kapat */
+            }
+            
+            .panel {
+                padding: 5px; /* Daha az padding */
+                min-width: auto;
+                overflow: hidden; /* Mobilde de taşmayı önle */
+                max-width: 100%; /* Maksimum genişlik */
+                margin: 0 5px; /* Yan marjlar */
+            }
+            
+            .current-stage-info {
+                margin: 0 5px 20px 5px; /* Panel ile aynı yan marjlar */
+            }
+            
+            .panel h2 {
+                font-size: 1.1rem; /* Daha küçük başlık */
+                margin-bottom: 10px; /* Daha az marj */
+                white-space: normal; /* Mobilde çok satırlı başlık */
+                word-wrap: break-word; /* Uzun kelimeleri böl */
+            }
+            
+            canvas {
+                width: 100% !important;
+                height: auto !important;
+                max-width: calc(100vw - 20px); /* Panel marjları ile uyumlu: 5px*2 + body padding 5px*2 */
+                min-height: 280px; /* Daha küçük minimum yükseklik */
+                border-radius: 6px; /* Daha küçük border radius */
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+                margin: 15px 0;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 250px; /* Daha küçük maksimum genişlik */
+                padding: 8px 15px; /* Daha küçük padding */
+                font-size: 13px; /* Daha küçük font */
+            }
+            
+            .info-text {
+                font-size: 0.9rem;
+                padding: 12px;
+                margin: 15px 0;
+            }
+            
+            .sign-table {
+                font-size: 0.8rem;
+                margin: 15px 0;
+                table-layout: auto; /* Mobilde otomatik düzen */
+                max-width: calc(100vw - 20px); /* Panel genişliği ile uyumlu */
+                overflow-x: auto; /* Tablo taşarsa yatay kaydırma */
+            }
+            
+            .sign-table th, .sign-table td {
+                padding: 6px 2px; /* Daha küçük padding */
+                min-width: 30px; /* Daha küçük minimum genişlik */
+                height: 30px; /* Daha küçük yükseklik */
+                white-space: normal; /* Mobilde çok satırlı metin */
+                font-size: 0.75rem; /* Daha küçük font */
+            }
+            
+            .sign-select {
+                width: 35px; /* Daha küçük genişlik */
+                font-size: 11px; /* Daha küçük font */
+                padding: 1px; /* Daha küçük padding */
+            }
+            
+            .analysis-box {
+                padding: 10px; /* Daha az padding */
+                margin: 10px 0; /* Daha az marj */
+                font-size: 0.8rem; /* Daha küçük font */
+                line-height: 1.3; /* Daha sıkı satır aralığı */
+                max-width: calc(100vw - 20px); /* Panel genişliği ile uyumlu */
+                word-wrap: break-word; /* Uzun kelimeleri böl */
+            }
+            
+            .activity-section {
+                padding: 15px;
+                margin-top: 15px;
+            }
+            
+            .activity-section h2 {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            
+            .questions {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin: 15px 0;
+            }
+            
+            .question {
+                padding: 15px;
+            }
+            
+            .question h4 {
+                font-size: 1rem;
+                margin-bottom: 12px;
+            }
+            
+            .question p {
+                font-size: 0.9rem;
+                margin-bottom: 12px;
+            }
+            
+            textarea {
+                padding: 10px;
+                font-size: 14px;
+                min-height: 80px;
+                margin-bottom: 12px;
+            }
+            
+            .conclusion {
+                padding: 15px;
+                margin-top: 15px;
+            }
+            
+            .conclusion h3 {
+                font-size: 1.1rem;
+                margin-bottom: 12px;
+            }
+            
+            .feedback-box {
+                padding: 15px;
+                margin-top: 15px;
+            }
+            
+            .feedback-box h3 {
+                font-size: 1.1rem;
+                margin-bottom: 12px;
+            }
+            
+            #feedbackContent {
+                padding: 12px;
+                min-height: 120px;
+                margin-top: 12px;
+                font-size: 0.9rem;
+            }
+            
+            .footer {
+                margin-top: 25px;
+                padding: 15px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+                font-size: 13px;
+            }
+            
+            .header {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .header p {
+                font-size: 0.8rem;
+            }
+            
+            .stage {
+                padding: 10px;
+            }
+            
+            .stage h3 {
+                font-size: 0.9rem;
+            }
+            
+            .stage p {
+                font-size: 0.8rem;
+            }
+            
+            .panel {
+                padding: 12px; /* Daha az padding */
+                margin: 0 2px; /* Daha az marjlar */
+            }
+            
+            .current-stage-info {
+                margin: 0 2px 20px 2px; /* Panel ile aynı yan marjlar */
+            }
+            
+            .panel h2 {
+                font-size: 1rem; /* Daha da küçük başlık */
+                margin-bottom: 8px; /* Çok az marj */
+            }
+            
+            canvas {
+                max-width: calc(100vw - 14px); /* Panel marjları ile uyumlu: 2px*2 + body padding 5px*2 */
+                min-height: 250px; /* Daha da küçük minimum yükseklik */
+            }
+            
+            button {
+                padding: 6px 12px; /* Daha küçük padding */
+                font-size: 12px; /* Daha küçük font */
+                max-width: 220px; /* Daha küçük maksimum genişlik */
+            }
+            
+            .sign-table {
+                font-size: 0.65rem; /* Daha da küçük font */
+                max-width: calc(100vw - 14px); /* Panel genişliği ile uyumlu */
+                overflow-x: auto; /* Tablo taşarsa yatay kaydırma */
+            }
+            
+            .sign-table th, .sign-table td {
+                padding: 4px 1px; /* Çok küçük padding */
+                min-width: 25px; /* Çok küçük minimum genişlik */
+                height: 25px; /* Çok küçük yükseklik */
+                font-size: 0.65rem; /* Çok küçük yazı boyutu */
+            }
+            
+            .sign-select {
+                width: 30px; /* Çok küçük genişlik */
+                font-size: 10px; /* Çok küçük font */
+                padding: 1px; /* Minimal padding */
+            }
+            
+            .info-text, .analysis-box {
+                font-size: 0.75rem; /* Daha küçük font */
+                padding: 8px; /* Daha küçük padding */
+                max-width: calc(100vw - 14px); /* Panel genişliği ile uyumlu */
+                line-height: 1.2; /* Daha sıkı satır aralığı */
+                word-wrap: break-word; /* Uzun kelimeleri böl */
+            }
+            
+            .question {
+                padding: 12px;
+            }
+            
+            .question h4 {
+                font-size: 0.95rem;
+            }
+            
+            .question p {
+                font-size: 0.85rem;
+            }
+            
+            textarea {
+                font-size: 13px;
+                min-height: 70px;
+                padding: 8px;
+            }
+            
+            .activity-section {
+                padding: 12px;
+            }
+            
+            .conclusion, .feedback-box {
+                padding: 12px;
+            }
+            
+            #feedbackContent {
+                font-size: 0.85rem;
+                padding: 10px;
+                min-height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Fonksiyon İşareti Etkinliği</h1>
+        
+    </div>
+    
+    <div class="container">
+        <!-- Aşama Seçimi -->
+        <div id="stageSelection" class="stage-selection">
+            <h2>📚 Öğrenme Aşamaları</h2>
+            <div class="stage-buttons">
+                <button id="watchSimulationsBtn" class="stage-btn">
+                    <span>👁️</span> Simulasyonları İzle
+                    <small>5 Fonksiyon - Tam Otomatik Animasyon</small>
+                </button>
+                <button id="practiceBtn" class="stage-btn" disabled>
+                    <span>✍️</span> Sıra Sizde
+                    <small>5 Fonksiyon - Kendi İşaretlerinizi Girin</small>
+                </button>
+            </div>
+            <div class="progress-info">
+                <div id="progressText">Önce simulasyonları izleyerek öğrenin, sonra sıra sizde!</div>
+            </div>
+        </div>
+
+        <!-- Ana Oyun Alanı -->
+        <div id="gameArea" style="display: none;">
+            <div class="current-stage-info">
+                <h3 id="currentStageTitle">📈 Simulasyonları İzliyorsunuz</h3>
+                <div id="functionProgress">Fonksiyon: 1/5</div>
+            </div>
+            
+            <!-- Göreviniz Bölümü - Sadece Sıra Sizde aşamasında görünür -->
+            <div id="taskInstructions" class="panel" style="display: none;">
+                <h2><span>📝</span> Göreviniz</h2>
+                <div id="taskContent" class="info-text">
+                    <b>📝 Göreviniz:</b> Aşağıdaki fonksiyon grafiğini inceleyerek işaret tablosunu doldurunuz. 
+                    Her aralıkta fonksiyonun pozitif (+) mi negatif (-) mi olduğunu belirleyip seçiniz.
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2><span>📈</span> Fonksiyon Grafiği</h2>
+                <canvas id="functionCanvas" width="600" height="500"></canvas>
+            </div>
+            
+            <div class="panel">
+                <h2><span>📊</span> Dinamik İşaret Tablosu</h2>
+                <table class="sign-table">
+                    <tbody id="signTableBody"></tbody>
+                </table>
+                
+                <div class="controls">
+                    <button id="checkSignTable" style="display: none;">
+                        <span>✓</span> İşaret Tablosunu Kontrol Et
+                    </button>
+                </div>
+                
+                <!-- Geri Dönüt Bölümü - İşaret Tablosunun Hemen Altında -->
+                <div id="signTableFeedback" class="analysis-box" style="display: none; margin-top: 15px;">
+                    <div id="signTableFeedbackContent"></div>
+                </div>
+                
+                <!-- Sonraki Soru Butonu - Geri Dönüt Alanının Altında (Her iki aşama için) -->
+                <div class="controls" style="margin-top: 15px;">
+                    <button id="nextQuestionBtn" style="display: none;">
+                        <span>📝</span> Sonraki Soruya Geçin
+                    </button>
+                    <button id="nextSimulationBtn" style="display: none;">
+                        <span>⏭️</span> Sonraki Fonksiyon
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2><span>🔎</span> Fonksiyon Analizi</h2>
+                <div class="analysis-box">
+                    <div id="analysisContent">
+                        Fonksiyon üretildikten sonra analiz burada görünecektir.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulasyon Tamamlandı Bilgilendirme Paneli -->
+    <div id="simulationCompletedPanel" class="feedback-box" style="display: none;">
+        <div style="text-align: center; padding: 20px;">
+            <h2 style="color: #27ae60; margin-bottom: 20px;">🎉 Tebrikler! Simulasyonları Tamamladınız</h2>
+            
+            <div style="background: #e8f4fc; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #3498db;">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">📚 Öğrendikleriniz:</h3>
+                <ul style="text-align: left; color: #2c3e50; line-height: 1.8;">
+                    <li>✅ Fonksiyon grafiklerini inceleme</li>
+                    <li>✅ İşaret tablolarının nasıl oluşturulduğunu gözlemleme</li>
+                    <li>✅ Köklerde ve teğet noktalarda işaret değişimlerini anlama</li>
+                    <li>✅ Fonksiyon analizi yapma sürecini öğrenme</li>
+                </ul>
+            </div>
+            
+            <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #ffc107;">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">🎯 Şimdi Sıra Sizde!</h3>
+                <div style="text-align: left; color: #2c3e50; line-height: 1.8;">
+                    <p><strong>📊 5 Fonksiyon</strong> sizi bekliyor!</p>
+                    <p><strong>🎯 Göreviniz:</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>Fonksiyon grafiğini inceleyin</li>
+                        <li>İşaret tablosunu kendiniz doldurun</li>
+                        <li>Her aralıkta fonksiyonun pozitif (+) mi negatif (-) mi olduğunu belirleyin</li>
+                        <li>Cevaplarınızı kontrol edin ve geri dönüt alın</li>
+                    </ul>
+                    <p><strong>💡 İpucu:</strong> Teğet noktalarda işaret değişmediğini unutmayın!</p>
+                </div>
+            </div>
+            
+            <button id="startPracticeFromPanel" class="stage-btn" style="margin-top: 20px; font-size: 1.2rem;">
+                <span>✍️</span> Sıra Sizde Aşamasına Başla
+            </button>
+        </div>
+    </div>
+
+    <!-- Feedback Box -->
+    <div id="feedbackBox" class="feedback-box" style="display: none;">
+        <div id="feedbackContent"></div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Fonksiyon analiz ediliyor...</p>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('functionCanvas');
+    const ctx = canvas.getContext('2d');
+    const signTableBody = document.getElementById('signTableBody');
+    const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+    const nextSimulationBtn = document.getElementById('nextSimulationBtn');
+    const checkSignTableButton = document.getElementById('checkSignTable');
+    const analysisContent = document.getElementById('analysisContent');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const feedbackContent = document.getElementById('feedbackContent');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const simulationCompletedPanel = document.getElementById('simulationCompletedPanel');
+    const startPracticeFromPanel = document.getElementById('startPracticeFromPanel');
+    
+    // Yeni geri dönüt elementi
+    const signTableFeedback = document.getElementById('signTableFeedback');
+    const signTableFeedbackContent = document.getElementById('signTableFeedbackContent');
+    
+    // Yeni UI elementleri
+    const stageSelection = document.getElementById('stageSelection');
+    const gameArea = document.getElementById('gameArea');
+    const watchSimulationsBtn = document.getElementById('watchSimulationsBtn');
+    const practiceBtn = document.getElementById('practiceBtn');
+    const currentStageTitle = document.getElementById('currentStageTitle');
+    const functionProgress = document.getElementById('functionProgress');
+    
+    // Oyun durumu değişkenleri
+    let currentStage = 'menu'; // 'menu', 'simulation', 'practice'
+    let currentFunctionIndex = 0;
+    let simulationFunctions = [];
+    let practiceFunctions = [];
+    let userAnswers = [];
+    let isAnimating = false;
+
+    // Önceden tanımlanmış fonksiyonlar - y değerleri 0'a çok yakın olmayan fonksiyonlar
+    const preloadedFunctions = [
+        // Simulasyon Aşaması - 5 Fonksiyon
+        {
+            domainStart: -3,
+            domainEnd: 3,
+            roots: [
+                { value: -2, multiplicity: 1 },
+                { value: 1, multiplicity: 1 }
+            ],
+            tangentPoints: [],
+            leadingCoefficient: 3,
+            polynomial: "f(x) = 3(x + 2)(x - 1)",
+            timestamp: "2025-07-18T08:00:00.000Z"
+        },
+        {
+            domainStart: -4,
+            domainEnd: 2,
+            roots: [
+                { value: -3, multiplicity: 1 },
+                { value: 0, multiplicity: 2 },
+                { value: 1, multiplicity: 1 }
+            ],
+            tangentPoints: [0],
+            leadingCoefficient: -2,
+            polynomial: "f(x) = -2(x + 3)x²(x - 1)",
+            timestamp: "2025-07-18T08:01:00.000Z"
+        },
+        {
+            domainStart: -2,
+            domainEnd: 4,
+            roots: [
+                { value: -1, multiplicity: 2 },
+                { value: 3, multiplicity: 1 }
+            ],
+            tangentPoints: [-1],
+            leadingCoefficient: 2,
+            polynomial: "f(x) = 2(x + 1)²(x - 3)",
+            timestamp: "2025-07-18T08:02:00.000Z"
+        },
+        {
+            domainStart: -3,
+            domainEnd: 4,
+            roots: [
+                { value: -2, multiplicity: 1 },
+                { value: 1, multiplicity: 1 },
+                { value: 3, multiplicity: 1 }
+            ],
+            tangentPoints: [],
+            leadingCoefficient: 1.5,
+            polynomial: "f(x) = 1.5(x + 2)(x - 1)(x - 3)",
+            timestamp: "2025-07-18T08:03:00.000Z"
+        },
+        {
+            domainStart: -2,
+            domainEnd: 3,
+            roots: [
+                { value: -1, multiplicity: 3 },
+                { value: 2, multiplicity: 1 }
+            ],
+            tangentPoints: [-1],
+            leadingCoefficient: 3,
+            polynomial: "f(x) = 3(x + 1)³(x - 2)",
+            timestamp: "2025-07-18T08:04:00.000Z"
+        },
+        
+        // Uygulama Aşaması - 5 Fonksiyon
+        {
+            domainStart: -3,
+            domainEnd: 4,
+            roots: [
+                { value: -2, multiplicity: 2 },
+                { value: 1, multiplicity: 1 },
+                { value: 3, multiplicity: 1 }
+            ],
+            tangentPoints: [-2],
+            leadingCoefficient: -1.5,
+            polynomial: "f(x) = -1.5(x + 2)²(x - 1)(x - 3)",
+            timestamp: "2025-07-18T08:05:00.000Z"
+        },
+        {
+            domainStart: -4,
+            domainEnd: 3,
+            roots: [
+                { value: -3, multiplicity: 1 },
+                { value: -1, multiplicity: 1 },
+                { value: 2, multiplicity: 2 }
+            ],
+            tangentPoints: [2],
+            leadingCoefficient: 2,
+            polynomial: "f(x) = 2(x + 3)(x + 1)(x - 2)²",
+            timestamp: "2025-07-18T08:06:00.000Z"
+        },
+        {
+            domainStart: -2,
+            domainEnd: 4,
+            roots: [
+                { value: 0, multiplicity: 2 },
+                { value: 3, multiplicity: 1 }
+            ],
+            tangentPoints: [0],
+            leadingCoefficient: -2,
+            polynomial: "f(x) = -2x²(x - 3)",
+            timestamp: "2025-07-18T08:07:00.000Z"
+        },
+        {
+            domainStart: -3,
+            domainEnd: 2,
+            roots: [
+                { value: -2, multiplicity: 1 },
+                { value: 0, multiplicity: 1 },
+                { value: 1, multiplicity: 1 }
+            ],
+            tangentPoints: [],
+            leadingCoefficient: 4,
+            polynomial: "f(x) = 4(x + 2)x(x - 1)",
+            timestamp: "2025-07-18T08:08:00.000Z"
+        },
+        {
+            domainStart: -4,
+            domainEnd: 3,
+            roots: [
+                { value: -3, multiplicity: 2 },
+                { value: 0, multiplicity: 1 },
+                { value: 2, multiplicity: 1 }
+            ],
+            tangentPoints: [-3],
+            leadingCoefficient: 1,
+            polynomial: "f(x) = (x + 3)²x(x - 2)",
+            timestamp: "2025-07-18T08:09:00.000Z"
+        }
+    ];
+
+    let userSavedFunctions = JSON.parse(localStorage.getItem('savedFunctions') || '[]');
+    let savedFunctions = preloadedFunctions.concat(userSavedFunctions);
+
+    let polynomialFunction, domainStart, domainEnd, roots, tangentPoints, animationFrameId, currentLeadingCoefficient;
+    let userSignInputs = {};
+
+    // Fonksiyonları aşamalara ayır
+    simulationFunctions = preloadedFunctions.slice(0, 5); // İlk 5 fonksiyon
+    practiceFunctions = preloadedFunctions.slice(5, 10);  // Son 5 fonksiyon
+
+    // Canvas ve çizim ayarları
+    const xMin = -8, xMax = 8, yMin = -20, yMax = 20;
+    let canvasWidth = canvas.width;
+    let canvasHeight = canvas.height;
+    
+    // Initialize origin and scale objects
+    let origin = { x: canvasWidth / 2, y: canvasHeight / 2 };
+    let scale = { x: canvasWidth / (xMax - xMin), y: canvasHeight / (yMax - yMin) };
+
+    // Tüm noktalar eşit büyüklükte olsun - mobilde daha küçük
+    let rootPointRadius, boundaryPointRadius, tangentPointRadius;
+    
+    function updatePointSizes() {
+        const isMobile = window.innerWidth <= 768;
+        rootPointRadius = isMobile ? 4 : 6; // Mobilde 4px, masaüstünde 6px
+        boundaryPointRadius = isMobile ? 4 : 6; // Aynı büyüklük
+        tangentPointRadius = isMobile ? 4 : 6; // Aynı büyüklük
+    }
+    
+    // İlk ayarlama
+    updatePointSizes();
+    
+    // Responsive canvas boyutları - mobilde daha küçük
+    function adjustCanvasSize() {
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 480;
+        
+        if (isSmallMobile) {
+            // 480px: panel margin 0 2px + body padding 5px*2 = 14px toplam
+            canvasWidth = Math.min(window.innerWidth - 14, 350);
+            canvasHeight = Math.min(250, canvasWidth * 0.7); // Daha düşük aspect ratio
+        } else if (isMobile) {
+            // 768px: panel margin 0 5px + body padding 5px*2 = 20px toplam
+            canvasWidth = Math.min(window.innerWidth - 20, 450);
+            canvasHeight = Math.min(350, canvasWidth * 0.75);
+        } else {
+            canvasWidth = Math.min(800, window.innerWidth - 100); // Maksimum 800px
+            canvasHeight = Math.min(450, canvasWidth * 0.6); // Daha küçük yükseklik ve aspect ratio
+        }
+        
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        canvas.style.width = canvasWidth + 'px';
+        canvas.style.height = canvasHeight + 'px';
+        
+        // Scaling ayarlarını güncelle
+        origin.x = canvasWidth / 2;
+        origin.y = canvasHeight / 2;
+        scale.x = canvasWidth / (xMax - xMin);
+        scale.y = canvasHeight / (yMax - yMin);
+    }
+
+    function toCanvas(x, y) { 
+        return { 
+            x: origin.x + x * scale.x, 
+            y: origin.y - y * scale.y 
+        }; 
+    }
+    
+    // İlk ayarlama
+    adjustCanvasSize();
+    
+    // Pencere boyutu değiştiğinde ayarla
+    window.addEventListener('resize', () => {
+        adjustCanvasSize();
+        updatePointSizes(); // Nokta boyutlarını güncelle
+        if (polynomialFunction) {
+            drawGrid();
+            // Eğer animasyon bittiyse fonksiyonu yeniden çiz
+            if (!animationFrameId) {
+                animate();
+            }
+        } else {
+            drawGrid();
+        }
+    });
+
+    // Ana menü event handler'ları
+    watchSimulationsBtn.addEventListener('click', startSimulations);
+    practiceBtn.addEventListener('click', startPractice);
+    nextQuestionBtn.addEventListener('click', nextFunction);
+    nextSimulationBtn.addEventListener('click', nextFunction);
+    checkSignTableButton.addEventListener('click', checkSignTable);
+    startPracticeFromPanel.addEventListener('click', startPractice);
+
+    function startSimulations() {
+        currentStage = 'simulation';
+        currentFunctionIndex = 0;
+        stageSelection.style.display = 'none';
+        gameArea.style.display = 'block';
+        simulationCompletedPanel.style.display = 'none';
+        currentStageTitle.textContent = '👁️ Simulasyonları İzliyorsunuz';
+        updateFunctionProgress();
+        checkSignTableButton.style.display = 'none';
+        nextQuestionBtn.style.display = 'none';
+        nextSimulationBtn.style.display = 'none';
+        
+        // Göreviniz bölümünü gizle
+        document.getElementById('taskInstructions').style.display = 'none';
+        
+        loadFunction(simulationFunctions[0]);
+    }
+
+    function startPractice() {
+        currentStage = 'practice';
+        currentFunctionIndex = 0;
+        stageSelection.style.display = 'none';
+        gameArea.style.display = 'block';
+        simulationCompletedPanel.style.display = 'none';
+        currentStageTitle.textContent = '✍️ Sıra Sizde - Kendi İşaretlerinizi Girin';
+        updateFunctionProgress();
+        nextQuestionBtn.style.display = 'none';
+        nextSimulationBtn.style.display = 'none';
+        
+        // Göreviniz bölümünü göster
+        document.getElementById('taskInstructions').style.display = 'block';
+        
+        loadFunction(practiceFunctions[0]);
+    }
+
+    function backToMenu() {
+        currentStage = 'menu';
+        currentFunctionIndex = 0;
+        stageSelection.style.display = 'block';
+        gameArea.style.display = 'none';
+        simulationCompletedPanel.style.display = 'none';
+        
+        // Göreviniz bölümünü gizle
+        document.getElementById('taskInstructions').style.display = 'none';
+        
+        // Animasyonu durdur
+        cleanupAnimations();
+        
+        // Canvas'ı temizle
+        drawGrid();
+        
+        // UI'yi sıfırla
+        analysisContent.innerHTML = 'Fonksiyon üretildikten sonra analiz burada görünecektir.';
+        signTableBody.innerHTML = '';
+        feedbackBox.style.display = 'none';
+    }
+
+    function updateFunctionProgress() {
+        const total = currentStage === 'simulation' ? simulationFunctions.length : practiceFunctions.length;
+        functionProgress.textContent = `Fonksiyon: ${currentFunctionIndex + 1}/${total}`;
+    }
+
+    function nextFunction() {
+        const currentFunctions = currentStage === 'simulation' ? simulationFunctions : practiceFunctions;
+        
+        if (currentFunctionIndex < currentFunctions.length - 1) {
+            // Simulasyon aşamasında analiz alanını temizle
+            if (currentStage === 'simulation') {
+                analysisContent.innerHTML = 'Fonksiyon analiz ediliyor...';
+            }
+            
+            currentFunctionIndex++;
+            updateFunctionProgress();
+            loadFunction(currentFunctions[currentFunctionIndex]);
+        } else {
+            // Aşama tamamlandı
+            if (currentStage === 'simulation') {
+                // Son simulasyonda "Sıra Sizde" butonuna tıklandıysa direkt practice moduna geç
+                if (nextSimulationBtn.innerHTML.includes('Sıra Sizde')) {
+                    startPractice();
+                } else {
+                    // Simulasyon tamamlandı - bilgilendirme panelini göster
+                    gameArea.style.display = 'none';
+                    simulationCompletedPanel.style.display = 'block';
+                    practiceBtn.disabled = false;
+                }
+            } else {
+                // Uygulama aşaması tamamlandı - sayfada mesaj göster
+                gameArea.style.display = 'none';
+                simulationCompletedPanel.style.display = 'block';
+                
+                // Panel içeriğini tamamlama mesajı ile değiştir
+                simulationCompletedPanel.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h2 style="color: #27ae60; margin-bottom: 20px;">🌟 Harika! Tüm Fonksiyonları Başarıyla Tamamladınız!</h2>
+                        
+                        <div style="background: #e8f4fc; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #3498db;">
+                            <h3 style="color: #2c3e50; margin-bottom: 15px;">🎓 Başarılarınız:</h3>
+                            <ul style="text-align: left; color: #2c3e50; line-height: 1.8;">
+                                <li>✅ 5 fonksiyonun işaret tablosunu doğru tamamladınız</li>
+                                <li>✅ Fonksiyon analizi yapma becerisi kazandınız</li>
+                                <li>✅ Teğet noktalardaki işaret değişimlerini doğru tespit ettiniz</li>
+                                <li>✅ Matematik problemlerini çözme yeteneğinizi geliştirdiniz</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: #d4edda; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #28a745;">
+                            <h3 style="color: #2c3e50; margin-bottom: 15px;">🎯 Fonksiyon Analizi Konusunda Artık Uzmanısınız!</h3>
+                            <p style="text-align: left; color: #2c3e50; line-height: 1.8;">
+                                Fonksiyonların işaret analizini başarıyla öğrendiniz. 
+                                Bu bilgileri matematik derslerinizde ve sınavlarınızda kullanabilirsiniz.
+                            </p>
+                        </div>
+                        
+                        <button onclick="location.reload()" class="stage-btn" style="margin-top: 20px; font-size: 1.2rem;">
+                            <span>🔄</span> Tekrar Başla
+                        </button>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    // Initialize the first function
+    console.log('Saved functions:', savedFunctions);
+    console.log('Total functions available:', savedFunctions.length);
+    
+    // Initially hide the control button
+    const checkSignTableBtn = document.getElementById('checkSignTable');
+    checkSignTableBtn.style.display = 'none';
+    
+    if (savedFunctions.length > 0) {
+        console.log('Loading function:', savedFunctions[0]);
+        // Add extra validation
+        const firstFunction = savedFunctions[0];
+        if (!firstFunction.leadingCoefficient && firstFunction.leadingCoefficient !== 0) {
+            console.warn('First function missing leadingCoefficient, setting to 1');
+            firstFunction.leadingCoefficient = 1;
+        }
+        loadFunction(firstFunction);
+    } else {
+        console.log('No functions available, drawing empty grid');
+        drawGrid();
+    }
+
+    function makePolynomialFunction(roots, leadingCoefficient) {
+        console.log('Making polynomial function with roots:', roots, 'leading coefficient:', leadingCoefficient);
+        
+        // Provide default value if undefined
+        if (leadingCoefficient === undefined || leadingCoefficient === null) {
+            console.warn('Leading coefficient is undefined, using default value 1');
+            leadingCoefficient = 1;
+        }
+        
+        const maxDegree = roots.reduce((sum, root) => sum + root.multiplicity, 0);
+        
+        // Yeni ölçeklendirme algoritması
+        let scalingFactor = 1;
+        if (maxDegree > 0) {
+            const maxValue = Math.max(1, ...roots.map(r => Math.abs(r.value)));
+            scalingFactor = 1 / Math.pow(maxValue, maxDegree - 1) * 0.5;
+        }
+
+        console.log('Max degree:', maxDegree, 'scaling factor:', scalingFactor);
+
+        return function(x) {
+            let result = 1;
+            for (let root of roots) {
+                result *= Math.pow(x - root.value, root.multiplicity);
+            }
+            const finalResult = leadingCoefficient * result * scalingFactor;
+            // Test için bir değer hesaplayalım
+            if (x === 0) {
+                console.log('Function value at x=0:', finalResult);
+            }
+            return finalResult;
+        };
+    }
+
+    // Y değeri sınırı için dinamik hesaplama
+    function shouldDrawPoint(y) {
+        if (!isNaN(y) && isFinite(y)) {
+            const yLimit = canvasHeight / (scale.y * 2); // Dinamik sınır
+            return Math.abs(y) < yLimit;
+        }
+        return false;
+    }
+
+    // Animasyon temizleme
+    function cleanupAnimations() {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+    }
+
+    // Statik fonksiyon çizimi (animasyon olmadan)
+    function drawFunctionStatic() {
+        // Fonksiyon grafiğini çiz
+        ctx.beginPath();
+        let hasValidPoint = false;
+        for (let x = domainStart; x <= domainEnd; x += 0.05) {
+            const y = polynomialFunction(x);
+            const p = toCanvas(x, y);
+            
+            if (shouldDrawPoint(y)) {
+                if (!hasValidPoint) {
+                    ctx.moveTo(p.x, p.y);
+                    hasValidPoint = true;
+                } else {
+                    ctx.lineTo(p.x, p.y);
+                }
+            }
+        }
+        
+        if (hasValidPoint) {
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        // Kökleri işaretle
+        roots.forEach(root => {
+            const pos = toCanvas(root.value, 0);
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, rootPointRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = root.multiplicity > 1 ? '#9b59b6' : '#2ecc71';
+            ctx.fill();
+        });
+
+        // Teğet noktaları
+        tangentPoints.forEach(point => {
+            const p = toCanvas(point, 0);
+            
+            // Teğet çizgisi
+            ctx.beginPath();
+            ctx.moveTo(p.x - 20, p.y);
+            ctx.lineTo(p.x + 20, p.y);
+            ctx.strokeStyle = '#9b59b6';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Teğet noktası - aynı boyutta
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, tangentPointRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = '#9b59b6';
+            ctx.fill();
+            ctx.strokeStyle = '#8e44ad';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        });
+
+        // Sınır noktaları
+        ctx.fillStyle = '#3498db';
+        const pStart = toCanvas(domainStart, polynomialFunction(domainStart));
+        ctx.beginPath();
+        ctx.arc(pStart.x, pStart.y, boundaryPointRadius, 0, 2 * Math.PI);
+        ctx.fill();
+        const pEnd = toCanvas(domainEnd, polynomialFunction(domainEnd));
+        ctx.beginPath();
+        ctx.arc(pEnd.x, pEnd.y, boundaryPointRadius, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+
+    function loadFunction(functionData) {
+        try {
+            console.log('Loading function data:', functionData);
+            console.log('Function data leadingCoefficient:', functionData.leadingCoefficient);
+            
+            // Veri doğrulama
+            if (!validateFunctionData(functionData)) {
+                throw new Error('Geçersiz fonksiyon verisi');
+            }
+            
+            domainStart = functionData.domainStart;
+            domainEnd = functionData.domainEnd;
+            roots = functionData.roots;
+            tangentPoints = functionData.tangentPoints;
+            currentLeadingCoefficient = functionData.leadingCoefficient;
+            console.log('Set currentLeadingCoefficient to:', currentLeadingCoefficient);
+            polynomialFunction = makePolynomialFunction(roots, currentLeadingCoefficient);
+
+            console.log('Domain:', domainStart, 'to', domainEnd);
+            console.log('Roots:', roots);
+            console.log('Tangent points:', tangentPoints);
+            
+            // Test fonksiyonu
+            console.log('Testing function at x=0:', polynomialFunction(0));
+            console.log('Testing function at x=1:', polynomialFunction(1));
+            console.log('Testing function at x=-1:', polynomialFunction(-1));
+
+            // Build root info string
+            let rootInfo = roots.map(root => {
+                return root.multiplicity > 1 ? 
+                    `${root.value} (${root.multiplicity} katlı)` : 
+                    root.value;
+            }).join(', ');
+
+            // Aşamaya göre işlem yap
+            if (currentStage === 'simulation') {
+                // Simulasyon aşaması - tam otomatik animasyon
+                console.log('Starting full simulation animation...');
+                checkSignTableButton.style.display = 'none';
+                nextQuestionBtn.style.display = 'none';
+                nextSimulationBtn.style.display = 'none';
+                
+                // Analiz alanını temizle
+                analysisContent.innerHTML = 'Fonksiyon analiz ediliyor...';
+                
+                animate();
+            } else if (currentStage === 'practice') {
+                // Uygulama aşaması - statik grafik + kullanıcı işaret girişi
+                console.log('Practice mode - static graphics + user input...');
+                drawGrid();
+                drawFunctionStatic();
+                // showAnalysis(); // Analizi başlangıçta gösterme
+                createEditableSignTable();
+                checkSignTableButton.style.display = 'block';
+                nextQuestionBtn.style.display = 'none'; // Başlangıçta gizle
+                nextSimulationBtn.style.display = 'none'; // Simulasyon butonu gizle
+                signTableFeedback.style.display = 'none'; // Geri dönütü gizle
+                
+                // Analiz alanını temizle
+                analysisContent.innerHTML = 'Doğru cevapları girdikten sonra fonksiyon analizi burada görünecektir.';
+            }
+            
+            // İlerleme kaydı
+            saveProgress();
+            
+        } catch (error) {
+            console.error('Fonksiyon yükleme hatası:', error);
+            feedbackContent.innerHTML = `<div class="error">Hata: ${error.message}. Lütfen farklı bir fonksiyon deneyin.</div>`;
+            feedbackBox.style.display = 'block';
+        }
+    }
+
+    function getPolynomialExpression() {
+        if (!roots.length) return "f(x) = 0";
+        
+        const maxDegree = roots.reduce((sum, root) => sum + root.multiplicity, 0);
+        const scalingFactor = 1 / Math.pow(2, maxDegree - 2);
+
+        let expression = "f(x) = ";
+        if (scalingFactor !== 1) {
+            expression += scalingFactor.toFixed(2).replace('.', ',') + " * ";
+        }
+        const sign = currentLeadingCoefficient > 0 ? "" : "-";
+        expression += sign;
+
+        for (const root of roots) {
+            const varPart = root.value === 0 ? "x" : `(x ${root.value < 0 ? '+' : '-'} ${Math.abs(root.value)})`;
+            if (root.multiplicity > 1) {
+                expression += `${varPart}^${root.multiplicity} `;
+            } else {
+                expression += `${varPart} `;
+            }
+        }
+
+        return expression;
+    }
+
+    function drawGrid() {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight); 
+        ctx.strokeStyle = '#ddd'; 
+        ctx.lineWidth = 1;
+        
+        // Grid çizgileri
+        for (let i = Math.ceil(xMin); i <= xMax; i++) { 
+            const p = toCanvas(i, 0); 
+            ctx.beginPath(); 
+            ctx.moveTo(p.x, 0); 
+            ctx.lineTo(p.x, canvasHeight); 
+            ctx.stroke(); 
+        }
+        for (let i = Math.ceil(yMin); i <= yMax; i++) { 
+            if (i % 2 === 0) { 
+                const p = toCanvas(0, i); 
+                ctx.beginPath(); 
+                ctx.moveTo(0, p.y); 
+                ctx.lineTo(canvasWidth, p.y); 
+                ctx.stroke(); 
+            }
+        }
+        
+        // Eksenler
+        ctx.strokeStyle = '#000'; 
+        ctx.lineWidth = 2;
+        ctx.beginPath(); 
+        ctx.moveTo(0, origin.y); 
+        ctx.lineTo(canvasWidth, origin.y); 
+        ctx.stroke();
+        ctx.beginPath(); 
+        ctx.moveTo(origin.x, 0); 
+        ctx.lineTo(origin.x, canvasHeight); 
+        ctx.stroke();
+        
+        // X ekseni okları - tam uç noktalarda
+        const arrowSize = 8;
+        
+        // Sol ok - tam sol kenar
+        ctx.beginPath();
+        ctx.moveTo(arrowSize, origin.y - arrowSize/2);
+        ctx.lineTo(0, origin.y);
+        ctx.lineTo(arrowSize, origin.y + arrowSize/2);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Sağ ok - tam sağ kenar
+        ctx.beginPath();
+        ctx.moveTo(canvasWidth - arrowSize, origin.y - arrowSize/2);
+        ctx.lineTo(canvasWidth, origin.y);
+        ctx.lineTo(canvasWidth - arrowSize, origin.y + arrowSize/2);
+        ctx.stroke();
+        
+        // Y ekseni okları - tam uç noktalarda
+        // Alt ok - tam alt kenar
+        ctx.beginPath();
+        ctx.moveTo(origin.x - arrowSize/2, canvasHeight - arrowSize);
+        ctx.lineTo(origin.x, canvasHeight);
+        ctx.lineTo(origin.x + arrowSize/2, canvasHeight - arrowSize);
+        ctx.stroke();
+        
+        // Üst ok - tam üst kenar
+        ctx.beginPath();
+        ctx.moveTo(origin.x - arrowSize/2, arrowSize);
+        ctx.lineTo(origin.x, 0);
+        ctx.lineTo(origin.x + arrowSize/2, arrowSize);
+        ctx.stroke();
+        
+        // Eksen işaretleri - mobilde daha küçük font
+        const isMobile = window.innerWidth <= 768;
+        const fontSize = isMobile ? '10px' : '12px';
+        
+        ctx.fillStyle = '#333'; 
+        ctx.font = fontSize + ' Arial'; 
+        ctx.textAlign = 'center'; 
+        ctx.textBaseline = 'top';
+        for (let i = Math.ceil(xMin); i <= xMax; i++) { 
+            if (i !== 0) ctx.fillText(i, toCanvas(i, 0).x, toCanvas(i, -1).y); 
+        }
+        ctx.textAlign = 'right'; 
+        ctx.textBaseline = 'middle';
+        for (let i = Math.ceil(yMin); i <= yMax; i++) { 
+            if (i !== 0 && i % 5 === 0) ctx.fillText(i, toCanvas(-0.2, i).x, toCanvas(0, i).y); 
+        }
+        
+        // Orijin etiketi
+        ctx.fillStyle = '#2c3e50';
+        ctx.font = 'bold ' + (isMobile ? '12px' : '14px') + ' Arial';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'top';
+        ctx.fillText('O', origin.x - 8, origin.y + 8);
+        
+        // Eksen etiketleri
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('x', canvasWidth - 10, origin.y - 15);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText('y', origin.x + 15, 20);
+    }
+
+    function animate() {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        let step = 0;
+        const animationSteps = 500;
+        let lastFrameTime = 0;
+        const frameInterval = 1000 / 60; // 60 FPS sınırı
+        
+        function drawStep(timestamp) {
+            if (step > animationSteps) {
+                showAnalysis();
+                // Sadece simulasyon aşamasında otomatik işaret tablosu oluştur
+                if (currentStage === 'simulation') {
+                    setTimeout(() => {
+                        updateSignTable(domainEnd); // Son hali ile göster
+                        // Simulasyon aşamasında buton metnini kontrol et
+                        if (currentFunctionIndex === simulationFunctions.length - 1) {
+                            // Son simulasyon - "Sıra Sizde" butonu göster
+                            nextSimulationBtn.innerHTML = '<span>✍️</span> Sıra Sizde';
+                        } else {
+                            // Diğer simulasyonlar - "Sonraki Fonksiyon" butonu göster
+                            nextSimulationBtn.innerHTML = '<span>⏭️</span> Sonraki Fonksiyon';
+                        }
+                        nextSimulationBtn.style.display = 'block';
+                    }, 500);
+                }
+                return;
+            }
+            
+            // FPS sınırlama
+            const now = performance.now();
+            const elapsed = now - lastFrameTime;
+            
+            if (elapsed > frameInterval) {
+                drawGrid();
+                const currentX = domainStart + (domainEnd - domainStart) * (step / animationSteps);
+                
+                // Fonksiyon grafiğini çiz
+                ctx.beginPath();
+                let hasValidPoint = false;
+                for (let x = domainStart; x <= currentX; x += 0.05) {
+                    const y = polynomialFunction(x);
+                    const p = toCanvas(x, y);
+                    
+                    // Y değeri valid range içinde mi kontrol et
+                    if (shouldDrawPoint(y)) {
+                        if (Math.abs(x - domainStart) < 0.05) {
+                            ctx.moveTo(p.x, p.y);
+                            hasValidPoint = true;
+                        } else if (hasValidPoint) {
+                            ctx.lineTo(p.x, p.y);
+                        }
+                    }
+                }
+                
+                if (hasValidPoint) {
+                    ctx.strokeStyle = '#e74c3c'; 
+                    ctx.lineWidth = 3; 
+                    ctx.stroke();
+                } else {
+                    console.log('No valid points to draw for current animation step');
+                }
+
+                // Kökleri işaretle - nokta boyutları eski haline
+                roots.forEach(root => { 
+                    if (currentX >= root.value) { 
+                        const pos = toCanvas(root.value, 0); 
+                        ctx.beginPath(); 
+                        ctx.arc(pos.x, pos.y, rootPointRadius, 0, 2 * Math.PI); 
+                        ctx.fillStyle = root.multiplicity > 1 ? '#9b59b6' : '#2ecc71';
+                        ctx.fill();
+                    } 
+                });
+                
+                // Teğet noktaları işaretle
+                tangentPoints.forEach(point => {
+                    if (currentX >= point) {
+                        const p = toCanvas(point, 0);
+                        
+                        // Teğet çizgisi
+                        ctx.beginPath();
+                        ctx.moveTo(p.x - 20, p.y);
+                        ctx.lineTo(p.x + 20, p.y);
+                        ctx.strokeStyle = '#9b59b6';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([5, 5]);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        
+                        // Teğet noktası - aynı boyutta
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, tangentPointRadius, 0, 2 * Math.PI);
+                        ctx.fillStyle = '#9b59b6';
+                        ctx.fill();
+                        ctx.strokeStyle = '#8e44ad';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                });
+
+                // Sınır noktalarını işaretle - nokta boyutları eski haline
+                ctx.fillStyle = '#3498db';
+                if (currentX >= domainStart) { 
+                    const p = toCanvas(domainStart, polynomialFunction(domainStart)); 
+                    ctx.beginPath(); 
+                    ctx.arc(p.x, p.y, boundaryPointRadius, 0, 2*Math.PI); 
+                    ctx.fill(); 
+                }
+                if (currentX >= domainEnd) { 
+                    const p = toCanvas(domainEnd, polynomialFunction(domainEnd)); 
+                    ctx.beginPath(); 
+                    ctx.arc(p.x, p.y, boundaryPointRadius, 0, 2*Math.PI); 
+                    ctx.fill(); 
+                }
+
+                updateSignTable(currentX);
+                step++;
+                
+                lastFrameTime = now - (elapsed % frameInterval);
+            }
+            
+            animationFrameId = requestAnimationFrame(drawStep);
+        }
+        drawStep();
+    }
+    
+    function showAnalysis() {
+        // Pozitif/Negatif Aralıkları Bul
+        const boundaries = [...new Set([domainStart, ...roots.map(r => r.value), domainEnd])].sort((a, b) => a - b);
+        let positiveIntervals = [], negativeIntervals = [];
+        for (let i = 0; i < boundaries.length - 1; i++) {
+            const start = boundaries[i];
+            const end = boundaries[i+1];
+            const midPoint = (start + end) / 2;
+            if (polynomialFunction(midPoint) > 0) {
+                positiveIntervals.push(`(${start}, ${end})`);
+            } else {
+                negativeIntervals.push(`(${start}, ${end})`);
+            }
+        }
+        
+        const domainStr = `[${domainStart}, ${domainEnd}]`;
+        const positiveStr = positiveIntervals.join(' ∪ ') || 'Yok';
+        const negativeStr = negativeIntervals.join(' ∪ ') || 'Yok';
+        const rootsStr = roots.map(root => root.value).join(', ');
+        
+        const tangentInfo = tangentPoints.length > 0 ? 
+            `<br><b>Teğet Noktalar:</b> ${tangentPoints.join(', ')} (Bu noktalarda işaret değişimi olmaz)` : 
+            '';
+
+        analysisContent.innerHTML = `
+            <b>Tanım Kümesi:</b> ${domainStr}<br>
+            <b>Fonksiyonun Sıfırları:</b> ${rootsStr}${tangentInfo}<br>
+            <b>Pozitif Olduğu Aralıklar (f(x)>0):</b> ${positiveStr}<br>
+            <b>Negatif Olduğu Aralıklar (f(x)<0):</b> ${negativeStr}
+        `;
+    }
+
+    function updateSignTable(currentX) {
+        const boundaries = [...new Set([domainStart, ...roots.map(r => r.value), domainEnd])].sort((a,b)=>a-b);
+        let xRow = '<tr><th scope="row">x</th><td class="hatched">-∞</td>';
+        let fxRow = '<tr><th scope="row">f(x)</th><td class="hatched"></td>';
+
+        for (let i = 0; i < boundaries.length; i++) {
+            const p1 = boundaries[i];
+            if (p1 < domainStart || p1 > domainEnd) continue;
+
+            if (currentX >= p1) {
+                const isRoot = roots.some(root => root.value === p1);
+                const isTangent = tangentPoints.includes(p1);
+                const xClass = isRoot ? (isTangent ? 'root-cell-x tangent-cell' : 'root-cell-x') : 'boundary-cell-x';
+                const fxClass = isRoot ? (isTangent ? 'root-cell-fx tangent-cell' : 'root-cell-fx') : 'boundary-cell-fx';
+                const yValue = isRoot ? 0 : Math.round(polynomialFunction(p1));
+                xRow += `<th class="${xClass}">${p1}</th>`;
+                fxRow += `<td class="${fxClass}">${yValue}</td>`;
+            } else {
+                xRow += '<td class="pending"></td>'; 
+                fxRow += '<td class="pending"></td>';
+            }
+
+            if (i < boundaries.length - 1) {
+                const p2 = boundaries[i+1];
+                if (p2 > domainEnd) continue;
+                const midPointX = (p1 + p2) / 2;
+                if(currentX >= midPointX) {
+                    const sign = polynomialFunction(midPointX) > 0 ? '+' : '-';
+                    fxRow += `<td class="${sign === '+' ? 'positive' : 'negative'}">${sign}</td>`;
+                } else { 
+                    fxRow += '<td class="pending"></td>'; 
+                }
+                xRow += '<td></td>';
+            }
+        }
+        xRow += '<td class="hatched">+∞</td></tr>';
+        fxRow += '<td class="hatched"></td></tr>';
+        signTableBody.innerHTML = xRow + fxRow;
+    }
+    
+    // İlerleme kaydı
+    function saveProgress() {
+        const progress = {
+            stage: currentStage,
+            functionIndex: currentFunctionIndex,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('functionAnalysisProgress', JSON.stringify(progress));
+    }
+
+    // Veri doğrulama
+    function validateFunctionData(data) {
+        if (!data.roots || !Array.isArray(data.roots)) return false;
+        if (typeof data.domainStart !== 'number' || typeof data.domainEnd !== 'number') return false;
+        return data.domainStart < data.domainEnd;
+    }
+
+    // Analitik entegrasyonu
+    function trackEvent(eventName, metadata) {
+        console.log(`Event: ${eventName}`, metadata);
+        // Google Analytics entegrasyonu için:
+        // if (window.gtag) gtag('event', eventName, metadata)
+    }
+
+    // Bellek yönetimi
+    function cleanup() {
+        cleanupAnimations();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        signTableBody.innerHTML = '';
+    }
+
+    function createEditableSignTable() {
+        const boundaries = [...new Set([domainStart, ...roots.map(r => r.value), domainEnd])].sort((a,b)=>a-b);
+        let xRow = '<tr><th scope="row">x</th><td class="hatched">-∞</td>';
+        let fxRow = '<tr><th scope="row">f(x)</th><td class="hatched"></td>';
+        
+        userSignInputs = {}; // Reset user inputs
+
+        for (let i = 0; i < boundaries.length; i++) {
+            const p1 = boundaries[i];
+            const isRoot = roots.some(root => root.value === p1);
+            const isTangent = tangentPoints.includes(p1);
+            const xClass = isRoot ? (isTangent ? 'root-cell-x tangent-cell' : 'root-cell-x') : 'boundary-cell-x';
+            const fxClass = isRoot ? (isTangent ? 'root-cell-fx tangent-cell' : 'root-cell-fx') : 'boundary-cell-fx';
+            const yValue = isRoot ? 0 : polynomialFunction(p1).toFixed(1).replace('.', ',');
+            
+            xRow += `<th class="${xClass}">${p1}</th>`;
+            fxRow += `<td class="${fxClass}">${yValue}</td>`;
+
+            if (i < boundaries.length - 1) {
+                const p2 = boundaries[i+1];
+                const intervalKey = `${p1}-${p2}`;
+                
+                // Add empty cell for x row
+                xRow += '<td></td>';
+                
+                // Add editable sign cell for f(x) row
+                fxRow += `
+                    <td>
+                        <select class="sign-select" id="sign-${intervalKey}">
+                            <option value="">Seçiniz</option>
+                            <option value="positive">+</option>
+                            <option value="negative">-</option>
+                        </select>
+                    </td>
+                `;
+                
+                // Store the interval for later validation
+                userSignInputs[intervalKey] = {
+                    elementId: `sign-${intervalKey}`,
+                    start: p1,
+                    end: p2
+                };
+            }
+        }
+        
+        xRow += '<td class="hatched">+∞</td></tr>';
+        fxRow += '<td class="hatched"></td></tr>';
+        signTableBody.innerHTML = xRow + fxRow;
+    }
+    
+    function saveFunction() {
+        if (!polynomialFunction) {
+            alert("Önce bir fonksiyon üretmelisiniz!");
+            return;
+        }
+        
+        const functionData = {
+            domainStart,
+            domainEnd,
+            roots: roots.map(root => ({...root})),
+            tangentPoints: [...tangentPoints],
+            leadingCoefficient: currentLeadingCoefficient,
+            polynomial: getPolynomialExpression(),
+            timestamp: new Date().toISOString()
+        };
+        
+        userSavedFunctions.push(functionData);
+        localStorage.setItem('savedFunctions', JSON.stringify(userSavedFunctions));
+        
+        // Update savedFunctions array
+        savedFunctions = preloadedFunctions.concat(userSavedFunctions);
+
+        alert(`Fonksiyon başarıyla kaydedildi!\n\nKayıtlı fonksiyon sayısı: ${savedFunctions.length}`);
+    }
+    
+    // Event listener'ları kaldır - artık manuel event handler'lar var
+    // nextButton.addEventListener('click', nextFunction); - Bu yukarda tanımlı
+    // checkSignTableButton.addEventListener('click', checkSignTable); - Bu yukarda tanımlı
+    
+    function createEditableSignTable() {
+        const boundaries = [...new Set([domainStart, ...roots.map(r => r.value), domainEnd])].sort((a,b)=>a-b);
+        let xRow = '<tr><th scope="row">x</th><td class="hatched">-∞</td>';
+        let fxRow = '<tr><th scope="row">f(x)</th><td class="hatched"></td>';
+        
+        userSignInputs = {}; // Reset user inputs
+
+        for (let i = 0; i < boundaries.length; i++) {
+            const p1 = boundaries[i];
+            const isRoot = roots.some(root => root.value === p1);
+            const isTangent = tangentPoints.includes(p1);
+            const xClass = isRoot ? (isTangent ? 'root-cell-x tangent-cell' : 'root-cell-x') : 'boundary-cell-x';
+            const fxClass = isRoot ? (isTangent ? 'root-cell-fx tangent-cell' : 'root-cell-fx') : 'boundary-cell-fx';
+            const yValue = isRoot ? 0 : polynomialFunction(p1).toFixed(1).replace('.', ',');
+            
+            xRow += `<th class="${xClass}">${p1}</th>`;
+            fxRow += `<td class="${fxClass}">${yValue}</td>`;
+
+            if (i < boundaries.length - 1) {
+                const p2 = boundaries[i+1];
+                const intervalKey = `${p1}-${p2}`;
+                
+                // Add empty cell for x row
+                xRow += '<td></td>';
+                
+                // Add editable sign cell for f(x) row
+                fxRow += `
+                    <td>
+                        <select class="sign-select" id="sign-${intervalKey}">
+                            <option value="">Seçiniz</option>
+                            <option value="positive">+</option>
+                            <option value="negative">-</option>
+                        </select>
+                    </td>
+                `;
+                
+                // Store the interval for later validation
+                userSignInputs[intervalKey] = {
+                    elementId: `sign-${intervalKey}`,
+                    start: p1,
+                    end: p2
+                };
+            }
+        }
+        
+        xRow += '<td class="hatched">+∞</td></tr>';
+        fxRow += '<td class="hatched"></td></tr>';
+        signTableBody.innerHTML = xRow + fxRow;
+    }
+
+    function checkSignTable() {
+        let allCorrect = true;
+        let emptyCount = 0;
+        
+        for (const [key, input] of Object.entries(userSignInputs)) {
+            const selectElement = document.getElementById(input.elementId);
+            const midPoint = (input.start + input.end) / 2;
+            const actualSign = polynomialFunction(midPoint) > 0 ? 'positive' : 'negative';
+            const userSign = selectElement.value;
+            
+            const cell = selectElement.parentElement;
+            
+            if (userSign === actualSign) {
+                cell.classList.add('correct');
+                cell.classList.remove('incorrect');
+            } else if (userSign === '') {
+                cell.classList.remove('correct', 'incorrect');
+                allCorrect = false;
+                emptyCount++;
+            } else {
+                cell.classList.add('incorrect');
+                cell.classList.remove('correct');
+                allCorrect = false;
+            }
+        }
+        
+        // Geri dönütü işaret tablosunun altında göster
+        signTableFeedback.style.display = 'block';
+        
+        if (emptyCount > 0) {
+            signTableFeedbackContent.innerHTML = `<div style="background:#fff3cd; padding:15px; border-radius:8px; border-left:4px solid:#ffc107;">
+                <b>⚠️ Eksik Giriş!</b> Lütfen tüm aralıkları doldurunuz. ${emptyCount} aralık boş kaldı.
+            </div>`;
+        } else if (allCorrect) {
+            signTableFeedbackContent.innerHTML = `<div style="background:#d4edda; padding:15px; border-radius:8px; border-left:4px solid:#28a745;">
+                <b>🎉 Tebrikler!</b> İşaret tablosunu doğru tamamladınız! 
+                ${tangentPoints.length > 0 ? 'Teğet olduğu noktalarda işaret değişmediğini doğru tespit ettiniz.' : ''}
+                <br><br>
+                Sonraki soruya geçmek için aşağıdaki butona tıklayın.
+            </div>`;
+            
+            // Doğru cevap verildiğinde fonksiyon analizini göster
+            showAnalysis();
+            
+            // Sonraki soru butonunu göster
+            nextQuestionBtn.style.display = 'block';
+            checkSignTableButton.style.display = 'none';
+        } else {
+            const incorrectCount = Object.keys(userSignInputs).length - emptyCount - Object.values(userSignInputs).filter(input => {
+                const selectElement = document.getElementById(input.elementId);
+                const midPoint = (input.start + input.end) / 2;
+                const actualSign = polynomialFunction(midPoint) > 0 ? 'positive' : 'negative';
+                return selectElement.value === actualSign;
+            }).length;
+            
+            signTableFeedbackContent.innerHTML = `<div style="background:#f8d7da; padding:15px; border-radius:8px; border-left:4px solid:#dc3545;">
+                <b>❌ Hatalı Giriş!</b> ${incorrectCount} aralıkta yanlış işaret girişi var. 
+                Grafik üzerindeki fonksiyon değerlerini dikkate alarak tekrar deneyiniz.
+            </div>`;
+        }
+    }
+    
+    // Erişilebilirlik iyileştirmeleri
+    watchSimulationsBtn.setAttribute('aria-label', 'Simülasyonları izlemeye başla');
+    practiceBtn.setAttribute('aria-label', 'Uygulama moduna geç');
+    nextQuestionBtn.setAttribute('aria-label', 'Sonraki fonksiyona geç');
+    checkSignTableButton.setAttribute('aria-label', 'İşaret tablosunu kontrol et');
+    
+    // Başlangıçta sadece grid çiz, fonksiyon yükleme
+    drawGrid();
+});
+
+// Global erişim için window'a ekle
+window.nextFunction = function() {
+    const nextBtn = document.getElementById('nextButton');
+    const gameArea = document.getElementById('gameArea');
+    if (gameArea.style.display !== 'none') {
+        const event = new Event('click');
+        nextBtn.dispatchEvent(event);
+    }
+};
+
+
+
+
+
+
+
+// Dokunmatik zoom engelleme
+function handleTouchStart(e) {
+    if (e.touches.length > 1) {
+        e.preventDefault();
+    }
+}
+    
+function handleTouchMove(e) {
+    if (e.touches.length > 1) {
+        e.preventDefault();
+    }
+}
+
+// Pencere kapatılırken temizlik
+window.addEventListener('beforeunload', cleanupAnimations);
+window.addEventListener('pagehide', cleanupAnimations);
+    
+// Dokunmatik zoom engelleme
+document.addEventListener('touchstart', handleTouchStart, { passive: false });
+document.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+</script>
+
+</body>
+</html>
