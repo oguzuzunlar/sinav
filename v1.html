@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Fonksiyonlarda Artan ve Azalanlık Etkinliği</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.4;
+            min-height: 100vh;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+        }
+
+        /* Desktop layout - iki sütunlu */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .content {
+                display: flex;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .graph-container {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .monotonicity-table {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+
+        header {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .progress-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 15px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1a2a6c, #2d4aa7);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-success:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .graph-container {
+            background-color: #f8f9fa;
+            padding: 5px;
+            border-radius: 4px;
+            text-align: center;
+            margin-bottom: 5px;
+            border: 1px solid #dee2e6;
+        }
+
+        .graph-header {
+            margin-bottom: 15px;
+        }
+
+        .graph-header h3 {
+            color: #1a2a6c;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            aspect-ratio: 1;
+            border: 2px solid #dee2e6;
+            overflow: hidden;
+        }
+
+        /* Desktop'ta grafik alanını optimize et */
+        @media (min-width: 769px) {
+            .canvas-wrapper {
+                aspect-ratio: 1.2;
+                max-height: 70vh;
+            }
+        }
+
+        #functionChart {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+        }
+
+        .monotonicity-table {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .monotonicity-table h4 {
+            color: #e65100;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .table-container {
+            position: relative;
+            background: #fff;
+            border-radius: 8px;
+            border: 2px solid #ffcc02;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .monotonicity-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 300px;
+        }
+
+        .monotonicity-table th,
+        .monotonicity-table td {
+            padding: 8px 4px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+
+        .monotonicity-table .interval-row {
+            background: linear-gradient(135deg, #ff9800, #ffb74d);
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .monotonicity-table .status-row {
+            background: #fafafa;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 10px;
+        }
+
+        .monotonicity-table .increasing {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            color: #2e7d32;
+        }
+
+        .monotonicity-table .decreasing {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #c62828;
+        }
+
+        .monotonicity-table .constant {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1565c0;
+        }
+
+        .interactive-cell {
+            background: #f8f9fa !important;
+            padding: 5px 2px !important;
+        }
+
+        .interactive-cell input,
+        .interactive-cell select {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .animated-row {
+            animation: slideInLeft 0.5s ease-out;
+            border-left: 4px solid #ff9800;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .progress-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.3));
+            transition: width 0.3s ease;
+            pointer-events: none;
+        }
+
+        .analysis-summary {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 152, 0, 0.1);
+            border-radius: 6px;
+            border: 1px solid #ffcc02;
+            font-size: 12px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .trend-icon {
+            display: inline-block;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        .trend-up::before {
+            content: "↗️";
+        }
+
+        .trend-down::before {
+            content: "↘️";
+        }
+
+        .trend-flat::before {
+            content: "➡️";
+        }
+
+        /* Mobil optimizasyonları */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                border-radius: 5px;
+                max-width: 800px;
+            }
+            
+            .content {
+                display: block;
+            }
+            
+            header {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1rem;
+            }
+            
+            .content {
+                padding: 10px;
+            }
+            
+            .graph-container {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .monotonicity-table {
+                padding: 10px;
+            }
+            
+            .monotonicity-table table {
+                font-size: 10px;
+            }
+            
+            .monotonicity-table th,
+            .monotonicity-table td {
+                padding: 6px 2px;
+                min-width: 50px;
+            }
+        }
+
+        /* Landscape orientation */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .canvas-wrapper {
+                aspect-ratio: 4/3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12h18m-9-9v18"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <h1>Fonksiyonlarda Artan ve Azalanlık Etkinliği</h1>
+            </div>
+            <div class="progress-info" id="progressInfo">
+                Fonksiyon: 0/10
+            </div>
+        </header>
+        
+        <div class="content">
+            
+            <div class="graph-container">
+                <div class="graph-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+
+                    <div class="controls" style="margin: 0; flex-shrink: 0;">
+                        <button class="btn btn-primary" id="generateBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v20"></path>
+                                <path d="M2 12h20"></path>
+                            </svg>
+                            Rastgele Fonksiyon Üret
+                        </button>
+                        <button class="btn btn-success" id="nextBtn" style="display: none;" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18l6-6-6-6"></path>
+                            </svg>
+                            Sonraki Fonksiyon
+                        </button>
+                    </div>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="functionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="monotonicity-table">
+                <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12h18"></path>
+                        <path d="M8 8l4-4 4 4"></path>
+                        <path d="M8 16l4 4 4-4"></path>
+                    </svg>
+                    Dinamik Artan/Azalan Analizi
+                </h4>
+                <div class="table-container">
+                    <div class="progress-indicator" id="tableProgressIndicator"></div>
+                    <table id="monotonicityTable">
+                        <tbody id="monotonicityTableBody">
+                            <tr>
+                                <td colspan="100%" style="text-align: center; padding: 20px; color: #666;">
+                                    Grafik üretildikten sonra analiz tablosu burada görüntülenecektir.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="interval-analysis" id="intervalAnalysis" style="display: none; margin-top: 10px; padding: 12px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #007bff;">
+                    <strong>📏 En Geniş Aralık Analizi:</strong>
+                    <div style="margin-top: 6px; font-size: 13px;">
+                        <div id="longestIncreasing" style="display: none;">↗️ <strong>En geniş artan aralık:</strong> -</div>
+                        <div id="longestDecreasing" style="display: none;">↘️ <strong>En geniş azalan aralık:</strong> -</div>
+                        <div id="longestConstant" style="display: none;">➡️ <strong>En geniş sabit aralık:</strong> -</div>
+                    </div>
+                </div>
+                <div class="analysis-summary" id="analysisSummary">
+                    <strong>📊 Analiz Özeti:</strong> Henüz analiz başlamadı. Grafik animasyonu başladığında dinamik olarak güncellenecektir.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global değişkenler
+        let currentPoints = [];
+        let currentGraphType = '';
+        let xIntercepts = [];
+        let canvas, ctx;
+        let animationId = null;
+        let animationProgress = 0;
+        let isAnimating = false;
+        let animationSpeed = 0.01; // Daima yavaş animasyon
+        let monotonicityData = [];
+        let criticalPoints = [];
+        let currentAnalysisIndex = 0;
+        let functionCounter = 0;
+        let maxFunctions = 10;
+        let isInteractiveMode = false;
+        let interactiveFunctionCounter = 0;
+        let maxInteractiveFunctions = 10;
+        let currentInteractiveData = null;
+        let isAnswerCorrect = false;
+        let nextButtonEnabled = false;
+        
+        // Sayfa yüklendiğinde başlat
+        document.addEventListener('DOMContentLoaded', function() {
+            canvas = document.getElementById('functionChart');
+            ctx = canvas.getContext('2d');
+            setupCanvas();
+            setupEventListeners();
+            updateProgressInfo();
+            
+            // İlk grafik için boş çizim
+            drawEmptyGraph();
+        });
+        
+        // Event listener'ları ayarla
+        function setupEventListeners() {
+            document.getElementById('generateBtn').addEventListener('click', generateRandomFunction);
+            document.getElementById('nextBtn').addEventListener('click', generateRandomFunction);
+            window.addEventListener('resize', setupCanvas);
+            
+            // Touch event optimizasyonları - sadece canvas için
+            canvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            canvas.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+        }
+        
+        // İlerleme bilgisini güncelle
+        function updateProgressInfo() {
+            const progressInfo = document.getElementById('progressInfo');
+            const generateBtn = document.getElementById('generateBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (!isInteractiveMode) {
+                progressInfo.textContent = `Fonksiyon: ${functionCounter}/${maxFunctions}`;
+                
+                if (functionCounter >= maxFunctions) {
+                    generateBtn.disabled = false;
+                    generateBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12l2 2 4-4"></path>
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        İnteraktif Moda Geç
+                    `;
+                    generateBtn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                }
+            } else {
+                progressInfo.textContent = `İnteraktif Mod: ${interactiveFunctionCounter}/${maxInteractiveFunctions}`;
+                
+                if (interactiveFunctionCounter >= maxInteractiveFunctions) {
+                    generateBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                    
+                    // Tamamlandı mesajı göster
+                    const controls = document.querySelector('.controls');
+                    controls.innerHTML = `
+                        <div style="text-align: center; padding: 20px; background: #d4edda; border-radius: 8px; color: #155724;">
+                            <h3>🎉 Tebrikler!</h3>
+                            <p>Tüm egzersizleri başarıyla tamamladınız!</p>
+                        </div>
+                    `;
+                } else {
+                    generateBtn.style.display = 'none';
+                    nextBtn.style.display = 'flex';
+                    nextBtn.disabled = !nextButtonEnabled;
+                }
+            }
+        }
+        
+        // Canvas boyutlarını ayarla
+        function setupCanvas() {
+            const canvasWrapper = document.querySelector('.canvas-wrapper');
+            const width = canvasWrapper.clientWidth;
+            const height = canvasWrapper.clientHeight;
+            
+            // Retina display desteği
+            const ratio = window.devicePixelRatio || 1;
+            canvas.width = width * ratio;
+            canvas.height = height * ratio;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            ctx.scale(ratio, ratio);
+            
+            if (currentPoints.length > 0) {
+                if (isAnimating) {
+                    drawCoordinateSystem();
+                } else {
+                    drawGraph();
+                }
+            } else {
+                drawEmptyGraph();
+            }
+        }
+        
+        // Rastgele tam sayı üret
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        // X eksenini kesen noktalar üret
+        function generateXIntercepts() {
+            const numIntercepts = randomInt(1, 3);
+            const intercepts = [];
+            const usedX = new Set();
+            
+            while (intercepts.length < numIntercepts) {
+                const x = randomInt(-10, 10);
+                if (!usedX.has(x)) {
+                    usedX.add(x);
+                    intercepts.push(x);
+                }
+            }
+            
+            return intercepts.sort((a, b) => a - b);
+        }
+        
+        // X kesim noktalarından geçen fonksiyon noktaları üret
+        function generatePointsFromIntercepts(intercepts) {
+            const points = [];
+            
+            intercepts.forEach(x => {
+                points.push({x: x, y: 0});
+            });
+            
+            const additionalPoints = 5 - intercepts.length;
+            const usedX = new Set(intercepts);
+            
+            for (let i = 0; i < additionalPoints; i++) {
+                let x, y;
+                do {
+                    x = randomInt(-10, 10); // -10 ile 10 arasında
+                } while (usedX.has(x));
+                
+                usedX.add(x);
+                y = randomInt(-10, 10); // -10 ile 10 arasında
+                if (y === 0) y = randomInt(1, 5) * (Math.random() < 0.5 ? 1 : -1);
+                
+                points.push({x, y});
+            }
+            
+            return points.sort((a, b) => a.x - b.x);
+        }
+        
+        // Rastgele fonksiyon üret
+        function generateRandomFunction() {
+            if (!isInteractiveMode && functionCounter >= maxFunctions) {
+                // İnteraktif moda geç
+                isInteractiveMode = true;
+                interactiveFunctionCounter = 0;
+                updateProgressInfo();
+                generateInteractiveFunction();
+                return;
+            }
+            
+            if (isInteractiveMode && interactiveFunctionCounter >= maxInteractiveFunctions) return;
+            
+            if (isInteractiveMode) {
+                generateInteractiveFunction();
+                return;
+            }
+            
+            stopAnimation();
+            
+            functionCounter++;
+            updateProgressInfo();
+            
+            xIntercepts = generateXIntercepts();
+            currentPoints = generatePointsFromIntercepts(xIntercepts);
+            currentGraphType = 'continuous'; // Daima sürekli fonksiyon
+            
+            // Artan/azalan analizi için veri hazırla
+            prepareMonotonicityAnalysis();
+            
+            updateGraphTitle();
+            resetMonotonicityTable();
+            
+            startDrawAnimation();
+        }
+        
+        // Animasyon başlatma
+        function startDrawAnimation() {
+            animationProgress = 0;
+            isAnimating = true;
+            currentAnalysisIndex = 0;
+            
+            drawCoordinateSystem();
+            animateDrawing();
+        }
+        
+        // Animasyonu durdurma
+        function stopAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            isAnimating = false;
+            animationProgress = 1;
+            currentAnalysisIndex = monotonicityData.length;
+            
+            if (currentPoints.length > 0) {
+                drawGraph();
+                
+                // İnteraktif modda tablo oluşturma
+                if (isInteractiveMode) {
+                    createInteractiveTable();
+                } else {
+                    completeMonotonicityTable();
+                }
+            }
+        }
+        
+        // Çizim animasyonu
+        function animateDrawing() {
+            if (!isAnimating) return;
+            
+            animationProgress += animationSpeed;
+            
+            if (animationProgress >= 1) {
+                animationProgress = 1;
+                isAnimating = false;
+                
+                // İnteraktif modda tablo oluşturma
+                if (isInteractiveMode) {
+                    createInteractiveTable();
+                } else {
+                    completeMonotonicityTable();
+                }
+            }
+            
+            drawCoordinateSystem();
+            drawAnimatedContinuousGraph();
+            drawAnimatedPoints();
+            
+            // Normal modda animasyon sırasında tablo güncelle
+            if (!isInteractiveMode) {
+                updateMonotonicityTableWithAnimation();
+            }
+            
+            if (isAnimating) {
+                animationId = requestAnimationFrame(animateDrawing);
+            }
+        }
+        
+        // Koordinat sistemini çiz
+        function drawCoordinateSystem() {
+            const width = canvas.style.width ? parseInt(canvas.style.width) : canvas.width;
+            const height = canvas.style.height ? parseInt(canvas.style.height) : canvas.height;
+            
+            const padding = Math.min(width, height) * 0.1;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            // Scale'i 1-11 sayıları sığacak şekilde ayarla (görüntü için)
+            const availableWidth = (width - padding * 2) / 2; // Sağ tarafın genişliği
+            const scale = availableWidth / 11; // 11 birim için scale hesapla (görüntü için)
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Grid çizgileri çiz (ana eksenlerden önce)
+            // Mobil optimizasyonu - ekran boyutuna göre grid ayarları
+            const isMobile = width < 500; // Mobil tespit
+            
+            // Mobilde daha belirgin grid için ayarlar
+            if (isMobile) {
+                ctx.strokeStyle = '#e8e8e8'; // Daha koyu gri
+                ctx.lineWidth = 0.8; // Daha kalın çizgi
+                ctx.globalAlpha = 0.7; // Daha opak
+            } else {
+                ctx.strokeStyle = '#e0e0e0'; // Masaüstü için normal
+                ctx.lineWidth = 0.5;
+                ctx.globalAlpha = 0.6;
+            }
+            
+            // Dikey grid çizgileri
+            for (let i = -11; i <= 11; i++) {
+                if (i === 0) continue; // Ana Y ekseni atlanacak
+                const x = centerX + i * scale;
+                if (x >= padding && x <= width - padding) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, padding);
+                    ctx.lineTo(x, height - padding);
+                    ctx.stroke();
+                }
+            }
+            
+            // Yatay grid çizgileri
+            for (let i = -11; i <= 11; i++) {
+                if (i === 0) continue; // Ana X ekseni atlanacak
+                const y = centerY - i * scale;
+                if (y >= padding && y <= height - padding) {
+                    ctx.beginPath();
+                    ctx.moveTo(padding, y);
+                    ctx.lineTo(width - padding, y);
+                    ctx.stroke();
+                }
+            }
+            
+            // Grid çizimi tamamlandıktan sonra alpha'yı sıfırla
+            ctx.globalAlpha = 1;
+            
+            // X ekseni (ana)
+            ctx.beginPath();
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.moveTo(padding, centerY);
+            ctx.lineTo(width - padding, centerY);
+            ctx.stroke();
+            
+            // Y ekseni (ana)
+            ctx.beginPath();
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.moveTo(centerX, height - padding);
+            ctx.lineTo(centerX, padding);
+            ctx.stroke();
+            
+            // Ok işaretleri
+            const arrowSize = scale * 0.4;
+            
+            // X ekseni sağ ok
+            ctx.beginPath();
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            const xArrowTip = width - padding;
+            ctx.moveTo(xArrowTip - arrowSize, centerY - arrowSize/2);
+            ctx.lineTo(xArrowTip, centerY);
+            ctx.lineTo(xArrowTip - arrowSize, centerY + arrowSize/2);
+            ctx.stroke();
+            
+            // X ekseni sol ok
+            ctx.beginPath();
+            const xArrowLeftTip = padding;
+            ctx.moveTo(xArrowLeftTip + arrowSize, centerY - arrowSize/2);
+            ctx.lineTo(xArrowLeftTip, centerY);
+            ctx.lineTo(xArrowLeftTip + arrowSize, centerY + arrowSize/2);
+            ctx.stroke();
+            
+            // Y ekseni yukarı ok
+            ctx.beginPath();
+            ctx.strokeStyle = '#2c3e50';
+            const yArrowTip = padding;
+            ctx.moveTo(centerX - arrowSize/2, yArrowTip + arrowSize);
+            ctx.lineTo(centerX, yArrowTip);
+            ctx.lineTo(centerX + arrowSize/2, yArrowTip + arrowSize);
+            ctx.stroke();
+            
+            // Y ekseni aşağı ok
+            ctx.beginPath();
+            const yArrowBottomTip = height - padding;
+            ctx.moveTo(centerX - arrowSize/2, yArrowBottomTip - arrowSize);
+            ctx.lineTo(centerX, yArrowBottomTip);
+            ctx.lineTo(centerX + arrowSize/2, yArrowBottomTip - arrowSize);
+            ctx.stroke();
+            
+            // Eksen noktaları
+            ctx.fillStyle = '#2c3e50';
+            for (let i = -11; i <= 11; i++) {
+                if (i === 0) continue;
+                const x = centerX + i * scale;
+                if (x >= padding && x <= width - padding) {
+                    ctx.beginPath();
+                    ctx.arc(x, centerY, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            for (let i = -11; i <= 11; i++) {
+                if (i === 0) continue;
+                const y = centerY - i * scale;
+                if (y >= padding && y <= height - padding) {
+                    ctx.beginPath();
+                    ctx.arc(centerX, y, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            // Mobil için daha küçük etiketler
+            const fontSize = Math.max(8, Math.min(12, width * 0.025));
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.textAlign = 'center';
+            
+            // X ekseni etiketleri - 1'den 11'e kadar ardışık
+            for (let i = 1; i <= 11; i++) {
+                const x = centerX + i * scale;
+                if (x >= padding && x <= width - padding) {
+                    ctx.fillText(i.toString(), x, centerY + fontSize + 3);
+                }
+            }
+            
+            // X ekseni negatif etiketler
+            for (let i = -11; i <= -1; i++) {
+                const x = centerX + i * scale;
+                if (x >= padding && x <= width - padding) {
+                    ctx.fillText(i.toString(), x, centerY + fontSize + 3);
+                }
+            }
+            
+            // Y ekseni etiketleri - 1'den 11'e kadar ardışık
+            ctx.textAlign = 'right';
+            for (let i = 1; i <= 11; i++) {
+                const y = centerY - i * scale;
+                if (y >= padding && y <= height - padding) {
+                    ctx.fillText(i.toString(), centerX - 5, y + fontSize/3);
+                }
+            }
+            
+            // Y ekseni negatif etiketler
+            for (let i = -11; i <= -1; i++) {
+                const y = centerY - i * scale;
+                if (y >= padding && y <= height - padding) {
+                    ctx.fillText(i.toString(), centerX - 5, y + fontSize/3);
+                }
+            }
+            
+            ctx.fillText('0', centerX - fontSize, centerY + fontSize + 3);
+            
+            // Eksen isimleri
+            ctx.font = `bold ${fontSize + 2}px Arial`;
+            ctx.fillStyle = '#1a2a6c';
+            ctx.textAlign = 'center';
+            ctx.fillText('x', width - padding + fontSize, centerY - 5);
+            ctx.fillText('y', centerX + fontSize, padding - 5);
+        }
+        
+        // Koordinat dönüşüm fonksiyonları
+        function toCanvasX(x) {
+            const width = canvas.style.width ? parseInt(canvas.style.width) : canvas.width;
+            const height = canvas.style.height ? parseInt(canvas.style.height) : canvas.height;
+            
+            const padding = Math.min(width, height) * 0.1;
+            
+            // Scale'i 1-11 sayıları sığacak şekilde ayarla (görüntü için)
+            const availableWidth = (width - padding * 2) / 2;
+            const scale = availableWidth / 11;
+            return width / 2 + x * scale;
+        }
+        
+        function toCanvasY(y) {
+            const width = canvas.style.width ? parseInt(canvas.style.width) : canvas.width;
+            const height = canvas.style.height ? parseInt(canvas.style.height) : canvas.height;
+            
+            const padding = Math.min(width, height) * 0.1;
+            
+            // Scale'i 1-11 sayıları sığacak şekilde ayarla (görüntü için)
+            const availableHeight = (height - padding * 2) / 2;
+            const scale = availableHeight / 11;
+            return height / 2 - y * scale;
+        }
+        
+        // Segment rengini belirle
+        function getSegmentColor(startPoint, endPoint) {
+            const deltaY = endPoint.y - startPoint.y;
+            const deltaX = endPoint.x - startPoint.x;
+            const slope = deltaY / deltaX;
+            
+            if (slope > 0.1) {
+                return '#28a745'; // Artan - Yeşil
+            } else if (slope < -0.1) {
+                return '#dc3545'; // Azalan - Kırmızı  
+            } else {
+                return '#17a2b8'; // Sabit - Mavi
+            }
+        }
+
+        // Animasyonlu sürekli grafik çizimi
+        function drawAnimatedContinuousGraph() {
+            if (currentPoints.length === 0) return;
+            
+            const minX = Math.min(...currentPoints.map(p => p.x));
+            const maxX = Math.max(...currentPoints.map(p => p.x));
+            const currentMaxX = minX + (maxX - minX) * animationProgress;
+            
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+            ctx.shadowBlur = 2;
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 1;
+            
+            for (let i = 1; i < currentPoints.length; i++) {
+                const prev = currentPoints[i-1];
+                const current = currentPoints[i];
+                
+                if (prev.x > currentMaxX) break;
+                
+                let endPoint = current;
+                if (current.x > currentMaxX) {
+                    const t = (currentMaxX - prev.x) / (current.x - prev.x);
+                    endPoint = {
+                        x: prev.x + t * (current.x - prev.x),
+                        y: prev.y + t * (current.y - prev.y)
+                    };
+                }
+                
+                // Segment rengini belirle
+                ctx.strokeStyle = getSegmentColor(prev, endPoint);
+                
+                ctx.beginPath();
+                ctx.moveTo(toCanvasX(prev.x), toCanvasY(prev.y));
+                
+                const cp1x = toCanvasX((prev.x + endPoint.x) / 2);
+                const cp1y = toCanvasY(prev.y);
+                const cp2x = toCanvasX((prev.x + endPoint.x) / 2);
+                const cp2y = toCanvasY(endPoint.y);
+                
+                ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, toCanvasX(endPoint.x), toCanvasY(endPoint.y));
+                ctx.stroke();
+                
+                if (current.x > currentMaxX) break;
+            }
+            
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+        
+        // Animasyonlu nokta çizimi
+        function drawAnimatedPoints() {
+            if (currentPoints.length === 0) return;
+            
+            const pointColors = ['#FF5252', '#FF9800', '#4CAF50', '#2196F3', '#9C27B0'];
+            const minX = Math.min(...currentPoints.map(p => p.x));
+            const maxX = Math.max(...currentPoints.map(p => p.x));
+            const currentMaxX = minX + (maxX - minX) * animationProgress;
+            
+            // X kesim noktalarını çiz
+            xIntercepts.forEach(x => {
+                if (x <= currentMaxX) {
+                    const cx = toCanvasX(x);
+                    const cy = toCanvasY(0);
+                    
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(220, 53, 69, 0.3)';
+                    ctx.arc(cx + 1, cy + 1, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    ctx.beginPath();
+                    ctx.fillStyle = '#dc3545';
+                    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            // Diğer noktaları çiz
+            currentPoints.forEach((point, index) => {
+                if (point.x > currentMaxX || point.y === 0) return;
+                
+                const cx = toCanvasX(point.x);
+                const cy = toCanvasY(point.y);
+                const pointProgress = Math.min(1, Math.max(0, (currentMaxX - point.x + 1) / 1));
+                const alpha = Math.min(1, pointProgress * 2);
+                
+                if (alpha <= 0) return;
+                
+                ctx.globalAlpha = alpha * 0.2;
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                ctx.arc(cx + 1, cy + 1, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.globalAlpha = alpha;
+                ctx.beginPath();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.fillStyle = pointColors[index];
+                ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.globalAlpha = 1;
+            });
+        }
+        
+        // Normal grafik çizimi (animasyonsuz)
+        function drawGraph() {
+            drawCoordinateSystem();
+            drawContinuousGraph();
+            drawXIntercepts();
+            drawPoints();
+        }
+        
+        // Sürekli grafik çiz
+        function drawContinuousGraph() {
+            if (currentPoints.length === 0) return;
+            
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+            ctx.shadowBlur = 2;
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 1;
+            
+            for (let i = 1; i < currentPoints.length; i++) {
+                const prev = currentPoints[i-1];
+                const current = currentPoints[i];
+                
+                // Segment rengini belirle
+                ctx.strokeStyle = getSegmentColor(prev, current);
+                
+                ctx.beginPath();
+                ctx.moveTo(toCanvasX(prev.x), toCanvasY(prev.y));
+                
+                const cp1x = toCanvasX((prev.x + current.x) / 2);
+                const cp1y = toCanvasY(prev.y);
+                const cp2x = toCanvasX((prev.x + current.x) / 2);
+                const cp2y = toCanvasY(current.y);
+                
+                ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, toCanvasX(current.x), toCanvasY(current.y));
+                ctx.stroke();
+            }
+            
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+        
+        // X kesim noktalarını çiz
+        function drawXIntercepts() {
+            xIntercepts.forEach(x => {
+                const cx = toCanvasX(x);
+                const cy = toCanvasY(0);
+                
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(220, 53, 69, 0.3)';
+                ctx.arc(cx + 1, cy + 1, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.fillStyle = '#dc3545';
+                ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        
+        // Noktaları çiz
+        function drawPoints() {
+            const pointColors = ['#FF5252', '#FF9800', '#4CAF50', '#2196F3', '#9C27B0'];
+            
+            currentPoints.forEach((point, index) => {
+                const cx = toCanvasX(point.x);
+                const cy = toCanvasY(point.y);
+                const isXIntercept = point.y === 0;
+                
+                if (isXIntercept) return;
+                
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                ctx.arc(cx + 1, cy + 1, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.fillStyle = pointColors[index];
+                ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        
+        // Boş grafik çiz
+        function drawEmptyGraph() {
+            drawCoordinateSystem();
+        }
+        
+        // Grafik başlığını güncelle
+        function updateGraphTitle() {
+            const graphTitleElement = document.getElementById('graphTitle');
+            if (!graphTitleElement) {
+                // Element yoksa hiçbir şey yapma
+                return;
+            }
+            
+            let titleText = '';
+            if (!isInteractiveMode) {
+                titleText = ``; // Boş başlık
+            } else {
+                const modeText = interactiveFunctionCounter > 5 ? 'Aralık Yazma' : 'Artan/Azalan Seçme';
+                titleText = `İnteraktif Egzersiz #${interactiveFunctionCounter} - ${modeText}`;
+            }
+            
+            graphTitleElement.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a2a6c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3v18h18"></path>
+                    <path d="M19 9l-5 5-4-4-3 3"></path>
+                </svg>
+                ${titleText}
+            `;
+        }
+
+        // Artan/Azalan analizi için veri hazırlama
+        function prepareMonotonicityAnalysis() {
+            monotonicityData = [];
+            criticalPoints = [];
+            
+            if (currentPoints.length < 2) return;
+            
+            // Noktaları x değerine göre sırala
+            const sortedPoints = [...currentPoints].sort((a, b) => a.x - b.x);
+            
+            for (let i = 0; i < sortedPoints.length - 1; i++) {
+                const p1 = sortedPoints[i];
+                const p2 = sortedPoints[i + 1];
+                
+                const deltaX = p2.x - p1.x;
+                const deltaY = p2.y - p1.y;
+                const slope = deltaY / deltaX;
+                
+                let status = 'constant';
+                let statusText = 'SABİT';
+                let trendIcon = 'trend-flat';
+                
+                if (slope > 0.1) {
+                    status = 'increasing';
+                    statusText = 'ARTAN';
+                    trendIcon = 'trend-up';
+                } else if (slope < -0.1) {
+                    status = 'decreasing';
+                    statusText = 'AZALAN';
+                    trendIcon = 'trend-down';
+                }
+                
+                monotonicityData.push({
+                    startX: p1.x,
+                    endX: p2.x,
+                    interval: `[${p1.x}, ${p2.x}]`,
+                    status: status,
+                    statusText: statusText,
+                    trendIcon: trendIcon,
+                    slope: slope.toFixed(2)
+                });
+            }
+        }
+
+        // Artan/azalan tablosunu sıfırla
+        function resetMonotonicityTable() {
+            const tableBody = document.getElementById('monotonicityTableBody');
+            
+            if (isInteractiveMode) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="100%" style="text-align: center; padding: 15px; color: #666;">
+                            Grafik çizimi tamamlandıktan sonra interaktif tablo burada görüntülenecektir...
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="100%" style="text-align: center; padding: 15px; color: #666;">
+                            Analiz başlıyor...
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            const progressIndicator = document.getElementById('tableProgressIndicator');
+            progressIndicator.style.width = '0%';
+            
+            const analysisSummary = document.getElementById('analysisSummary');
+            analysisSummary.innerHTML = '<strong>📊 Analiz Özeti:</strong> Animasyon başladığında dinamik olarak güncellenecektir.';
+            
+            // Aralık analizini gizle
+            const intervalAnalysis = document.getElementById('intervalAnalysis');
+            intervalAnalysis.style.display = 'none';
+        }
+
+        // Animasyonla senkronize tablo güncelleme
+        function updateMonotonicityTableWithAnimation() {
+            if (monotonicityData.length === 0) return;
+            
+            const minX = Math.min(...currentPoints.map(p => p.x));
+            const maxX = Math.max(...currentPoints.map(p => p.x));
+            const currentMaxX = minX + (maxX - minX) * animationProgress;
+            
+            // Hangi aralıkların gösterilmesi gerektiğini belirle
+            const visibleIntervals = monotonicityData.filter(data => data.startX <= currentMaxX);
+            
+            if (visibleIntervals.length > 0 && visibleIntervals.length !== currentAnalysisIndex) {
+                const tableBody = document.getElementById('monotonicityTableBody');
+                
+                // Tablo içeriğini temizle
+                tableBody.innerHTML = '';
+                
+                // Aralık satırını oluştur
+                const intervalRow = document.createElement('tr');
+                intervalRow.className = 'animated-row';
+                
+                // Durum satırını oluştur
+                const statusRow = document.createElement('tr');
+                statusRow.className = 'animated-row';
+                
+                visibleIntervals.forEach((data, index) => {
+                    // Aralık hücresi
+                    const intervalCell = document.createElement('td');
+                    intervalCell.className = 'interval-row';
+                    intervalCell.textContent = data.interval;
+                    intervalRow.appendChild(intervalCell);
+                    
+                    // Durum hücresi
+                    const statusCell = document.createElement('td');
+                    statusCell.className = `status-row ${data.status}`;
+                    statusCell.innerHTML = `
+                        <span class="trend-icon ${data.trendIcon}"></span>
+                        ${data.statusText}
+                    `;
+                    statusRow.appendChild(statusCell);
+                });
+                
+                tableBody.appendChild(intervalRow);
+                tableBody.appendChild(statusRow);
+                
+                currentAnalysisIndex = visibleIntervals.length;
+                updateAnalysisSummary(visibleIntervals);
+            }
+            
+            // Progress indicator güncelle
+            const progressIndicator = document.getElementById('tableProgressIndicator');
+            progressIndicator.style.width = (animationProgress * 100) + '%';
+        }
+
+        // Tabloyu tamamla
+        function completeMonotonicityTable() {
+            if (monotonicityData.length === 0) return;
+            
+            currentAnalysisIndex = monotonicityData.length;
+            
+            const tableBody = document.getElementById('monotonicityTableBody');
+            tableBody.innerHTML = '';
+            
+            // Aralık satırını oluştur
+            const intervalRow = document.createElement('tr');
+            
+            // Sol etiket hücresi - "x"
+            const intervalLabelCell = document.createElement('td');
+            intervalLabelCell.className = 'interval-row';
+            intervalLabelCell.textContent = 'x';
+            intervalLabelCell.style.backgroundColor = '#2c3e50';
+            intervalLabelCell.style.color = 'white';
+            intervalLabelCell.style.fontWeight = 'bold';
+            intervalLabelCell.style.fontSize = '12px';
+            intervalLabelCell.style.padding = '8px 6px';
+            intervalLabelCell.style.textAlign = 'center';
+            intervalLabelCell.style.minWidth = '40px';
+            intervalRow.appendChild(intervalLabelCell);
+            
+            // Durum satırını oluştur
+            const statusRow = document.createElement('tr');
+            
+            // Sol etiket hücresi - "f(x)"
+            const statusLabelCell = document.createElement('td');
+            statusLabelCell.className = 'status-row';
+            statusLabelCell.textContent = 'f(x)';
+            statusLabelCell.style.backgroundColor = '#34495e';
+            statusLabelCell.style.color = 'white';
+            statusLabelCell.style.fontWeight = 'bold';
+            statusLabelCell.style.fontSize = '12px';
+            statusLabelCell.style.padding = '8px 6px';
+            statusLabelCell.style.textAlign = 'center';
+            statusLabelCell.style.minWidth = '40px';
+            statusRow.appendChild(statusLabelCell);
+            
+            monotonicityData.forEach((data, index) => {
+                // Aralık hücresi
+                const intervalCell = document.createElement('td');
+                intervalCell.className = 'interval-row';
+                intervalCell.textContent = data.interval;
+                intervalRow.appendChild(intervalCell);
+                
+                // Durum hücresi
+                const statusCell = document.createElement('td');
+                statusCell.className = `status-row ${data.status}`;
+                statusCell.innerHTML = `
+                    <span class="trend-icon ${data.trendIcon}"></span>
+                    ${data.statusText}
+                `;
+                statusRow.appendChild(statusCell);
+            });
+            
+            tableBody.appendChild(intervalRow);
+            tableBody.appendChild(statusRow);
+            
+            updateAnalysisSummary(monotonicityData);
+            
+            const progressIndicator = document.getElementById('tableProgressIndicator');
+            progressIndicator.style.width = '100%';
+        }
+
+        // İnteraktif fonksiyon üret
+        function generateInteractiveFunction() {
+            if (interactiveFunctionCounter >= maxInteractiveFunctions) return;
+            
+            stopAnimation();
+            
+            interactiveFunctionCounter++;
+            isAnswerCorrect = false;
+            nextButtonEnabled = false;
+            updateProgressInfo();
+            
+            xIntercepts = generateXIntercepts();
+            currentPoints = generatePointsFromIntercepts(xIntercepts);
+            currentGraphType = 'continuous';
+            
+            prepareMonotonicityAnalysis();
+            currentInteractiveData = [...monotonicityData];
+            
+            updateGraphTitle();
+            createInteractiveTable();
+            
+            // Yeni egzersizde aralık analizini gizle
+            const intervalAnalysis = document.getElementById('intervalAnalysis');
+            intervalAnalysis.style.display = 'none';
+            
+            startDrawAnimation();
+        }
+        
+        // İnteraktif tablo oluştur
+        function createInteractiveTable() {
+            console.log('Creating interactive table, mode:', isInteractiveMode, 'counter:', interactiveFunctionCounter);
+            console.log('Current interactive data:', currentInteractiveData);
+            
+            const tableBody = document.getElementById('monotonicityTableBody');
+            tableBody.innerHTML = '';
+            
+            if (!currentInteractiveData || currentInteractiveData.length === 0) {
+                console.error('No interactive data available');
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="100%" style="text-align: center; padding: 15px; color: #dc3545;">
+                            Hata: Analiz verileri bulunamadı!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            const isIntervalMode = interactiveFunctionCounter > 5; // İlk 5'i artan/azalan, sonraki 5'i aralık
+            console.log('Is interval mode:', isIntervalMode);
+            
+            if (isIntervalMode) {
+                // Aralık yazma modu - kullanıcı hem aralığı hem durumu yazacak
+                createIntervalWritingTable(tableBody);
+            } else {
+                // Artan/Azalan seçme modu - sadece durumu seçecek
+                createStatusSelectingTable(tableBody);
+            }
+            
+            updateInteractiveAnalysisSummary();
+            console.log('Interactive table creation completed');
+        }
+        
+        // Durum seçme tablosu oluştur
+        function createStatusSelectingTable(tableBody) {
+            console.log('Creating status selecting table for', currentInteractiveData.length, 'intervals');
+            
+            // Aralık satırını oluştur (önceden doldurulmuş)
+            const intervalRow = document.createElement('tr');
+            intervalRow.className = 'interval-row-header';
+            
+            // Sol etiket hücresi - "ax"
+            const intervalLabelCell = document.createElement('td');
+            intervalLabelCell.className = 'interval-row';
+            intervalLabelCell.textContent = 'x';
+            intervalLabelCell.style.backgroundColor = '#2c3e50';
+            intervalLabelCell.style.color = 'white';
+            intervalLabelCell.style.fontWeight = 'bold';
+            intervalLabelCell.style.fontSize = '12px';
+            intervalLabelCell.style.padding = '8px 6px';
+            intervalLabelCell.style.textAlign = 'center';
+            intervalLabelCell.style.minWidth = '40px';
+            intervalRow.appendChild(intervalLabelCell);
+            
+            // Durum satırını oluştur (kullanıcı doldurması için)
+            const statusRow = document.createElement('tr');
+            statusRow.className = 'status-row-interactive';
+            
+            // Sol etiket hücresi - "f(x)"
+            const statusLabelCell = document.createElement('td');
+            statusLabelCell.className = 'status-row';
+            statusLabelCell.textContent = 'f(x)';
+            statusLabelCell.style.backgroundColor = '#34495e';
+            statusLabelCell.style.color = 'white';
+            statusLabelCell.style.fontWeight = 'bold';
+            statusLabelCell.style.fontSize = '12px';
+            statusLabelCell.style.padding = '8px 6px';
+            statusLabelCell.style.textAlign = 'center';
+            statusLabelCell.style.minWidth = '40px';
+            statusRow.appendChild(statusLabelCell);
+            
+            currentInteractiveData.forEach((data, index) => {
+                console.log(`Creating cells for interval ${index}:`, data.interval, data.status);
+                
+                // Aralık hücresi - önceden doldurulmuş
+                const intervalCell = document.createElement('td');
+                intervalCell.className = 'interval-row';
+                intervalCell.textContent = data.interval;
+                intervalCell.style.backgroundColor = '#ff9800';
+                intervalCell.style.color = 'white';
+                intervalCell.style.fontWeight = 'bold';
+                intervalCell.style.fontSize = '11px';
+                intervalCell.style.padding = '8px 4px';
+                intervalCell.style.textAlign = 'center';
+                intervalRow.appendChild(intervalCell);
+                
+                // Durum hücresi - kullanıcı dolduracak
+                const statusCell = document.createElement('td');
+                statusCell.className = 'status-row interactive-cell';
+                statusCell.style.padding = '5px 2px';
+                statusCell.style.backgroundColor = '#f8f9fa';
+                statusCell.innerHTML = `
+                    <select id="status_${index}" 
+                            style="width: 100%; border: 1px solid #ccc; border-radius: 3px; padding: 4px; font-size: 11px; background: white;"
+                            onchange="checkAnswer()">
+                        <option value="">-- Seçin --</option>
+                        <option value="increasing">ARTAN</option>
+                        <option value="decreasing">AZALAN</option>
+                        <option value="constant">SABİT</option>
+                    </select>
+                `;
+                statusRow.appendChild(statusCell);
+            });
+            
+            tableBody.appendChild(intervalRow);
+            tableBody.appendChild(statusRow);
+            
+            console.log('Status selecting table created successfully');
+        }
+        
+        // Aralık yazma tablosu oluştur
+        function createIntervalWritingTable(tableBody) {
+            console.log('Creating interval writing table for', currentInteractiveData.length, 'intervals');
+            
+            // Aralık satırını oluştur (kullanıcı doldurması için)
+            const intervalRow = document.createElement('tr');
+            intervalRow.className = 'interval-row-interactive';
+            
+            // Sol etiket hücresi - "ax"
+            const intervalLabelCell = document.createElement('td');
+            intervalLabelCell.className = 'interval-row';
+            intervalLabelCell.textContent = 'x';
+            intervalLabelCell.style.backgroundColor = '#2c3e50';
+            intervalLabelCell.style.color = 'white';
+            intervalLabelCell.style.fontWeight = 'bold';
+            intervalLabelCell.style.fontSize = '12px';
+            intervalLabelCell.style.padding = '8px 6px';
+            intervalLabelCell.style.textAlign = 'center';
+            intervalLabelCell.style.minWidth = '40px';
+            intervalRow.appendChild(intervalLabelCell);
+            
+            // Durum satırını oluştur (kullanıcı doldurması için)
+            const statusRow = document.createElement('tr');
+            statusRow.className = 'status-row-interactive';
+            
+            // Sol etiket hücresi - "f(x)"
+            const statusLabelCell = document.createElement('td');
+            statusLabelCell.className = 'status-row';
+            statusLabelCell.textContent = 'f(x)';
+            statusLabelCell.style.backgroundColor = '#34495e';
+            statusLabelCell.style.color = 'white';
+            statusLabelCell.style.fontWeight = 'bold';
+            statusLabelCell.style.fontSize = '12px';
+            statusLabelCell.style.padding = '8px 6px';
+            statusLabelCell.style.textAlign = 'center';
+            statusLabelCell.style.minWidth = '40px';
+            statusRow.appendChild(statusLabelCell);
+            
+            currentInteractiveData.forEach((data, index) => {
+                console.log(`Creating input cells for interval ${index}:`, data.interval, data.status);
+                
+                // Aralık hücresi - kullanıcı dolduracak
+                const intervalCell = document.createElement('td');
+                intervalCell.className = 'interval-row interactive-cell';
+                intervalCell.style.backgroundColor = '#fff3e0';
+                intervalCell.style.padding = '5px 2px';
+                intervalCell.innerHTML = `
+                    <input type="text" 
+                           id="interval_${index}" 
+                           placeholder="[a,b]" 
+                           style="width: 100%; border: 1px solid #ccc; border-radius: 3px; padding: 4px; font-size: 11px; text-align: center; background: white;"
+                           onchange="checkAnswer()"
+                           oninput="checkAnswer()">
+                `;
+                intervalRow.appendChild(intervalCell);
+                
+                // Durum hücresi - kullanıcı dolduracak
+                const statusCell = document.createElement('td');
+                statusCell.className = 'status-row interactive-cell';
+                statusCell.style.padding = '5px 2px';
+                statusCell.style.backgroundColor = '#f8f9fa';
+                statusCell.innerHTML = `
+                    <select id="status_${index}" 
+                            style="width: 100%; border: 1px solid #ccc; border-radius: 3px; padding: 4px; font-size: 11px; background: white;"
+                            onchange="checkAnswer()">
+                        <option value="">-- Seçin --</option>
+                        <option value="increasing">ARTAN</option>
+                        <option value="decreasing">AZALAN</option>
+                        <option value="constant">SABİT</option>
+                    </select>
+                `;
+                statusRow.appendChild(statusCell);
+            });
+            
+            tableBody.appendChild(intervalRow);
+            tableBody.appendChild(statusRow);
+            
+            console.log('Interval writing table created successfully');
+        }
+        
+        // Cevapları kontrol et
+        function checkAnswer() {
+            const isIntervalMode = interactiveFunctionCounter > 5;
+            let allFilled = true;
+            let allCorrect = true;
+            
+            currentInteractiveData.forEach((data, index) => {
+                let userIntervalAnswer = '';
+                let userStatusAnswer = '';
+                
+                if (isIntervalMode) {
+                    // Aralık yazma modu
+                    userIntervalAnswer = document.getElementById(`interval_${index}`).value.trim();
+                    userStatusAnswer = document.getElementById(`status_${index}`).value;
+                    
+                    if (!userIntervalAnswer || !userStatusAnswer) {
+                        allFilled = false;
+                        return;
+                    }
+                    
+                    // Aralık kontrolü
+                    const cleanUserInterval = userIntervalAnswer.replace(/\s/g, '');
+                    const cleanCorrectInterval = data.interval.replace(/\s/g, '');
+                    const intervalCorrect = cleanUserInterval === cleanCorrectInterval;
+                    
+                    // Durum kontrolü
+                    const statusCorrect = userStatusAnswer === data.status;
+                    
+                    // Görsel geri bildirim
+                    const intervalCell = document.getElementById(`interval_${index}`).parentElement;
+                    const statusCell = document.getElementById(`status_${index}`).parentElement;
+                    
+                    if (intervalCorrect) {
+                        intervalCell.style.backgroundColor = '#d4edda';
+                        intervalCell.style.border = '2px solid #28a745';
+                    } else {
+                        intervalCell.style.backgroundColor = '#f8d7da';
+                        intervalCell.style.border = '2px solid #dc3545';
+                        allCorrect = false;
+                    }
+                    
+                    if (statusCorrect) {
+                        statusCell.style.backgroundColor = '#d4edda';
+                        statusCell.style.border = '2px solid #28a745';
+                    } else {
+                        statusCell.style.backgroundColor = '#f8d7da';
+                        statusCell.style.border = '2px solid #dc3545';
+                        allCorrect = false;
+                    }
+                    
+                } else {
+                    // Durum seçme modu
+                    userStatusAnswer = document.getElementById(`status_${index}`).value;
+                    
+                    if (!userStatusAnswer) {
+                        allFilled = false;
+                        return;
+                    }
+                    
+                    const statusCorrect = userStatusAnswer === data.status;
+                    const statusCell = document.getElementById(`status_${index}`).parentElement;
+                    
+                    if (statusCorrect) {
+                        statusCell.style.backgroundColor = '#d4edda';
+                        statusCell.style.border = '2px solid #28a745';
+                    } else {
+                        statusCell.style.backgroundColor = '#f8d7da';
+                        statusCell.style.border = '2px solid #dc3545';
+                        allCorrect = false;
+                    }
+                }
+            });
+            
+            // Geri bildirim ve sonraki buton kontrolü
+            const analysisSummary = document.getElementById('analysisSummary');
+            
+            if (!allFilled) {
+                analysisSummary.innerHTML = `
+                    <strong>📝 Devam edin...</strong> 
+                    Tüm alanları doldurun.
+                `;
+                analysisSummary.style.backgroundColor = 'rgba(255, 152, 0, 0.1)';
+                analysisSummary.style.border = '1px solid #ffcc02';
+                isAnswerCorrect = false;
+                nextButtonEnabled = false;
+            } else if (allCorrect) {
+                analysisSummary.innerHTML = `
+                    <strong>🎉 Mükemmel!</strong> 
+                    Tüm cevaplar doğru! Sonraki fonksiyona geçebilirsiniz.
+                `;
+                analysisSummary.style.backgroundColor = '#d4edda';
+                analysisSummary.style.border = '1px solid #28a745';
+                isAnswerCorrect = true;
+                nextButtonEnabled = true;
+                
+                // Doğru cevap verildikten sonra en geniş aralık analizini göster
+                calculateIntervalSets(currentInteractiveData);
+            } else {
+                analysisSummary.innerHTML = `
+                    <strong>⚠️ Tekrar deneyin!</strong> 
+                    Kırmızı işaretli alanları kontrol edin.
+                `;
+                analysisSummary.style.backgroundColor = '#f8d7da';
+                analysisSummary.style.border = '1px solid #dc3545';
+                isAnswerCorrect = false;
+                nextButtonEnabled = false;
+            }
+            
+            updateProgressInfo();
+        }
+        
+        // İnteraktif analiz özetini güncelle
+        function updateInteractiveAnalysisSummary() {
+            const analysisSummary = document.getElementById('analysisSummary');
+            const isIntervalMode = interactiveFunctionCounter > 5;
+            
+            if (isIntervalMode) {
+                analysisSummary.innerHTML = `
+                    <strong>📝 Egzersiz ${interactiveFunctionCounter}:</strong> 
+                    Aralıkları ve durumları (ARTAN/AZALAN/SABİT) doldurun.
+                `;
+            } else {
+                analysisSummary.innerHTML = `
+                    <strong>📝 Egzersiz ${interactiveFunctionCounter}:</strong> 
+                    Her aralık için ARTAN, AZALAN veya SABİT durumunu seçin.
+                `;
+            }
+            
+            analysisSummary.style.backgroundColor = 'rgba(255, 152, 0, 0.1)';
+            analysisSummary.style.border = '1px solid #ffcc02';
+            
+            // İnteraktif modda başlangıçta aralık analizini gizle
+            const intervalAnalysis = document.getElementById('intervalAnalysis');
+            intervalAnalysis.style.display = 'none';
+        }
+
+        // Analiz özetini güncelle
+        function updateAnalysisSummary(visibleData) {
+            const analysisSummary = document.getElementById('analysisSummary');
+            
+            const increasingCount = visibleData.filter(d => d.status === 'increasing').length;
+            const decreasingCount = visibleData.filter(d => d.status === 'decreasing').length;
+            const constantCount = visibleData.filter(d => d.status === 'constant').length;
+            
+            const totalVisible = visibleData.length;
+            const totalIntervals = monotonicityData.length;
+            
+            let summary = `<strong>📊 Fonksiyon #${functionCounter} Analizi:</strong> `;
+            
+            if (totalVisible < totalIntervals) {
+                summary += `(${totalVisible}/${totalIntervals} aralık) `;
+            } else {
+                summary += `(Tamamlandı) `;
+            }
+            
+            summary += `<br>`;
+            
+            if (increasingCount > 0) {
+                summary += `↗️ ${increasingCount} artan `;
+            }
+            
+            if (decreasingCount > 0) {
+                summary += `↘️ ${decreasingCount} azalan `;
+            }
+            
+            if (constantCount > 0) {
+                summary += `➡️ ${constantCount} sabit `;
+            }
+            
+            summary += `aralık`;
+            
+            analysisSummary.innerHTML = summary;
+            
+            // En geniş aralık analizi (normal modda tamamlandığında veya interaktif modda doğru cevap verildikten sonra)
+            if ((!isInteractiveMode && totalVisible === totalIntervals) || (isInteractiveMode && isAnswerCorrect)) {
+                calculateIntervalSets(visibleData);
+            }
+        }
+        
+        // Aralık kümelerini hesapla
+        function calculateIntervalSets(data) {
+            const intervalAnalysis = document.getElementById('intervalAnalysis');
+            const longestIncreasing = document.getElementById('longestIncreasing');
+            const longestDecreasing = document.getElementById('longestDecreasing');
+            const longestConstant = document.getElementById('longestConstant');
+            
+            // Her tip için aralıkları topla
+            const increasingIntervals = [];
+            const decreasingIntervals = [];
+            const constantIntervals = [];
+            
+            data.forEach(interval => {
+                if (interval.status === 'increasing') {
+                    increasingIntervals.push(interval.interval);
+                } else if (interval.status === 'decreasing') {
+                    decreasingIntervals.push(interval.interval);
+                } else if (interval.status === 'constant') {
+                    constantIntervals.push(interval.interval);
+                }
+            });
+            
+            // Önce tüm divleri gizle
+            longestIncreasing.style.display = 'none';
+            longestDecreasing.style.display = 'none';
+            longestConstant.style.display = 'none';
+            
+            let hasAnyInterval = false;
+            
+            // Sonuçları küme birleşimi olarak göster (sadece bulunanlar için)
+            if (increasingIntervals.length > 0) {
+                const unionText = increasingIntervals.join(' ∪ ');
+                longestIncreasing.innerHTML = `↗️ <strong>Artan aralıklar:</strong> ${unionText}`;
+                longestIncreasing.style.color = '#28a745';
+                longestIncreasing.style.display = 'block';
+                hasAnyInterval = true;
+            }
+            
+            if (decreasingIntervals.length > 0) {
+                const unionText = decreasingIntervals.join(' ∪ ');
+                longestDecreasing.innerHTML = `↘️ <strong>Azalan aralıklar:</strong> ${unionText}`;
+                longestDecreasing.style.color = '#dc3545';
+                longestDecreasing.style.display = 'block';
+                hasAnyInterval = true;
+            }
+            
+            if (constantIntervals.length > 0) {
+                const unionText = constantIntervals.join(' ∪ ');
+                longestConstant.innerHTML = `➡️ <strong>Sabit aralıklar:</strong> ${unionText}`;
+                longestConstant.style.color = '#17a2b8';
+                longestConstant.style.display = 'block';
+                hasAnyInterval = true;
+            }
+            
+            // En az bir aralık varsa analiz bölümünü göster
+            if (hasAnyInterval) {
+                intervalAnalysis.style.display = 'block';
+            } else {
+                intervalAnalysis.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

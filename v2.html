@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Fonksiyonlarda Artan ve Azalanlık Etkinliği</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.4;
+            min-height: 100vh;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+        }
+
+        /* Desktop layout - iki sütunlu */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .content {
+                display: flex;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .graph-container {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .monotonicity-table {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+
+        header {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .progress-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 15px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1a2a6c, #2d4aa7);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-success:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .graph-container {
+            background-color: #f8f9fa;
+            padding: 5px;
+            border-radius: 4px;
+            text-align: center;
+            margin-bottom: 5px;
+            border: 1px solid #dee2e6;
+        }
+
+        .graph-header {
+            margin-bottom: 15px;
+        }
+
+        /* İşaret Tablosu Stilleri */
+        .sign-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sign-table th, .sign-table td {
+            border: 1px solid #ddd;
+            padding: 8px 4px;
+            text-align: center;
+            min-width: 40px;
+            height: 35px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            opacity: 1;
+        }
+        
+        .sign-table th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .sign-table th[scope="row"] {
+            background: #2c3e50;
+            min-width: 50px;
+        }
+        
+        .root-cell-x {
+            vertical-align: bottom;
+            font-weight: bold;
+            border-left: 3px solid #2ecc71;
+            padding-bottom: 2px;
+            line-height: 1;
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+            animation: fadeInSlide 0.5s ease-out;
+        }
+        
+        .root-cell-fx {
+            vertical-align: top;
+            font-weight: bold;
+            border-left: 3px solid #2ecc71;
+            padding-top: 2px;
+            line-height: 1;
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+            font-size: 16px;
+            animation: fadeInSlide 0.5s ease-out;
+        }
+        
+        .boundary-cell-x {
+            vertical-align: bottom;
+            font-weight: bold;
+            border-left: 2px solid #f39c12;
+            padding-bottom: 2px;
+            line-height: 1;
+            background: rgba(243, 156, 18, 0.1);
+            animation: fadeInSlide 0.5s ease-out;
+        }
+        
+        .boundary-cell-fx {
+            vertical-align: top;
+            font-weight: bold;
+            border-left: 2px solid #f39c12;
+            padding-top: 2px;
+            line-height: 1;
+            background: rgba(243, 156, 18, 0.1);
+            animation: fadeInSlide 0.5s ease-out;
+        }
+        
+        .positive {
+            color: #3498db;
+            font-size: 18px;
+            font-weight: bold;
+            background: rgba(52, 152, 219, 0.1);
+            animation: pulsePositive 0.6s ease-out;
+        }
+        
+        .negative {
+            color: #e74c3c;
+            font-size: 18px;
+            font-weight: bold;
+            background: rgba(231, 76, 60, 0.1);
+            animation: pulseNegative 0.6s ease-out;
+        }
+        
+        .hatched {
+            background: repeating-linear-gradient(45deg, #f1f1f1, #f1f1f1 5px, #fff 5px, #fff 10px);
+            color: #999;
+        }
+        
+        .pending {
+            background-color: #fafafa;
+            color: #bbb;
+            opacity: 0.3;
+        }
+
+        /* Animasyon keyframes */
+        @keyframes fadeInSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulsePositive {
+            0% {
+                background: rgba(52, 152, 219, 0.1);
+                transform: scale(1);
+            }
+            50% {
+                background: rgba(52, 152, 219, 0.3);
+                transform: scale(1.05);
+            }
+            100% {
+                background: rgba(52, 152, 219, 0.1);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulseNegative {
+            0% {
+                background: rgba(231, 76, 60, 0.1);
+                transform: scale(1);
+            }
+            50% {
+                background: rgba(231, 76, 60, 0.3);
+                transform: scale(1.05);
+            }
+            100% {
+                background: rgba(231, 76, 60, 0.1);
+                transform: scale(1);
+            }
+        }
+
+        .animated-cell {
+            animation: highlightCell 0.8s ease-out;
+        }
+
+        @keyframes highlightCell {
+            0% {
+                background-color: #fff3cd;
+                border: 2px solid #ffc107;
+            }
+            100% {
+                background-color: inherit;
+                border: 1px solid #ddd;
+            }
+        }
+
+        .graph-header h3 {
+            color: #1a2a6c;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            aspect-ratio: 1;
+            border: 2px solid #dee2e6;
+            overflow: hidden;
+        }
+
+        /* Desktop'ta grafik alanını optimize et */
+        @media (min-width: 769px) {
+            .canvas-wrapper {
+                aspect-ratio: 1.2;
+                max-height: 70vh;
+            }
+        }
+
+        #functionChart {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+        }
+
+        .monotonicity-table {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .monotonicity-table h4 {
+            color: #e65100;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .table-container {
+            position: relative;
+            background: #fff;
+            border-radius: 8px;
+            border: 2px solid #ffcc02;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .monotonicity-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 300px;
+        }
+
+        .monotonicity-table th,
+        .monotonicity-table td {
+            padding: 8px 4px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+
+        .monotonicity-table .interval-row {
+            background: linear-gradient(135deg, #ff9800, #ffb74d);
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .monotonicity-table .status-row {
+            background: #fafafa;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 10px;
+        }
+
+        .monotonicity-table .increasing {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            color: #2e7d32;
+        }
+
+        .monotonicity-table .decreasing {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #c62828;
+        }
+
+        .monotonicity-table .constant {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1565c0;
+        }
+
+        .interactive-cell {
+            background: #f8f9fa !important;
+            padding: 5px 2px !important;
+        }
+
+        .interactive-cell input,
+        .interactive-cell select {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .animated-row {
+            animation: slideInLeft 0.5s ease-out;
+            border-left: 4px solid #ff9800;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .progress-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.3));
+            transition: width 0.3s ease;
+            pointer-events: none;
+        }
+
+        .analysis-summary {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 152, 0, 0.1);
+            border-radius: 6px;
+            border: 1px solid #ffcc02;
+            font-size: 12px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .trend-icon {
+            display: inline-block;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        .trend-up::before {
+            content: "↗️";
+        }
+
+        .trend-down::before {
+            content: "↘️";
+        }
+
+        .trend-flat::before {
+            content: "➡️";
+        }
+
+        /* Mobil optimizasyonları */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                border-radius: 5px;
+                max-width: 800px;
+            }
+            
+            .content {
+                display: block;
+            }
+            
+            header {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1rem;
+            }
+            
+            .content {
+                padding: 10px;
+            }
+            
+            .graph-container {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .monotonicity-table {
+                padding: 10px;
+            }
+            
+            .monotonicity-table table {
+                font-size: 10px;
+            }
+            
+            .monotonicity-table th,
+            .monotonicity-table td {
+                padding: 6px 2px;
+                min-width: 50px;
+            }
+        }
+
+        /* Landscape orientation */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .canvas-wrapper {
+                aspect-ratio: 4/3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12h18m-9-9v18"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <h1>Fonksiyonlarda Artan ve Azalanlık Etkinliği</h1>
+            </div>
+            <div class="progress-info" id="progressInfo">
+                Fonksiyon: 0/10
+            </div>
+        </header>
+        
+        <div class="content">
+            
+            <div class="graph-container">
+                <div class="graph-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+
+                    <div class="controls" style="margin: 0; flex-shrink: 0;">
+                        <button class="btn btn-primary" id="generateBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v20"></path>
+                                <path d="M2 12h20"></path>
+                            </svg>
+                            Rastgele Fonksiyon Üret
+                        </button>
+                        <button class="btn btn-success" id="nextBtn" style="display: none;" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18l6-6-6-6"></path>
+                            </svg>
+                            Sonraki Fonksiyon
+                        </button>
+                    </div>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="functionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="monotonicity-table">
+                <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12h18"></path>
+                        <path d="M8 8l4-4 4 4"></path>
+                        <path d="M8 16l4 4 4-4"></path>
+                    </svg>
+                    Dinamik İşaret Tablosu
+                </h4>
+                <div class="table-container">
+                    <div class="progress-indicator" id="tableProgressIndicator"></div>
+                    <table class="sign-table" id="monotonicityTable">
+                        <tbody id="monotonicityTableBody">
+                            <tr>
+                                <td colspan="100%" style="text-align: center; padding: 20px; color: #666;">
+                                    Grafik üretildikten sonra işaret tablosu burada görüntülenecektir.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="interval-analysis" id="intervalAnalysis" style="display: none; margin-top: 10px; padding: 12px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #007bff;">
+                    <strong>📏 İşaret Analizi:</strong>
+                    <div style="margin-top: 6px; font-size: 13px;">
+                        <div id="positiveRegions" style="display: none;">➕ <strong>Pozitif bölgeler:</strong> -</div>
+                        <div id="negativeRegions" style="display: none;">➖ <strong>Negatif bölgeler:</strong> -</div>
+                        <div id="zeroPoints" style="display: none;">🎯 <strong>Sıfır noktaları:</strong> -</div>
+                    </div>
+                </div>
+                <div class="analysis-summary" id="analysisSummary">
+                    <strong>📊 Analiz Özeti:</strong> Henüz analiz başlamadı. Grafik animasyonu başladığında dinamik olarak güncellenecektir.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global değişkenler
+        let currentPoints = [];
+        let currentGraphType = '';
+        let xIntercepts = [];
+        let canvas, ctx;
+        let animationId = null;
+        let animationProgress = 0;
+        let isAnimating = false;
+        let animationSpeed = 0.01; // Daima yavaş animasyon
+        let monotonicityData = [];
+        let criticalPoints = [];
+        let currentAnalysisIndex = 0;
+        let functionCounter = 0;
+        let maxFunctions = 10;
+        let isInteractiveMode = false;
+        let interactiveFunctionCounter = 0;
+        let maxInteractiveFunctions = 10;
+        let currentInteractiveData = null;
+        let isAnswerCorrect = false;
+        let nextButtonEnabled = false;
+        
+        // Sayfa yüklendiğinde başlat
+        document.addEventListener('DOMContentLoaded', function() {
+            canvas = document.getElementById('functionChart');
+            ctx = canvas.getContext('2d');
+            setupCanvas();
+            setupEventListeners();
+            updateProgressInfo();
+            
+            // İlk grafik için boş çizim
+            drawEmptyGraph();
+        });
+        
+        // Event listener'ları ayarla
+        function setupEventListeners() {
+            document.getElementById('generateBtn').addEventListener('click', generateRandomFunction);
+            document.getElementById('nextBtn').addEventListener('click', generateRandomFunction);
+            window.addEventListener('resize', setupCanvas);
+            
+            // Touch event optimizasyonları - sadece canvas için
+            canvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            canvas.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+        }
+        
+        // İlerleme bilgisini güncelle
+        function updateProgressInfo() {
+            const progressInfo = document.getElementById('progressInfo');
+            const generateBtn = document.getElementById('generateBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (!isInteractiveMode) {
+                progressInfo.textContent = `Fonksiyon: ${functionCounter}/${maxFunctions}`;
+                
+                if (functionCounter >= maxFunctions) {
+                    generateBtn.disabled = false;
+                    generateBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12l2 2 4-4"></path>
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        İnteraktif Moda Geç
+                    `;
+                    generateBtn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                }
+            } else {
+                progressInfo.textContent = `İnteraktif Mod: ${interactiveFunctionCounter}/${maxInteractiveFunctions}`;
+                
+                if (interactiveFunctionCounter >= maxInteractiveFunctions) {
+                    generateBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                    
+                    // Tamamlandı mesajı göster
+                    const controls = document.querySelector('.controls');
+                    controls.innerHTML = `
+                        <div style="text-align: center; padding: 20px; background: #d4edda; border-radius: 8px; color: #155724;">
+                            <h3>🎉 Tebrikler!</h3>
+                            <p>Tüm egzersizleri başarıyla tamamladınız!</p>
+                        </div>
+                    `;
+                } else {
+                    generateBtn.style.display = 'none';
+                    nextBtn.style.display = 'flex';
+                    nextBtn.disabled = !nextButtonEnabled;
+                }
+            }
+        }
+        
+        // Canvas boyutlarını ayarla
+        function setupCanvas() {
+            const canvasWrapper = document.querySelector('.canvas-wrapper');
+            const width = canvasWrapper.clientWidth;
+            const height = canvasWrapper.clientHeight;
+            
+            // Retina display desteği
+            const ratio = window.devicePixelRatio || 1;
+            canvas.width = width * ratio;
+            canvas.height = height * ratio;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            ctx.scale(ratio, ratio);
+            
+            if (currentPoints.length > 0) {
+                if (isAnimating) {
+                    drawCoordinateSystem();
+                } else {
+                    drawGraph();
+                }
+            } else {
+                drawEmptyGraph();
+            }
+        }
+        
+        // Rastgele tam sayı üret
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        // X eksenini kesen noktalar üret - GARANTİLİ TAM SAYI ALGORİTMASI
+        function generateXIntercepts() {
+            const numIntercepts = randomInt(1, 3);
+            const intercepts = [];
+            const usedX = new Set();
+            
+            console.log(`🎯 Generating ${numIntercepts} X-intercept(s)...`);
+            
+            // TAM SAYI GARANTİSİ İLE X KESİM NOKTALARI ÜRET
+            let attempts = 0;
+            while (intercepts.length < numIntercepts && attempts < 50) {
+                const x = randomInt(-8, 8); // Mutlaka tam sayı (-8 ile 8 arası)
+                
+                if (!usedX.has(x)) {
+                    usedX.add(x);
+                    intercepts.push(x);
+                    console.log(`✅ Generated X-intercept: ${x} (integer: ${Number.isInteger(x)})`);
+                }
+                attempts++;
+            }
+            
+            // FINAL TAM SAYI KONTROLÜ
+            intercepts.forEach(x => {
+                if (!Number.isInteger(x)) {
+                    console.error(`❌ CRITICAL ERROR: X-intercept is not integer! x = ${x}`);
+                    throw new Error(`X-intercept must be integer: ${x}`);
+                }
+            });
+            
+            const sortedIntercepts = intercepts.sort((a, b) => a - b);
+            console.log(`🎉 FINAL X-intercepts (all integers):`, sortedIntercepts);
+            
+            return sortedIntercepts;
+        }
+        
+        // TAMAMEN YENİ ALGORİTMA: GERÇEK RASTGELE FONKSIYON ÜRETİMİ - TAM SAYI X KESİM GARANTİSİ
+        function generatePointsFromIntercepts(intercepts) {
+            console.log('🎯 GENERATING FUNCTION WITH INTERCEPTS:', intercepts);
+            
+            // TAM SAYI X KESİM NOKTALARI ZORUNLU KONTROLÜ
+            intercepts.forEach(x => {
+                if (!Number.isInteger(x)) {
+                    console.error(`⚠️ FATAL: Non-integer X-intercept! x = ${x}`);
+                    throw new Error(`X-intercept must be integer: ${x}`);
+                }
+            });
+            
+            // SIRA: X değerlerine göre sırala
+            const sortedIntercepts = [...intercepts].sort((a, b) => a - b);
+            console.log('✅ Sorted integer X-intercepts:', sortedIntercepts);
+            
+            // ALGORİTMA: X kesim noktalarından dinamik fonksiyon oluştur
+            const points = [];
+            
+            // BAŞLANGIÇ VE SON NOKTALARINI BELİRLE
+            const minIntercept = sortedIntercepts[0];
+            const maxIntercept = sortedIntercepts[sortedIntercepts.length - 1];
+            
+            // SOL BAŞLANGIÇ NOKTASI (-8 ile minIntercept-2 arası) - Y değeri 1-4 arası
+            const leftStartX = randomInt(-8, minIntercept - 2);
+            const leftStartY = (Math.random() < 0.5 ? 1 : -1) * randomInt(1, 4); // ±1 ile ±4 arası
+            points.push({x: leftStartX, y: leftStartY});
+            console.log(`📍 Left start: (${leftStartX}, ${leftStartY})`);
+            
+            // X KESİM NOKTALARI VE ARALARDA GÜVENLİ NOKTALAR
+            sortedIntercepts.forEach((interceptX, index) => {
+                // X kesim noktasını ekle
+                points.push({x: interceptX, y: 0});
+                console.log(`🎯 X-intercept: (${interceptX}, 0)`);
+                
+                // Eğer bu son intercept değilse, arada bir nokta ekle
+                if (index < sortedIntercepts.length - 1) {
+                    const nextInterceptX = sortedIntercepts[index + 1];
+                    const midX = Math.floor((interceptX + nextInterceptX) / 2);
+                    
+                    // ORTA NOKTA TAM SAYI OLACAK ŞEKİLDE AYARLA
+                    const actualMidX = (midX === interceptX || midX === nextInterceptX) 
+                        ? interceptX + 1 
+                        : midX;
+                    
+                    // Y değeri: işaret değişimi için mutlaka pozitif veya negatif - SINIRLI
+                    const midY = (Math.random() < 0.5 ? 1 : -1) * randomInt(1, 4); // ±1 ile ±4 arası
+                    points.push({x: actualMidX, y: midY});
+                    console.log(`📌 Mid point: (${actualMidX}, ${midY})`);
+                }
+            });
+            
+            // SAĞ SON NOKTA (maxIntercept+2 ile 10 arası) - Y değeri 1-4 arası
+            const rightEndX = randomInt(maxIntercept + 2, 10);
+            const rightEndY = (Math.random() < 0.5 ? 1 : -1) * randomInt(1, 4); // ±1 ile ±4 arası
+            points.push({x: rightEndX, y: rightEndY});
+            console.log(`📍 Right end: (${rightEndX}, ${rightEndY})`);
+            
+            // X'E GÖRE SIRALA
+            points.sort((a, b) => a.x - b.x);
+            
+            // SABİT ARALIK KONTROLÜ VE DÜZELTME
+            for (let i = 0; i < points.length - 1; i++) {
+                const p1 = points[i];
+                const p2 = points[i + 1];
+                
+                const deltaY = Math.abs(p2.y - p1.y);
+                const deltaX = Math.abs(p2.x - p1.x);
+                
+                // Eğer eğim çok düşükse (sabit gibi görünebilir)
+                if (deltaY < 1 && deltaX > 1) {
+                    console.warn(`🔧 FIXING LOW SLOPE: [${p1.x}, ${p2.x}] deltaY=${deltaY}`);
+                    
+                    // Y değerini daha belirgin yap - ama sınırlı tut
+                    if (p2.y !== 0) { // X-intercept değilse değiştir
+                        p2.y = p2.y > 0 ? Math.max(2, Math.min(4, p2.y)) : Math.min(-2, Math.max(-4, p2.y));
+                        console.log(`🔧 Fixed point: (${p2.x}, ${p2.y})`);
+                    } else if (p1.y !== 0) { // Önceki nokta X-intercept değilse
+                        p1.y = p1.y > 0 ? Math.max(2, Math.min(4, p1.y)) : Math.min(-2, Math.max(-4, p1.y));
+                        console.log(`🔧 Fixed point: (${p1.x}, ${p1.y})`);
+                    }
+                }
+            }
+            
+            // GLOBAL GÜNCELLEME
+            xIntercepts = sortedIntercepts;
+            
+            // FINAL KONTROLÜ
+            console.log('🎉 GENERATED POINTS:', points);
+            console.log('🎯 CONFIRMED X-INTERCEPTS:', xIntercepts);
+            
+            // TAM SAYI DOUBLE-CHECK
+            points.forEach(p => {
+                if (!Number.isInteger(p.x)) {
+                    console.error(`❌ CRITICAL: Non-integer X coordinate! (${p.x}, ${p.y})`);
+                    throw new Error(`All X coordinates must be integers: (${p.x}, ${p.y})`);
+                }
+            });
+            
+            // Y DEĞERLERİ KONTROL - ETIKET UYUMU İÇİN
+            points.forEach(p => {
+                if (Math.abs(p.y) > 5) {
+                    console.warn(`⚠️ Y value might overlap with labels: (${p.x}, ${p.y})`);
+                }
+            });
+            
+            console.log('✅ ALL COORDINATES VALIDATED - INTEGERS ONLY, Y VALUES LIMITED');
+            
+            return points;
+        }
+        
+        // Rastgele fonksiyon üret
+        function generateRandomFunction() {
+            if (!isInteractiveMode && functionCounter >= maxFunctions) {
+                // İnteraktif moda geç
+                isInteractiveMode = true;
+                interactiveFunctionCounter = 0;
+                updateProgressInfo();
+                generateInteractiveFunction();
+                return;
+            }
+            
+            if (isInteractiveMode && interactiveFunctionCounter >= maxInteractiveFunctions) return;
+            
+            if (isInteractiveMode) {
+                generateInteractiveFunction();
+                return;
+            }
+            
+            stopAnimation();
+            
+            functionCounter++;
+            updateProgressInfo();
+            
+            xIntercepts = generateXIntercepts();
+            currentPoints = generatePointsFromIntercepts(xIntercepts);
+            currentGraphType = 'continuous'; // Daima sürekli fonksiyon
+            
+            // Artan/azalan analizi için veri hazırla
+            prepareSignTableAnalysis();
+            
+            updateGraphTitle();
+            resetMonotonicityTable();
+            
+            startDrawAnimation();
+        }
+        
+        // Animasyon başlatma
+        function startDrawAnimation() {
+            animationProgress = 0;
+            isAnimating = true;
+            currentAnalysisIndex = 0;
+            
+            // Normal modda boş işaret tablosunu oluştur
+            if (!isInteractiveMode) {
+                createEmptySignTable();
+            }
+            
+            drawCoordinateSystem();
+            animateDrawing();
+        }
+        
+        // Animasyonu durdurma
+        function stopAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            isAnimating = false;
+            animationProgress = 1;
+            currentAnalysisIndex = monotonicityData.length;
+            
+            if (currentPoints.length > 0) {
+                drawGraph();
+                
+                // İnteraktif modda tablo oluşturma
+                if (isInteractiveMode) {
+                    createInteractiveTable();
+                } else {
+                    completeMonotonicityTable();
+                }
+            }
+        }
+        
+        // Çizim animasyonu
+        function animateDrawing() {
+            if (!isAnimating) return;
+            
+            animationProgress += animationSpeed;
+            
+            if (animationProgress >= 1) {
+                animationProgress = 1;
+                isAnimating = false;
+                
+                // İnteraktif modda tablo oluşturma
+                if (isInteractiveMode) {
+                    createInteractiveTable();
+                } else {
+                    completeMonotonicityTable();
+                }
+            }
+            
+            drawCoordinateSystem();
+            drawAnimatedContinuousGraph();
+            drawAnimatedPoints();
+            
+            // Normal modda animasyon sırasında tablo güncelle
+            if (!isInteractiveMode) {
+                updateMonotonicityTableWithAnimation();
+            }
+            
+            if (isAnimating) {
+                animationId = requestAnimationFrame(animateDrawing);
+            }
+        }
+        
+        // Koordinat sistemini çiz
+        function drawCoordinateSystem() {
+            const width = canvas.style.width ? parseInt(canvas.style.width) : canvas.width;
+            const height = canvas.style.height ? parseInt(canvas.style.height) : canvas.height;
+            
+            const padding = Math.min(width, height) * 0.1;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            // DÜZELTME: X ve Y için ayrı scale hesaplama - toplam 22 birim için (-11 ile +11 arası)
+            const availableWidth = width - padding * 2;
+            const availableHeight = height - padding * 2;
+            const scaleX = availableWidth / 22; // X ekseni için scale
+            const scaleY = availableHeight / 22; // Y ekseni için scale
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Grid çizgileri çiz (ana eksenlerden önce)
+            // Mobil optimizasyonu - ekran boyutuna göre grid ayarları
+            const isMobile = width < 500; // Mobil tespit
+            
+            // Mobilde daha belirgin grid için ayarlar
+            if (isMobile) {
+                ctx.strokeStyle = '#e8e8e8'; // Daha koyu gri
+                ctx.lineWidth = 0.8; // Daha kalın çizgi
+                ctx.globalAlpha = 0.7; // Daha opak
+            } else {
+                ctx.strokeStyle = '#e0e0e0'; // Masaüstü için normal
+                ctx.lineWidth = 0.5;
+                ctx.globalAlpha = 0.6;
+            }
+            
+            // Dikey grid çizgileri
+            for (let i = -11; i <= 11; i++) {
+                if (i === 0) continue; // Ana Y ekseni atlanacak
+                const x = centerX + i * scaleX;
+                if (x >= padding && x <= width - padding) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, padding);
+                    ctx.lineTo(x, height - padding);
+                    ctx.stroke();
+                }
+            }
+            
+            // Yatay grid çizgileri
+            for (let i = -11; i <= 11; i++) {
+                if (i === 0) continue; // Ana X ekseni atlanacak
+                const y = centerY - i * scaleY;
+                if (y >= padding && y <= height - padding) {
+                    ctx.beginPath();
+                    ctx.moveTo(padding, y);
+                    ctx.lineTo(width - padding, y);
+                    ctx.stroke();
+                }
+            }
+            
+            // Grid çizimi tamamlandıktan sonra alpha'yı sıfırla
+            ctx.globalAlpha = 1;
+            
+            // X ekseni (ana)
+            ctx.beginPath();
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.moveTo(padding, centerY);
+            ctx.lineTo(width - padding, centerY);
+            ctx.stroke();
+            
+            // Y ekseni (ana)
+            ctx.beginPath();
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.moveTo(centerX, height - padding);
+            ctx.lineTo(centerX, padding);
+            ctx.stroke();
+            
+            // Ok işaretleri
+            const arrowSize = Math.min(scaleX, scaleY) * 0.4;
+            
+            // X ekseni sağ ok
+            ctx.beginPath();
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            const xArrowTip = width - padding;
+            ctx.moveTo(xArrowTip - arrowSize, centerY - arrowSize/2);
+            ctx.lineTo(xArrowTip, centerY);
+            ctx.lineTo(xArrowTip - arrowSize, centerY + arrowSize/2);
+            ctx.stroke();
+            
+            // X ekseni sol ok
+            ctx.beginPath();
+            const xArrowLeftTip = padding;
+            ctx.moveTo(xArrowLeftTip + arrowSize, centerY - arrowSize/2);
+            ctx.lineTo(xArrowLeftTip, centerY);
+            ctx.lineTo(xArrowLeftTip + arrowSize, centerY + arrowSize/2);
+            ctx.stroke();
+            
+            // Y ekseni yukarı ok
+            ctx.beginPath();
+            ctx.strokeStyle = '#2c3e50';
+            const yArrowTip = padding;
+            ctx.moveTo(centerX - arrowSize/2, yArrowTip + arrowSize);
+            ctx.lineTo(centerX, yArrowTip);
+            ctx.lineTo(centerX + arrowSize/2, yArrowTip + arrowSize);
+            ctx.stroke();
+            
+            // Y ekseni aşağı ok
+            ctx.beginPath();
+            const yArrowBottomTip = height - padding;
+            ctx.moveTo(centerX - arrowSize/2, yArrowBottomTip - arrowSize);
+            ctx.lineTo(centerX, yArrowBottomTip);
+            ctx.lineTo(centerX + arrowSize/2, yArrowBottomTip - arrowSize);
+            ctx.stroke();
+            
+            // Eksen noktaları
+            ctx.fillStyle = '#2c3e50';
+            for (let i = -11; i <= 11; i++) {
+                if (i === 0) continue;
+                const x = centerX + i * scaleX;
+                if (x >= padding && x <= width - padding) {
+                    ctx.beginPath();
+                    ctx.arc(x, centerY, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            for (let i = -11; i <= 11; i++) {
+                if (i === 0) continue;
+                const y = centerY - i * scaleY;
+                if (y >= padding && y <= height - padding) {
+                    ctx.beginPath();
+                    ctx.arc(centerX, y, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            // Mobil için daha küçük etiketler
+            const fontSize = Math.max(8, Math.min(12, width * 0.025));
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.textAlign = 'center';
+            
+            // X ekseni etiketleri - 1'den 11'e kadar ardışık
+            for (let i = 1; i <= 11; i++) {
+                const x = centerX + i * scaleX;
+                if (x >= padding && x <= width - padding) {
+                    ctx.fillText(i.toString(), x, centerY + fontSize + 3);
+                }
+            }
+            
+            // X ekseni negatif etiketler
+            for (let i = -11; i <= -1; i++) {
+                const x = centerX + i * scaleX;
+                if (x >= padding && x <= width - padding) {
+                    ctx.fillText(i.toString(), x, centerY + fontSize + 3);
+                }
+            }
+            
+            // Y ekseni etiketleri - 1'den 11'e kadar ardışık
+            ctx.textAlign = 'right';
+            for (let i = 1; i <= 11; i++) {
+                const y = centerY - i * scaleY;
+                if (y >= padding && y <= height - padding) {
+                    ctx.fillText(i.toString(), centerX - 5, y + fontSize/3);
+                }
+            }
+            
+            // Y ekseni negatif etiketler
+            for (let i = -11; i <= -1; i++) {
+                const y = centerY - i * scaleY;
+                if (y >= padding && y <= height - padding) {
+                    ctx.fillText(i.toString(), centerX - 5, y + fontSize/3);
+                }
+            }
+            
+            // Orijin "0" etiketi - sabit 14px font boyutu
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('0', centerX + 14, centerY +16);
+            
+            // Eksen isimleri
+            ctx.font = `bold ${fontSize + 2}px Arial`;
+            ctx.fillStyle = '#1a2a6c';
+            ctx.textAlign = 'center';
+            ctx.fillText('x', width - padding + fontSize, centerY - 5);
+            ctx.fillText('y', centerX + fontSize, padding - 5);
+        }
+        
+        // Koordinat dönüşüm fonksiyonları
+        function toCanvasX(x) {
+            const width = canvas.style.width ? parseInt(canvas.style.width) : canvas.width;
+            const height = canvas.style.height ? parseInt(canvas.style.height) : canvas.height;
+            
+            const padding = Math.min(width, height) * 0.1;
+            
+            // DÜZELTME: X ekseni için sadece genişlik kullan - toplam 22 birim için
+            const availableWidth = width - padding * 2;
+            const scaleX = availableWidth / 22; // Toplam 22 birim (-11 ile +11 arası)
+            return width / 2 + x * scaleX;
+        }
+        
+        function toCanvasY(y) {
+            const width = canvas.style.width ? parseInt(canvas.style.width) : canvas.width;
+            const height = canvas.style.height ? parseInt(canvas.style.height) : canvas.height;
+            
+            const padding = Math.min(width, height) * 0.1;
+            
+            // DÜZELTME: Y ekseni için sadece yükseklik kullan - toplam 22 birim için
+            const availableHeight = height - padding * 2;
+            const scaleY = availableHeight / 22; // Toplam 22 birim (-11 ile +11 arası)
+            return height / 2 - y * scaleY;
+        }
+        
+        // Segment rengini belirle - her zaman kırmızı
+        function getSegmentColor(startPoint, endPoint) {
+            return '#dc3545'; // Tüm segmentler kırmızı
+        }
+
+        // Animasyonlu sürekli grafik çizimi
+        function drawAnimatedContinuousGraph() {
+            if (currentPoints.length === 0) return;
+            
+            const minX = Math.min(...currentPoints.map(p => p.x));
+            const maxX = Math.max(...currentPoints.map(p => p.x));
+            const currentMaxX = minX + (maxX - minX) * animationProgress;
+            
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+            ctx.shadowBlur = 2;
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 1;
+            
+            for (let i = 1; i < currentPoints.length; i++) {
+                const prev = currentPoints[i-1];
+                const current = currentPoints[i];
+                
+                if (prev.x > currentMaxX) break;
+                
+                let endPoint = current;
+                if (current.x > currentMaxX) {
+                    const t = (currentMaxX - prev.x) / (current.x - prev.x);
+                    endPoint = {
+                        x: prev.x + t * (current.x - prev.x),
+                        y: prev.y + t * (current.y - prev.y)
+                    };
+                }
+                
+                // Segment rengini belirle
+                ctx.strokeStyle = getSegmentColor(prev, endPoint);
+                
+                ctx.beginPath();
+                ctx.moveTo(toCanvasX(prev.x), toCanvasY(prev.y));
+                
+                // Geliştirilmiş nokta algılama ve yumuşak eğri çizimi
+                const isNearZero = Math.abs(prev.y) < 0.6 || Math.abs(endPoint.y) < 0.6;
+                
+                // Standart Bezier eğrisi
+                let smoothness = 0.5; // Sabit yumuşaklık değeri
+                
+                const cp1x = toCanvasX(prev.x + (endPoint.x - prev.x) * smoothness);
+                const cp1y = toCanvasY(prev.y);
+                const cp2x = toCanvasX(prev.x + (endPoint.x - prev.x) * (1 - smoothness));
+                const cp2y = toCanvasY(endPoint.y);
+                
+                ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, toCanvasX(endPoint.x), toCanvasY(endPoint.y));
+                ctx.stroke();
+                
+                if (current.x > currentMaxX) break;
+            }
+            
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+        
+        // Animasyonlu nokta çizimi - X kesim noktaları + Tanım kümesi uç noktaları
+        function drawAnimatedPoints() {
+            if (currentPoints.length === 0) return;
+            
+            const minX = Math.min(...currentPoints.map(p => p.x));
+            const maxX = Math.max(...currentPoints.map(p => p.x));
+            const currentMaxX = minX + (maxX - minX) * animationProgress;
+            
+            // X kesim noktalarını çiz - kırmızı çemberler
+            xIntercepts.forEach(x => {
+                if (x <= currentMaxX) {
+                    const cx = toCanvasX(x);
+                    const cy = toCanvasY(0);
+                    
+                    // Gölge efekti
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(220, 53, 69, 0.3)';
+                    ctx.arc(cx + 1, cy + 1, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Dış çember (beyaz kenarlık)
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // İç çember (kırmızı)
+                    ctx.beginPath();
+                    ctx.fillStyle = '#dc3545';
+                    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            // TANİM KÜMESİ UÇ NOKTALARI - mavi çemberler
+            if (currentPoints.length > 0) {
+                const sortedPoints = [...currentPoints].sort((a, b) => a.x - b.x);
+                const leftEndpoint = sortedPoints[0];
+                const rightEndpoint = sortedPoints[sortedPoints.length - 1];
+                
+                // Sol uç nokta
+                if (leftEndpoint.x <= currentMaxX) {
+                    const cx = toCanvasX(leftEndpoint.x);
+                    const cy = toCanvasY(leftEndpoint.y);
+                    
+                    // Gölge efekti
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(52, 144, 220, 0.3)';
+                    ctx.arc(cx + 1, cy + 1, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Dış çember (beyaz kenarlık)
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // İç çember (mavi)
+                    ctx.beginPath();
+                    ctx.fillStyle = '#3490dc';
+                    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Sağ uç nokta (sol uçtan farklıysa)
+                if (rightEndpoint.x !== leftEndpoint.x && rightEndpoint.x <= currentMaxX) {
+                    const cx = toCanvasX(rightEndpoint.x);
+                    const cy = toCanvasY(rightEndpoint.y);
+                    
+                    // Gölge efekti
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(52, 144, 220, 0.3)';
+                    ctx.arc(cx + 1, cy + 1, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Dış çember (beyaz kenarlık)
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // İç çember (mavi)
+                    ctx.beginPath();
+                    ctx.fillStyle = '#3490dc';
+                    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+        
+        // Normal grafik çizimi (animasyonsuz)
+        function drawGraph() {
+            drawCoordinateSystem();
+            drawContinuousGraph();
+            drawPoints(); // drawXIntercepts kaldırıldı - drawPoints zaten X kesim noktalarını çiziyor
+        }
+        
+        // Sürekli grafik çiz
+        function drawContinuousGraph() {
+            if (currentPoints.length === 0) return;
+            
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+            ctx.shadowBlur = 2;
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 1;
+            
+            for (let i = 1; i < currentPoints.length; i++) {
+                const prev = currentPoints[i-1];
+                const current = currentPoints[i];
+                
+                // Segment rengini belirle
+                ctx.strokeStyle = getSegmentColor(prev, current);
+                
+                ctx.beginPath();
+                ctx.moveTo(toCanvasX(prev.x), toCanvasY(prev.y));
+                
+                // Geliştirilmiş nokta algılama ve yumuşak eğri çizimi
+                const isNearZero = Math.abs(prev.y) < 0.6 || Math.abs(current.y) < 0.6;
+                
+                // Standart Bezier eğrisi
+                let smoothness = 0.5; // Sabit yumuşaklık değeri
+                
+                const cp1x = toCanvasX(prev.x + (current.x - prev.x) * smoothness);
+                const cp1y = toCanvasY(prev.y);
+                const cp2x = toCanvasX(prev.x + (current.x - prev.x) * (1 - smoothness));
+                const cp2y = toCanvasY(current.y);
+                
+                ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, toCanvasX(current.x), toCanvasY(current.y));
+                ctx.stroke();
+            }
+            
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+        
+        // X kesim noktalarını çiz - gereksiz fonksiyon (drawPoints zaten yapıyor)
+        function drawXIntercepts() {
+            // Bu fonksiyon artık kullanılmıyor - drawPoints() ve drawAnimatedPoints() 
+            // zaten X kesim noktalarını çiziyor
+        }
+        
+        // Noktaları çiz - X kesim noktaları + Tanım kümesi uç noktaları
+        function drawPoints() {
+            // X kesim noktalarını çiz - kırmızı çemberler
+            xIntercepts.forEach(x => {
+                const cx = toCanvasX(x);
+                const cy = toCanvasY(0);
+                
+                // Gölge efekti
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(220, 53, 69, 0.3)';
+                ctx.arc(cx + 1, cy + 1, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Dış çember (beyaz kenarlık)
+                ctx.beginPath();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // İç çember (kırmızı)
+                ctx.beginPath();
+                ctx.fillStyle = '#dc3545';
+                ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // TANİM KÜMESİ UÇ NOKTALARI - mavi çemberler
+            if (currentPoints.length > 0) {
+                const sortedPoints = [...currentPoints].sort((a, b) => a.x - b.x);
+                const leftEndpoint = sortedPoints[0];
+                const rightEndpoint = sortedPoints[sortedPoints.length - 1];
+                
+                // Sol uç nokta
+                const leftCx = toCanvasX(leftEndpoint.x);
+                const leftCy = toCanvasY(leftEndpoint.y);
+                
+                // Gölge efekti
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(52, 144, 220, 0.3)';
+                ctx.arc(leftCx + 1, leftCy + 1, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Dış çember (beyaz kenarlık)
+                ctx.beginPath();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1.5;
+                ctx.arc(leftCx, leftCy, 4, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // İç çember (mavi)
+                ctx.beginPath();
+                ctx.fillStyle = '#3490dc';
+                ctx.arc(leftCx, leftCy, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Sağ uç nokta (sol uçtan farklıysa)
+                if (rightEndpoint.x !== leftEndpoint.x) {
+                    const rightCx = toCanvasX(rightEndpoint.x);
+                    const rightCy = toCanvasY(rightEndpoint.y);
+                    
+                    // Gölge efekti
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(52, 144, 220, 0.3)';
+                    ctx.arc(rightCx + 1, rightCy + 1, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Dış çember (beyaz kenarlık)
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.arc(rightCx, rightCy, 4, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // İç çember (mavi)
+                    ctx.beginPath();
+                    ctx.fillStyle = '#3490dc';
+                    ctx.arc(rightCx, rightCy, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+        
+        // Boş grafik çiz
+        function drawEmptyGraph() {
+            drawCoordinateSystem();
+        }
+        
+        // Grafik başlığını güncelle
+        function updateGraphTitle() {
+            const graphTitleElement = document.getElementById('graphTitle');
+            if (!graphTitleElement) {
+                // Element yoksa hiçbir şey yapma
+                return;
+            }
+            
+            let titleText = '';
+            if (!isInteractiveMode) {
+                titleText = ``; // Boş başlık
+            } else {
+                const modeText = interactiveFunctionCounter > 5 ? 'Aralık Yazma' : 'Artan/Azalan Seçme';
+                titleText = `İnteraktif Egzersiz #${interactiveFunctionCounter} - ${modeText}`;
+            }
+            
+            graphTitleElement.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a2a6c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3v18h18"></path>
+                    <path d="M19 9l-5 5-4-4-3 3"></path>
+                </svg>
+                ${titleText}
+            `;
+        }
+
+        // İşaret tablosu analizi için veri hazırlama
+        function prepareSignTableAnalysis() {
+            monotonicityData = [];
+            criticalPoints = [];
+            
+            if (currentPoints.length < 2) return;
+            
+            // X eksenini kesen noktaları (kökler) belirle
+            const roots = xIntercepts.sort((a, b) => a - b);
+            console.log('X-intercepts (roots):', roots);
+            
+            // Tanım aralığını belirle
+            const allXValues = currentPoints.map(p => p.x);
+            const domainStart = Math.min(...allXValues);
+            const domainEnd = Math.max(...allXValues);
+            
+            // Sınır noktaları: başlangıç, kökler, son
+            const boundaries = [domainStart, ...roots, domainEnd].sort((a, b) => a - b);
+            
+            // Her aralık için işaret analizi
+            for (let i = 0; i < boundaries.length - 1; i++) {
+                const startX = boundaries[i];
+                const endX = boundaries[i + 1];
+                
+                // Aralığın ortasındaki noktada fonksiyonun değerini hesapla
+                const midX = (startX + endX) / 2;
+                const midY = calculateFunctionValue(midX);
+                
+                let status = '';
+                let statusText = '';
+                let statusSymbol = '';
+                
+                if (midY > 0.01) { // Küçük pozitif değerleri de pozitif say
+                    status = 'positive';
+                    statusText = 'POZİTİF';
+                    statusSymbol = '+';
+                } else if (midY < -0.01) { // Küçük negatif değerleri de negatif say
+                    status = 'negative';
+                    statusText = 'NEGATİF';
+                    statusSymbol = '−';
+                } else {
+                    status = 'zero';
+                    statusText = 'SIFIR';
+                    statusSymbol = '0';
+                }
+                
+                monotonicityData.push({
+                    startX: startX,
+                    endX: endX,
+                    interval: `(${startX}, ${endX})`,
+                    status: status,
+                    statusText: statusText,
+                    statusSymbol: statusSymbol,
+                    midY: midY.toFixed(2)
+                });
+            }
+            
+            console.log('Sign analysis data:', monotonicityData);
+        }
+        
+        // Verilen x değerinde fonksiyonun değerini hesapla (interpolasyon)
+        function calculateFunctionValue(x) {
+            // Eğer x tam olarak bir nokta üzerindeyse
+            for (const point of currentPoints) {
+                if (Math.abs(point.x - x) < 0.001) {
+                    return point.y;
+                }
+            }
+            
+            // Linear interpolasyon kullan
+            const sortedPoints = [...currentPoints].sort((a, b) => a.x - b.x);
+            
+            for (let i = 0; i < sortedPoints.length - 1; i++) {
+                const p1 = sortedPoints[i];
+                const p2 = sortedPoints[i + 1];
+                
+                if (x >= p1.x && x <= p2.x) {
+                    const t = (x - p1.x) / (p2.x - p1.x);
+                    return p1.y + t * (p2.y - p1.y);
+                }
+            }
+            
+            // Aralık dışındaysa en yakın değeri döndür
+            if (x < sortedPoints[0].x) {
+                return sortedPoints[0].y;
+            } else {
+                return sortedPoints[sortedPoints.length - 1].y;
+            }
+        }
+
+        // İşaret tablosunu sıfırla
+        function resetMonotonicityTable() {
+            const tableBody = document.getElementById('monotonicityTableBody');
+            
+            if (isInteractiveMode) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="100%" style="text-align: center; padding: 15px; color: #666;">
+                            Grafik çizimi tamamlandıktan sonra interaktif işaret tablosu burada görüntülenecektir...
+                        </td>
+                    </tr>
+                `;
+            } else {
+                // Başlangıçta boş tablo oluştur
+                createEmptySignTable();
+            }
+            
+            const progressIndicator = document.getElementById('tableProgressIndicator');
+            progressIndicator.style.width = '0%';
+            
+            const analysisSummary = document.getElementById('analysisSummary');
+            analysisSummary.innerHTML = ''; // Analiz özeti kaldırıldı
+            
+            // Aralık analizini gizle
+            const intervalAnalysis = document.getElementById('intervalAnalysis');
+            intervalAnalysis.style.display = 'none';
+        }
+
+        // Boş işaret tablosu oluştur - isaret.html tarzı
+        function createEmptySignTable() {
+            if (monotonicityData.length === 0) return;
+            
+            const tableBody = document.getElementById('monotonicityTableBody');
+            const roots = xIntercepts.sort((a, b) => a - b);
+            const allXValues = currentPoints.map(p => p.x);
+            const domainStart = Math.min(...allXValues);
+            const domainEnd = Math.max(...allXValues);
+            
+            // Tablo başlığını oluştur
+            let xRow = '<tr><th scope="row">x</th><td class="hatched">-∞</td>';
+            let fxRow = '<tr><th scope="row">f(x)</th><td class="hatched"></td>';
+            
+            // Kökler ve aralıkları ekle
+            const boundaries = [domainStart, ...roots, domainEnd].sort((a, b) => a - b);
+            
+            for (let i = 0; i < boundaries.length; i++) {
+                const boundary = boundaries[i];
+                
+                if (roots.includes(boundary)) {
+                    // Bu bir kök
+                    xRow += `<td class="root-cell-x">${boundary}</td>`;
+                    fxRow += `<td class="root-cell-fx">0</td>`;
+                } else {
+                    // Bu bir sınır noktası
+                    xRow += `<td class="boundary-cell-x">${boundary.toFixed(1)}</td>`;
+                    fxRow += `<td class="boundary-cell-fx pending">?</td>`;
+                }
+                
+                // Aralık sütununu ekle (son boundary hariç)
+                if (i < boundaries.length - 1) {
+                    xRow += `<td class="pending">...</td>`;
+                    fxRow += `<td class="pending">?</td>`;
+                }
+            }
+            
+            xRow += '<td class="hatched">+∞</td></tr>';
+            fxRow += '<td class="hatched"></td></tr>';
+            
+            tableBody.innerHTML = xRow + fxRow;
+        }
+
+        // Animasyonla senkronize tablo güncelleme - isaret.html tarzı
+        function updateMonotonicityTableWithAnimation() {
+            if (monotonicityData.length === 0) return;
+            
+            const minX = Math.min(...currentPoints.map(p => p.x));
+            const maxX = Math.max(...currentPoints.map(p => p.x));
+            const currentMaxX = minX + (maxX - minX) * animationProgress;
+            
+            // Hangi aralıkların gösterilmesi gerektiğini belirle
+            const visibleIntervals = monotonicityData.filter(data => data.startX <= currentMaxX);
+            
+            if (visibleIntervals.length > 0 && visibleIntervals.length !== currentAnalysisIndex) {
+                currentAnalysisIndex = visibleIntervals.length;
+                updateSignTableCells(visibleIntervals);
+                
+                // Progress bar'ı güncelle
+                const progressIndicator = document.getElementById('tableProgressIndicator');
+                const progressPercent = (visibleIntervals.length / monotonicityData.length) * 100;
+                progressIndicator.style.width = progressPercent + '%';
+            }
+        }
+
+        // İşaret tablosu hücrelerini güncelle
+        function updateSignTableCells(visibleIntervals) {
+            const tableBody = document.getElementById('monotonicityTableBody');
+            const fxRow = tableBody.querySelector('tr:last-child');
+            const cells = fxRow.querySelectorAll('td');
+            
+            visibleIntervals.forEach((interval, index) => {
+                // Aralık hücresini bul ve güncelle
+                const intervalCellIndex = (index * 2) + 2; // +2 çünkü başta hatched hücre var
+                
+                if (cells[intervalCellIndex] && cells[intervalCellIndex].classList.contains('pending')) {
+                    const cell = cells[intervalCellIndex];
+                    
+                    // Animasyon efekti ekle
+                    cell.classList.add('animated-cell');
+                    cell.classList.remove('pending');
+                    
+                    // İşaret değerine göre stil ve içerik ayarla
+                    if (interval.status === 'positive') {
+                        cell.classList.add('positive');
+                        cell.textContent = '+';
+                    } else if (interval.status === 'negative') {
+                        cell.classList.add('negative');
+                        cell.textContent = '−';
+                    } else {
+                        cell.textContent = '0';
+                    }
+                    
+                    // Animasyon sınıfını kaldır
+                    setTimeout(() => {
+                        cell.classList.remove('animated-cell');
+                    }, 800);
+                }
+            });
+            
+            // Animasyon tamamlandı
+            updateSignAnalysisSummary(visibleIntervals);
+            
+            // Progress indicator güncelle
+            const progressIndicator = document.getElementById('tableProgressIndicator');
+            progressIndicator.style.width = (animationProgress * 100) + '%';
+        }
+
+        // Tabloyu tamamla - İşaret Tablosu
+        function completeMonotonicityTable() {
+            if (monotonicityData.length === 0) return;
+            
+            currentAnalysisIndex = monotonicityData.length;
+            
+            const tableBody = document.getElementById('monotonicityTableBody');
+            tableBody.innerHTML = '';
+            
+            // Sınır noktalarını ve kökleri birleştir
+            const allXValues = currentPoints.map(p => p.x);
+            const domainStart = Math.min(...allXValues);
+            const domainEnd = Math.max(...allXValues);
+            const roots = xIntercepts.sort((a, b) => a - b);
+            const boundaries = [domainStart, ...roots, domainEnd].sort((a, b) => a - b);
+            
+            // X satırını oluştur
+            const xRow = document.createElement('tr');
+            
+            // Sol etiket hücresi - "x"
+            const xLabelCell = document.createElement('td');
+            xLabelCell.textContent = 'x';
+            xLabelCell.style.backgroundColor = '#2c3e50';
+            xLabelCell.style.color = 'white';
+            xLabelCell.style.fontWeight = 'bold';
+            xLabelCell.style.fontSize = '14px';
+            xLabelCell.style.padding = '8px 6px';
+            xLabelCell.style.textAlign = 'center';
+            xLabelCell.style.minWidth = '50px';
+            xRow.appendChild(xLabelCell);
+            
+            // -∞ hücresi
+            const minusInfCell = document.createElement('td');
+            minusInfCell.textContent = '-∞';
+            minusInfCell.className = 'hatched';
+            xRow.appendChild(minusInfCell);
+            
+            // Sınır noktaları ve aralıklar
+            for (let i = 0; i < boundaries.length; i++) {
+                const boundary = boundaries[i];
+                const isRoot = roots.includes(boundary);
+                
+                // Sınır noktası hücresi
+                const boundaryCell = document.createElement('td');
+                boundaryCell.textContent = boundary.toString();
+                boundaryCell.className = isRoot ? 'root-cell-x' : 'boundary-cell-x';
+                xRow.appendChild(boundaryCell);
+                
+                // Aralık hücresi (son sınır hariç)
+                if (i < boundaries.length - 1) {
+                    const intervalCell = document.createElement('td');
+                    intervalCell.textContent = `(${boundary}, ${boundaries[i + 1]})`;
+                    intervalCell.style.backgroundColor = '#f8f9fa';
+                    intervalCell.style.fontSize = '11px';
+                    intervalCell.style.padding = '4px 2px';
+                    xRow.appendChild(intervalCell);
+                }
+            }
+            
+            // +∞ hücresi
+            const plusInfCell = document.createElement('td');
+            plusInfCell.textContent = '+∞';
+            plusInfCell.className = 'hatched';
+            xRow.appendChild(plusInfCell);
+            
+            // f(x) satırını oluştur
+            const fxRow = document.createElement('tr');
+            
+            // Sol etiket hücresi - "f(x)"
+            const fxLabelCell = document.createElement('td');
+            fxLabelCell.textContent = 'f(x)';
+            fxLabelCell.style.backgroundColor = '#34495e';
+            fxLabelCell.style.color = 'white';
+            fxLabelCell.style.fontWeight = 'bold';
+            fxLabelCell.style.fontSize = '14px';
+            fxLabelCell.style.padding = '8px 6px';
+            fxLabelCell.style.textAlign = 'center';
+            fxLabelCell.style.minWidth = '50px';
+            fxRow.appendChild(fxLabelCell);
+            
+            // -∞ bölgesi hücresi
+            const minusInfFxCell = document.createElement('td');
+            minusInfFxCell.className = 'hatched';
+            fxRow.appendChild(minusInfFxCell);
+            
+            // Sınır noktaları ve işaret aralıkları
+            for (let i = 0; i < boundaries.length; i++) {
+                const boundary = boundaries[i];
+                const isRoot = roots.includes(boundary);
+                
+                // Sınır noktasındaki değer
+                const boundaryFxCell = document.createElement('td');
+                if (isRoot) {
+                    boundaryFxCell.textContent = '0';
+                    boundaryFxCell.className = 'root-cell-fx';
+                } else {
+                    const value = calculateFunctionValue(boundary);
+                    // Ondalıklı değeri virgül ile göster
+                    boundaryFxCell.textContent = value.toString().replace('.', ',');
+                    boundaryFxCell.className = 'boundary-cell-fx';
+                }
+                fxRow.appendChild(boundaryFxCell);
+                
+                // Aralıktaki işaret (son sınır hariç)
+                if (i < boundaries.length - 1) {
+                    const signData = monotonicityData.find(data => 
+                        data.startX === boundary && data.endX === boundaries[i + 1]
+                    );
+                    
+                    const signCell = document.createElement('td');
+                    if (signData) {
+                        signCell.textContent = signData.statusSymbol;
+                        signCell.className = signData.status;
+                    } else {
+                        signCell.textContent = '?';
+                        signCell.className = 'pending';
+                    }
+                    fxRow.appendChild(signCell);
+                }
+            }
+            
+            // +∞ bölgesi hücresi
+            const plusInfFxCell = document.createElement('td');
+            plusInfFxCell.className = 'hatched';
+            fxRow.appendChild(plusInfFxCell);
+            
+            tableBody.appendChild(xRow);
+            tableBody.appendChild(fxRow);
+            
+            updateSignAnalysisSummary(monotonicityData);
+            
+            const progressIndicator = document.getElementById('tableProgressIndicator');
+            progressIndicator.style.width = '100%';
+        }
+
+        // İşaret analizi özetini güncelle
+        function updateSignAnalysisSummary(visibleData) {
+            const analysisSummary = document.getElementById('analysisSummary');
+            
+            // İşaret analizi özeti kaldırıldı - sadece boş bir div göster
+            analysisSummary.innerHTML = '';
+            analysisSummary.style.display = 'none';
+            
+            // İşaret bölgeleri analizi
+            if ((!isInteractiveMode && visibleData.length === monotonicityData.length) || (isInteractiveMode && isAnswerCorrect)) {
+                calculateSignRegions(visibleData);
+            }
+        }
+        
+        // İşaret bölgelerini hesapla
+        function calculateSignRegions(data) {
+            const intervalAnalysis = document.getElementById('intervalAnalysis');
+            const positiveRegions = document.getElementById('positiveRegions');
+            const negativeRegions = document.getElementById('negativeRegions');
+            const zeroPoints = document.getElementById('zeroPoints');
+            
+            const positiveIntervals = data.filter(d => d.status === 'positive');
+            const negativeIntervals = data.filter(d => d.status === 'negative');
+            
+            if (positiveIntervals.length > 0) {
+                positiveRegions.style.display = 'block';
+                const positiveText = positiveIntervals.map(d => d.interval).join(', ');
+                positiveRegions.innerHTML = `➕ <strong>Pozitif bölgeler:</strong> ${positiveText}`;
+            }
+            
+            if (negativeIntervals.length > 0) {
+                negativeRegions.style.display = 'block';
+                const negativeText = negativeIntervals.map(d => d.interval).join(', ');
+                negativeRegions.innerHTML = `➖ <strong>Negatif bölgeler:</strong> ${negativeText}`;
+            }
+            
+            if (xIntercepts.length > 0) {
+                zeroPoints.style.display = 'block';
+                zeroPoints.innerHTML = `🎯 <strong>Sıfır noktaları:</strong> x = ${xIntercepts.join(', ')}`;
+            }
+            
+            intervalAnalysis.style.display = 'block';
+        }
+
+        // İnteraktif fonksiyon üret
+        function generateInteractiveFunction() {
+            if (interactiveFunctionCounter >= maxInteractiveFunctions) return;
+            
+            stopAnimation();
+            
+            interactiveFunctionCounter++;
+            isAnswerCorrect = false;
+            nextButtonEnabled = false;
+            updateProgressInfo();
+            
+            xIntercepts = generateXIntercepts();
+            currentPoints = generatePointsFromIntercepts(xIntercepts);
+            currentGraphType = 'continuous';
+            
+            prepareSignTableAnalysis();
+            currentInteractiveData = [...monotonicityData];
+            
+            updateGraphTitle();
+            createInteractiveTable();
+            
+            // Yeni egzersizde aralık analizini gizle
+            const intervalAnalysis = document.getElementById('intervalAnalysis');
+            intervalAnalysis.style.display = 'none';
+            
+            startDrawAnimation();
+        }
+        
+        // İnteraktif tablo oluştur
+        function createInteractiveTable() {
+            console.log('Creating interactive table, mode:', isInteractiveMode, 'counter:', interactiveFunctionCounter);
+            console.log('Current interactive data:', currentInteractiveData);
+            
+            const tableBody = document.getElementById('monotonicityTableBody');
+            tableBody.innerHTML = '';
+            
+            if (!currentInteractiveData || currentInteractiveData.length === 0) {
+                console.error('No interactive data available');
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="100%" style="text-align: center; padding: 15px; color: #dc3545;">
+                            Hata: Analiz verileri bulunamadı!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Hep aynı işaret tablosu modunu kullan
+            createStatusSelectingTable(tableBody);
+            
+            updateInteractiveAnalysisSummary();
+            console.log('Interactive table creation completed');
+        }
+        
+        // İşaret tablosu oluştur - tüm modlar için
+        function createStatusSelectingTable(tableBody) {
+            console.log('Creating sign table for', currentInteractiveData.length, 'intervals');
+            
+            // Sınır noktalarını ve kökleri birleştir
+            const allXValues = currentPoints.map(p => p.x);
+            const domainStart = Math.min(...allXValues);
+            const domainEnd = Math.max(...allXValues);
+            const roots = xIntercepts.sort((a, b) => a - b);
+            const boundaries = [domainStart, ...roots, domainEnd].sort((a, b) => a - b);
+            
+            // X satırını oluştur
+            const xRow = document.createElement('tr');
+            
+            // Sol etiket hücresi - "x"
+            const xLabelCell = document.createElement('td');
+            xLabelCell.textContent = 'x';
+            xLabelCell.style.backgroundColor = '#2c3e50';
+            xLabelCell.style.color = 'white';
+            xLabelCell.style.fontWeight = 'bold';
+            xLabelCell.style.fontSize = '14px';
+            xLabelCell.style.padding = '8px 6px';
+            xLabelCell.style.textAlign = 'center';
+            xLabelCell.style.minWidth = '50px';
+            xRow.appendChild(xLabelCell);
+            
+            // -∞ hücresi
+            const minusInfCell = document.createElement('td');
+            minusInfCell.textContent = '-∞';
+            minusInfCell.className = 'hatched';
+            xRow.appendChild(minusInfCell);
+            
+            // Sınır noktaları ve aralıklar
+            for (let i = 0; i < boundaries.length; i++) {
+                const boundary = boundaries[i];
+                const isRoot = roots.includes(boundary);
+                
+                // Sınır noktası hücresi
+                const boundaryCell = document.createElement('td');
+                boundaryCell.textContent = boundary.toString();
+                boundaryCell.className = isRoot ? 'root-cell-x' : 'boundary-cell-x';
+                xRow.appendChild(boundaryCell);
+                
+                // Aralık hücresi (son sınır hariç)
+                if (i < boundaries.length - 1) {
+                    const intervalCell = document.createElement('td');
+                    intervalCell.textContent = `(${boundary}, ${boundaries[i + 1]})`;
+                    intervalCell.style.backgroundColor = '#f8f9fa';
+                    intervalCell.style.fontSize = '11px';
+                    intervalCell.style.padding = '4px 2px';
+                    xRow.appendChild(intervalCell);
+                }
+            }
+            
+            // +∞ hücresi
+            const plusInfCell = document.createElement('td');
+            plusInfCell.textContent = '+∞';
+            plusInfCell.className = 'hatched';
+            xRow.appendChild(plusInfCell);
+            
+            // f(x) satırını oluştur - kullanıcı dolduracak
+            const fxRow = document.createElement('tr');
+            
+            // Sol etiket hücresi - "f(x)"
+            const fxLabelCell = document.createElement('td');
+            fxLabelCell.textContent = 'f(x)';
+            fxLabelCell.style.backgroundColor = '#34495e';
+            fxLabelCell.style.color = 'white';
+            fxLabelCell.style.fontWeight = 'bold';
+            fxLabelCell.style.fontSize = '14px';
+            fxLabelCell.style.padding = '8px 6px';
+            fxLabelCell.style.textAlign = 'center';
+            fxLabelCell.style.minWidth = '50px';
+            fxRow.appendChild(fxLabelCell);
+            
+            // -∞ bölgesi hücresi
+            const minusInfFxCell = document.createElement('td');
+            minusInfFxCell.className = 'hatched';
+            fxRow.appendChild(minusInfFxCell);
+            
+            // Sınır noktaları ve işaret aralıkları
+            let intervalIndex = 0;
+            for (let i = 0; i < boundaries.length; i++) {
+                const boundary = boundaries[i];
+                const isRoot = roots.includes(boundary);
+                
+                // Sınır noktasındaki değer
+                const boundaryFxCell = document.createElement('td');
+                if (isRoot) {
+                    boundaryFxCell.textContent = '0';
+                    boundaryFxCell.className = 'root-cell-fx';
+                } else {
+                    const value = calculateFunctionValue(boundary);
+                    // Ondalıklı değeri virgül ile göster
+                    boundaryFxCell.textContent = value.toString().replace('.', ',');
+                    boundaryFxCell.className = 'boundary-cell-fx';
+                }
+                fxRow.appendChild(boundaryFxCell);
+                
+                // Aralıktaki işaret (son sınır hariç) - kullanıcı dolduracak
+                if (i < boundaries.length - 1) {
+                    const signCell = document.createElement('td');
+                    signCell.className = 'status-row interactive-cell';
+                    signCell.style.padding = '5px 2px';
+                    signCell.style.backgroundColor = '#fff3e0';
+                    signCell.innerHTML = `
+                        <select id="sign_${intervalIndex}" 
+                                style="width: 100%; border: 1px solid #ccc; border-radius: 3px; padding: 4px; font-size: 12px; background: white;"
+                                onchange="checkSignAnswer()">
+                            <option value="">?</option>
+                            <option value="positive">+</option>
+                            <option value="negative">−</option>
+                        </select>
+                    `;
+                    fxRow.appendChild(signCell);
+                    intervalIndex++;
+                }
+            }
+            
+            // +∞ bölgesi hücresi
+            const plusInfFxCell = document.createElement('td');
+            plusInfFxCell.className = 'hatched';
+            fxRow.appendChild(plusInfFxCell);
+            
+            tableBody.appendChild(xRow);
+            tableBody.appendChild(fxRow);
+            
+            console.log('Interactive sign table created successfully');
+        }
+        
+        // İşaret tablosu cevaplarını kontrol et
+        function checkSignAnswer() {
+            let allFilled = true;
+            let allCorrect = true;
+            
+            // Kaç adet işaret aralığı var?
+            const intervalCount = currentInteractiveData.length;
+            
+            for (let i = 0; i < intervalCount; i++) {
+                const selectElement = document.getElementById(`sign_${i}`);
+                if (!selectElement) continue;
+                
+                const userAnswer = selectElement.value;
+                const correctAnswer = currentInteractiveData[i].status;
+                
+                if (!userAnswer) {
+                    allFilled = false;
+                    continue;
+                }
+                
+                const isCorrect = userAnswer === correctAnswer;
+                const signCell = selectElement.parentElement;
+                
+                if (isCorrect) {
+                    signCell.style.backgroundColor = '#d4edda';
+                    signCell.style.border = '2px solid #28a745';
+                } else {
+                    signCell.style.backgroundColor = '#f8d7da';
+                    signCell.style.border = '2px solid #dc3545';
+                    allCorrect = false;
+                }
+            }
+            
+            // Geri bildirim ve sonraki buton kontrolü
+            const analysisSummary = document.getElementById('analysisSummary');
+            
+            if (!allFilled) {
+                analysisSummary.innerHTML = `
+                    <strong>📝 İşaret Tablosu...</strong> 
+                    Tüm aralıkların işaretini seçin.
+                `;
+                analysisSummary.style.backgroundColor = 'rgba(255, 152, 0, 0.1)';
+                analysisSummary.style.border = '1px solid #ffcc02';
+                nextButtonEnabled = false;
+                isAnswerCorrect = false;
+            } else if (allCorrect) {
+                analysisSummary.innerHTML = `
+                    <strong>✅ Mükemmel!</strong> 
+                    İşaret tablosunu doğru tamamladınız! 
+                    <span style="color: #28a745;">Sonraki soruya geçebilirsiniz.</span>
+                `;
+                analysisSummary.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+                analysisSummary.style.border = '1px solid #28a745';
+                nextButtonEnabled = true;
+                isAnswerCorrect = true;
+                
+                // Aralık analizi göster
+                calculateSignRegions(currentInteractiveData);
+            } else {
+                analysisSummary.innerHTML = `
+                    <strong>❌ Kontrol edin!</strong> 
+                    Bazı işaretler yanlış. Kırmızı işaretlenen aralıkları düzeltin.
+                `;
+                analysisSummary.style.backgroundColor = 'rgba(220, 53, 69, 0.1)';
+                analysisSummary.style.border = '1px solid #dc3545';
+                nextButtonEnabled = false;
+                isAnswerCorrect = false;
+            }
+            
+            updateProgressInfo();
+        }
+        
+        // Cevapları kontrol et (eski fonksiyon - kullanılmıyor artık)
+        function checkAnswer() {
+            const isIntervalMode = interactiveFunctionCounter > 5;
+            let allFilled = true;
+            let allCorrect = true;
+            
+            currentInteractiveData.forEach((data, index) => {
+                let userIntervalAnswer = '';
+                let userStatusAnswer = '';
+                
+                if (isIntervalMode) {
+                    // Aralık yazma modu
+                    userIntervalAnswer = document.getElementById(`interval_${index}`).value.trim();
+                    userStatusAnswer = document.getElementById(`status_${index}`).value;
+                    
+                    if (!userIntervalAnswer || !userStatusAnswer) {
+                        allFilled = false;
+                        return;
+                    }
+                    
+                    // Aralık kontrolü
+                    const cleanUserInterval = userIntervalAnswer.replace(/\s/g, '');
+                    const cleanCorrectInterval = data.interval.replace(/\s/g, '');
+                    const intervalCorrect = cleanUserInterval === cleanCorrectInterval;
+                    
+                    // Durum kontrolü
+                    const statusCorrect = userStatusAnswer === data.status;
+                    
+                    // Görsel geri bildirim
+                    const intervalCell = document.getElementById(`interval_${index}`).parentElement;
+                    const statusCell = document.getElementById(`status_${index}`).parentElement;
+                    
+                    if (intervalCorrect) {
+                        intervalCell.style.backgroundColor = '#d4edda';
+                        intervalCell.style.border = '2px solid #28a745';
+                    } else {
+                        intervalCell.style.backgroundColor = '#f8d7da';
+                        intervalCell.style.border = '2px solid #dc3545';
+                        allCorrect = false;
+                    }
+                    
+                    if (statusCorrect) {
+                        statusCell.style.backgroundColor = '#d4edda';
+                        statusCell.style.border = '2px solid #28a745';
+                    } else {
+                        statusCell.style.backgroundColor = '#f8d7da';
+                        statusCell.style.border = '2px solid #dc3545';
+                        allCorrect = false;
+                    }
+                    
+                } else {
+                    // Durum seçme modu
+                    userStatusAnswer = document.getElementById(`status_${index}`).value;
+                    
+                    if (!userStatusAnswer) {
+                        allFilled = false;
+                        return;
+                    }
+                    
+                    const statusCorrect = userStatusAnswer === data.status;
+                    const statusCell = document.getElementById(`status_${index}`).parentElement;
+                    
+                    if (statusCorrect) {
+                        statusCell.style.backgroundColor = '#d4edda';
+                        statusCell.style.border = '2px solid #28a745';
+                    } else {
+                        statusCell.style.backgroundColor = '#f8d7da';
+                        statusCell.style.border = '2px solid #dc3545';
+                        allCorrect = false;
+                    }
+                }
+            });
+            
+            // Geri bildirim ve sonraki buton kontrolü
+            const analysisSummary = document.getElementById('analysisSummary');
+            
+            if (!allFilled) {
+                analysisSummary.innerHTML = `
+                    <strong>📝 Devam edin...</strong> 
+                    Tüm alanları doldurun.
+                `;
+                analysisSummary.style.backgroundColor = 'rgba(255, 152, 0, 0.1)';
+                analysisSummary.style.border = '1px solid #ffcc02';
+                isAnswerCorrect = false;
+                nextButtonEnabled = false;
+            } else if (allCorrect) {
+                analysisSummary.innerHTML = `
+                    <strong>🎉 Mükemmel!</strong> 
+                    Tüm cevaplar doğru! Sonraki fonksiyona geçebilirsiniz.
+                `;
+                analysisSummary.style.backgroundColor = '#d4edda';
+                analysisSummary.style.border = '1px solid #28a745';
+                isAnswerCorrect = true;
+                nextButtonEnabled = true;
+                
+                // Doğru cevap verildikten sonra işaret analizi göster
+                calculateSignRegions(currentInteractiveData);
+            } else {
+                analysisSummary.innerHTML = `
+                    <strong>⚠️ Tekrar deneyin!</strong> 
+                    Kırmızı işaretli alanları kontrol edin.
+                `;
+                analysisSummary.style.backgroundColor = '#f8d7da';
+                analysisSummary.style.border = '1px solid #dc3545';
+                isAnswerCorrect = false;
+                nextButtonEnabled = false;
+            }
+            
+            updateProgressInfo();
+        }
+        
+        // İnteraktif analiz özetini güncelle
+        function updateInteractiveAnalysisSummary() {
+            const analysisSummary = document.getElementById('analysisSummary');
+            
+            analysisSummary.innerHTML = `
+                <strong>🎯 İşaret Tablosu Egzersizi #${interactiveFunctionCounter}</strong><br>
+                📋 <strong>Görev:</strong> Fonksiyonun her aralıktaki işaretini belirleyin<br>
+                ➕ Pozitif aralıklar için "<strong>+</strong>" seçin<br>
+                ➖ Negatif aralıklar için "<strong>−</strong>" seçin<br>
+                💡 <strong>İpucu:</strong> Köklerin arasındaki aralıklarda fonksiyonun işareti değişir
+            `;
+            
+            analysisSummary.style.backgroundColor = 'rgba(33, 150, 243, 0.1)';
+            analysisSummary.style.border = '1px solid #2196F3';
+            
+            // İnteraktif modda başlangıçta aralık analizini gizle
+            const intervalAnalysis = document.getElementById('intervalAnalysis');
+            intervalAnalysis.style.display = 'none';
+        }
+
+        // İşaret analizi özetini güncelle
+        function updateAnalysisSummary(visibleData) {
+            const analysisSummary = document.getElementById('analysisSummary');
+            
+            // İşaret analizi özeti kaldırıldı - sadece boş bir div göster
+            analysisSummary.innerHTML = '';
+            analysisSummary.style.display = 'none';
+            
+            // İşaret bölgeleri analizi
+            if ((!isInteractiveMode && totalVisible === visibleData.length) || (isInteractiveMode && isAnswerCorrect)) {
+                calculateSignRegions(visibleData);
+            }
+            
+            // İşaret bölgeleri analizi
+            if ((!isInteractiveMode && totalVisible === visibleData.length) || (isInteractiveMode && isAnswerCorrect)) {
+                calculateSignRegions(visibleData);
+            }
+        }
+        
+        // İşaret bölgelerini hesapla
+        function calculateSignRegions(data) {
+            const intervalAnalysis = document.getElementById('intervalAnalysis');
+            const positiveRegions = document.getElementById('positiveRegions');
+            const negativeRegions = document.getElementById('negativeRegions');
+            const zeroPoints = document.getElementById('zeroPoints');
+            
+            const positiveIntervals = data.filter(d => d.status === 'positive');
+            const negativeIntervals = data.filter(d => d.status === 'negative');
+            
+            if (positiveIntervals.length > 0) {
+                positiveRegions.style.display = 'block';
+                const positiveText = positiveIntervals.map(d => d.interval).join(', ');
+                positiveRegions.innerHTML = `➕ <strong>Pozitif bölgeler:</strong> ${positiveText}`;
+            }
+            
+            if (negativeIntervals.length > 0) {
+                negativeRegions.style.display = 'block';
+                const negativeText = negativeIntervals.map(d => d.interval).join(', ');
+                negativeRegions.innerHTML = `➖ <strong>Negatif bölgeler:</strong> ${negativeText}`;
+            }
+            
+            if (xIntercepts.length > 0) {
+                zeroPoints.style.display = 'block';
+                zeroPoints.innerHTML = `🎯 <strong>Sıfır noktaları:</strong> x = ${xIntercepts.join(', ')}`;
+            }
+            
+            intervalAnalysis.style.display = 'block';
+        }
+        
+    </script>
+</body>
+</html>
