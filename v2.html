@@ -1,3 +1,9 @@
+        // Sayı biçimlendirme: Tam sayı ise tam, ondalık ise virgül ile göster
+        function formatNumber(num) {
+            if (typeof num !== 'number') num = Number(num);
+            if (Number.isInteger(num)) return num.toString();
+            return num.toFixed(1).replace('.', ',');
+        }
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -634,30 +640,158 @@
         let animationId = null;
         let animationProgress = 0;
         let isAnimating = false;
-        let animationSpeed = 0.01; // Daima yavaş animasyon
+let animationSpeed = 0.0033; // Daha yavaş animasyon (üçte bir hız)
         let monotonicityData = [];
         let criticalPoints = [];
         let currentAnalysisIndex = 0;
         let functionCounter = 0;
-        let maxFunctions = 10;
+        let maxFunctions = 5; // Simülasyon için 5 fonksiyon
         let isInteractiveMode = false;
         let interactiveFunctionCounter = 0;
-        let maxInteractiveFunctions = 10;
+        let maxInteractiveFunctions = 5; // Sıra Sizde için 5 fonksiyon
         let currentInteractiveData = null;
         let isAnswerCorrect = false;
         let nextButtonEnabled = false;
+
+        // JSON'dan fonksiyonlar
+        let allJsonFunctions = [];
+        let simulationFunctions = [];
+        let interactiveFunctions = [];
+        let simulationIndex = 0;
+        let interactiveIndex = 0;
         
-        // Sayfa yüklendiğinde başlat
-        document.addEventListener('DOMContentLoaded', function() {
+
+        // Giriş ekranı HTML'i ekle
+        function showWelcomeScreen() {
+            const content = document.querySelector('.content');
+            content.innerHTML = `
+                <div class="welcome-screen" style="max-width: 600px; margin: 40px auto; background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 12px #0001; padding: 32px 24px; text-align: center;">
+                    <h2 style="color: #1a2a6c; margin-bottom: 16px;">Fonksiyonun İşaret Tablosu Etkinliği</h2>
+                    <p style="font-size: 1.1em; color: #333; margin-bottom: 18px;">Bu etkinlikte, fonksiyonların grafiğini inceleyerek işaret tablosunu doldurmayı ve fonksiyonun köklerini, pozitif-negatif olduğu aralıkları analiz etmeyi öğreneceksiniz.</p>
+                    <ul style="text-align: left; margin: 0 auto 18px auto; max-width: 420px; color: #444; font-size: 1em;">
+                        <li>Önce <b>Simülasyon</b> bölümünde örnek fonksiyonların grafiğini ve işaret tablosunu izleyin.</li>
+                        <li>Ardından <b>Sıra Sizde</b> bölümünde, verilen fonksiyonun işaret tablosunu kendiniz doldurun.</li>
+                        <li>Her iki bölümde de ilerlemenizi üstte görebilirsiniz.</li>
+                    </ul>
+                    <button id="startActivityBtn" style="margin-top: 18px; padding: 12px 32px; font-size: 1.1em; background: linear-gradient(135deg, #007bff, #00c6ff); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Etkinliğe Başla</button>
+                </div>
+            `;
+            document.getElementById('startActivityBtn').onclick = () => {
+                showLoadingScreen();
+                loadFunctionsAndStart();
+            };
+        }
+
+        // Yükleniyor ekranı
+        function showLoadingScreen() {
+            const content = document.querySelector('.content');
+            content.innerHTML = `<div style="text-align:center; padding: 60px 0; color: #1a2a6c; font-size: 1.2em;">Veriler yükleniyor...</div>`;
+        }
+
+        // Fonksiyonları yükle ve simülasyonu başlat
+        function loadFunctionsAndStart() {
+            fetch('fonk1.json')
+                .then(r => r.json())
+                .then(data => {
+                    allJsonFunctions = data.functions || [];
+                    if (allJsonFunctions.length < 10) {
+                        alert('Yeterli fonksiyon yok!');
+                        return;
+                    }
+                    simulationFunctions = pickRandomFunctions(allJsonFunctions, 5);
+                    interactiveFunctions = pickRandomFunctions(allJsonFunctions, 5, simulationFunctions);
+                    simulationIndex = 0;
+                    interactiveIndex = 0;
+                    // Simülasyon ekranını başlat
+                    showSimulationScreen();
+                })
+                .catch(e => {
+                    alert('Fonksiyon verisi yüklenemedi!');
+                });
+        }
+
+        // Simülasyon ekranı (canvas ve kontrolleri göster)
+        function showSimulationScreen() {
+            // Canvas ve kontrolleri tekrar göster
+            const content = document.querySelector('.content');
+            content.innerHTML = window._mainContentHtml || '';
+            // Canvas ve kontrolleri tekrar başlat
             canvas = document.getElementById('functionChart');
             ctx = canvas.getContext('2d');
             setupCanvas();
             setupEventListeners();
             updateProgressInfo();
-            
-            // İlk grafik için boş çizim
-            drawEmptyGraph();
+            startSimulationMode();
+        }
+
+        // Sayfa yüklendiğinde giriş ekranını göster
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ana içeriği yedekle (canvas ve kontroller)
+            const content = document.querySelector('.content');
+            window._mainContentHtml = content.innerHTML;
+            showWelcomeScreen();
         });
+
+        // Rastgele fonksiyon seçici (diğerlerinden farklı olanları seçmek için)
+        function pickRandomFunctions(arr, n, excludeArr = []) {
+            let pool = arr.filter(f => !excludeArr.includes(f));
+            let result = [];
+            while (result.length < n && pool.length > 0) {
+                let idx = Math.floor(Math.random() * pool.length);
+                result.push(pool[idx]);
+                pool.splice(idx, 1);
+            }
+            return result;
+        }
+
+        function startSimulationMode() {
+            isInteractiveMode = false;
+            functionCounter = 0;
+            updateProgressInfo();
+            showSimulationFunction();
+        }
+
+        function showSimulationFunction() {
+            if (functionCounter >= maxFunctions) {
+                // Simülasyon bitti, interaktif moda geç
+                startInteractiveMode();
+                return;
+            }
+            let func = simulationFunctions[functionCounter];
+            if (!func) return;
+            currentPoints = func.points;
+            currentGraphType = func.graphType || 'curved';
+            xIntercepts = func.xIntercepts || [];
+            prepareSignTableAnalysis();
+            updateGraphTitle();
+            resetMonotonicityTable();
+            startDrawAnimation();
+        }
+
+        function startInteractiveMode() {
+            isInteractiveMode = true;
+            interactiveFunctionCounter = 0;
+            updateProgressInfo();
+            showInteractiveFunction();
+        }
+
+        function showInteractiveFunction() {
+            if (interactiveFunctionCounter >= maxInteractiveFunctions) {
+                // Tüm interaktif fonksiyonlar bitti
+                updateProgressInfo();
+                return;
+            }
+            let func = interactiveFunctions[interactiveFunctionCounter];
+            if (!func) return;
+            currentPoints = func.points;
+            currentGraphType = func.graphType || 'curved';
+            xIntercepts = func.xIntercepts || [];
+            prepareSignTableAnalysis();
+            currentInteractiveData = [...monotonicityData];
+            updateGraphTitle();
+            resetMonotonicityTable();
+            startDrawAnimation();
+        }
         
         // Event listener'ları ayarla
         function setupEventListeners() {
@@ -683,7 +817,16 @@
             
             if (!isInteractiveMode) {
                 progressInfo.textContent = `Fonksiyon: ${functionCounter}/${maxFunctions}`;
-                
+                // Simülasyon modunda butonun üstünde "Sonraki Fonksiyon" yazsın
+                generateBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 12l2 2 4-4"></path>
+                        <circle cx="12" cy="12" r="10"></circle>
+                    </svg>
+                    Sonraki Fonksiyon
+                `;
+                generateBtn.style.background = 'linear-gradient(135deg, #007bff, #00c6ff)';
+                generateBtn.disabled = false;
                 if (functionCounter >= maxFunctions) {
                     generateBtn.disabled = false;
                     generateBtn.innerHTML = `
@@ -691,12 +834,12 @@
                             <path d="M9 12l2 2 4-4"></path>
                             <circle cx="12" cy="12" r="10"></circle>
                         </svg>
-                        İnteraktif Moda Geç
+                        Sıra Sizde
                     `;
                     generateBtn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
                 }
             } else {
-                progressInfo.textContent = `İnteraktif Mod: ${interactiveFunctionCounter}/${maxInteractiveFunctions}`;
+                progressInfo.textContent = `Sıra Sizde: ${interactiveFunctionCounter}/${maxInteractiveFunctions}`;
                 
                 if (interactiveFunctionCounter >= maxInteractiveFunctions) {
                     generateBtn.style.display = 'none';
@@ -896,38 +1039,17 @@
         
         // Rastgele fonksiyon üret
         function generateRandomFunction() {
-            if (!isInteractiveMode && functionCounter >= maxFunctions) {
-                // İnteraktif moda geç
-                isInteractiveMode = true;
-                interactiveFunctionCounter = 0;
+            if (!isInteractiveMode) {
+                stopAnimation();
+                functionCounter++;
                 updateProgressInfo();
-                generateInteractiveFunction();
-                return;
+                showSimulationFunction();
+            } else {
+                stopAnimation();
+                interactiveFunctionCounter++;
+                updateProgressInfo();
+                showInteractiveFunction();
             }
-            
-            if (isInteractiveMode && interactiveFunctionCounter >= maxInteractiveFunctions) return;
-            
-            if (isInteractiveMode) {
-                generateInteractiveFunction();
-                return;
-            }
-            
-            stopAnimation();
-            
-            functionCounter++;
-            updateProgressInfo();
-            
-            xIntercepts = generateXIntercepts();
-            currentPoints = generatePointsFromIntercepts(xIntercepts);
-            currentGraphType = 'continuous'; // Daima sürekli fonksiyon
-            
-            // Artan/azalan analizi için veri hazırla
-            prepareSignTableAnalysis();
-            
-            updateGraphTitle();
-            resetMonotonicityTable();
-            
-            startDrawAnimation();
         }
         
         // Animasyon başlatma
@@ -1525,7 +1647,7 @@
                 titleText = ``; // Boş başlık
             } else {
                 const modeText = interactiveFunctionCounter > 5 ? 'Aralık Yazma' : 'Artan/Azalan Seçme';
-                titleText = `İnteraktif Egzersiz #${interactiveFunctionCounter} - ${modeText}`;
+                titleText = `Sıra Sizde #${interactiveFunctionCounter} - ${modeText}`;
             }
             
             graphTitleElement.innerHTML = `
@@ -1677,11 +1799,11 @@
                 
                 if (roots.includes(boundary)) {
                     // Bu bir kök
-                    xRow += `<td class="root-cell-x">${boundary}</td>`;
+                    xRow += `<td class="root-cell-x">${formatNumber(boundary)}</td>`;
                     fxRow += `<td class="root-cell-fx">0</td>`;
                 } else {
                     // Bu bir sınır noktası
-                    xRow += `<td class="boundary-cell-x">${boundary.toFixed(1)}</td>`;
+                    xRow += `<td class="boundary-cell-x">${formatNumber(boundary)}</td>`;
                     fxRow += `<td class="boundary-cell-fx pending">?</td>`;
                 }
                 
@@ -1701,18 +1823,25 @@
         // Animasyonla senkronize tablo güncelleme - isaret.html tarzı
         function updateMonotonicityTableWithAnimation() {
             if (monotonicityData.length === 0) return;
-            
             const minX = Math.min(...currentPoints.map(p => p.x));
             const maxX = Math.max(...currentPoints.map(p => p.x));
             const currentMaxX = minX + (maxX - minX) * animationProgress;
-            
-            // Hangi aralıkların gösterilmesi gerektiğini belirle
-            const visibleIntervals = monotonicityData.filter(data => data.startX <= currentMaxX);
-            
+
+            // Soldan sağa: Her aralığın ortası, currentMaxX'i geçtiyse göster
+            let visibleIntervals = [];
+            for (let i = 0; i < monotonicityData.length; i++) {
+                const interval = monotonicityData[i];
+                const mid = (interval.startX + interval.endX) / 2;
+                if (mid <= currentMaxX) {
+                    visibleIntervals.push(interval);
+                } else {
+                    break; // Soldan sağa sırayla ilerle
+                }
+            }
+
             if (visibleIntervals.length > 0 && visibleIntervals.length !== currentAnalysisIndex) {
                 currentAnalysisIndex = visibleIntervals.length;
                 updateSignTableCells(visibleIntervals);
-                
                 // Progress bar'ı güncelle
                 const progressIndicator = document.getElementById('tableProgressIndicator');
                 const progressPercent = (visibleIntervals.length / monotonicityData.length) * 100;
@@ -1807,14 +1936,14 @@
                 
                 // Sınır noktası hücresi
                 const boundaryCell = document.createElement('td');
-                boundaryCell.textContent = boundary.toString();
+                boundaryCell.textContent = formatNumber(boundary);
                 boundaryCell.className = isRoot ? 'root-cell-x' : 'boundary-cell-x';
                 xRow.appendChild(boundaryCell);
                 
                 // Aralık hücresi (son sınır hariç)
                 if (i < boundaries.length - 1) {
                     const intervalCell = document.createElement('td');
-                    intervalCell.textContent = `(${boundary}, ${boundaries[i + 1]})`;
+                    intervalCell.textContent = `(${formatNumber(boundary)}, ${formatNumber(boundaries[i + 1])})`;
                     intervalCell.style.backgroundColor = '#f8f9fa';
                     intervalCell.style.fontSize = '11px';
                     intervalCell.style.padding = '4px 2px';
@@ -1860,8 +1989,7 @@
                     boundaryFxCell.className = 'root-cell-fx';
                 } else {
                     const value = calculateFunctionValue(boundary);
-                    // Ondalıklı değeri virgül ile göster
-                    boundaryFxCell.textContent = value.toString().replace('.', ',');
+                    boundaryFxCell.textContent = formatNumber(value);
                     boundaryFxCell.className = 'boundary-cell-fx';
                 }
                 fxRow.appendChild(boundaryFxCell);
@@ -1992,9 +2120,138 @@
             
             // Hep aynı işaret tablosu modunu kullan
             createStatusSelectingTable(tableBody);
-            
+
+            // Kontrol Et butonunu ve feedback'i işaret tablosu ve analiz div'lerinden tamamen ayrı bir div'e ekle
+            // Önce eski kontrol divini kaldır
+            let oldControls = document.getElementById('signTableControls');
+            if (oldControls) oldControls.remove();
+
+            // Yeni kontrol divini oluştur
+            let controlsDiv = document.createElement('div');
+            controlsDiv.id = 'signTableControls';
+            controlsDiv.style = 'margin: 24px auto 0 auto; max-width: 600px; text-align: center;';
+
+            // Kontrol Et butonu
+            let kontrolBtn = document.createElement('button');
+            kontrolBtn.id = 'checkTableBtn';
+            kontrolBtn.textContent = 'Kontrol Et';
+            kontrolBtn.style = 'margin: 0 auto; display: inline-block; padding: 10px 32px; font-size: 1.1em; background: linear-gradient(135deg, #28a745, #20c997); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;';
+            kontrolBtn.disabled = false;
+            controlsDiv.appendChild(kontrolBtn);
+
+            // Geri bildirim kutusu
+            let feedback = document.createElement('div');
+            feedback.id = 'signTableFeedback';
+            feedback.style = 'margin: 16px auto 0 auto; text-align: center; font-size: 1.1em; min-height: 24px;';
+            feedback.textContent = '';
+            controlsDiv.appendChild(feedback);
+
+            // Kontrol divini, işaret tablosu ve analiz div'lerinden sonra ekle
+            // (analiz div'i varsa onun sonrasına, yoksa tablonun sonrasına)
+            let analysisDiv = document.getElementById('intervalAnalysis');
+            if (analysisDiv && analysisDiv.parentElement) {
+                analysisDiv.parentElement.insertBefore(controlsDiv, analysisDiv.nextSibling);
+            } else {
+                // Yedek: tabloyu bul ve onun sonrasına ekle
+                const table = tableBody.parentElement;
+                table.parentElement.insertBefore(controlsDiv, table.nextSibling);
+            }
+
+            kontrolBtn.onclick = function() {
+                let allFilled = true;
+                let allCorrect = true;
+                const intervalCount = currentInteractiveData.length;
+                for (let i = 0; i < intervalCount; i++) {
+                    const selectElement = document.getElementById(`sign_${i}`);
+                    if (!selectElement) continue;
+                    const userAnswer = selectElement.value;
+                    const correctAnswer = currentInteractiveData[i].status;
+                    const cell = selectElement.parentElement;
+                    // Önce stilleri sıfırla
+                    cell.style.backgroundColor = '';
+                    cell.style.border = '';
+                    if (!userAnswer) {
+                        allFilled = false;
+                        continue;
+                    }
+                    if (userAnswer !== correctAnswer) {
+                        allCorrect = false;
+                        cell.style.backgroundColor = '#f8d7da';
+                        cell.style.border = '2px solid #dc3545';
+                    } else {
+                        cell.style.backgroundColor = '#d4edda';
+                        cell.style.border = '2px solid #28a745';
+                    }
+                }
+                if (!allFilled) {
+                    feedback.textContent = 'Tüm aralıkların işaretini seçmelisiniz.';
+                    feedback.style.color = '#ff9800';
+                    nextButtonEnabled = false;
+                } else if (!allCorrect) {
+                    feedback.textContent = 'Bazı işaretler yanlış. Kırmızı işaretlenen aralıkları düzeltin.';
+                    feedback.style.color = '#dc3545';
+                    nextButtonEnabled = false;
+                } else {
+                    feedback.innerHTML = '<span style="color:#28a745;font-weight:bold;">Tebrikler, tabloyu doğru doldurdunuz!</span><br><span style="color:#2196F3;">Sonraki soruya geçebilirsiniz.</span>';
+                    feedback.style.color = '#28a745';
+                    nextButtonEnabled = true;
+                    kontrolBtn.disabled = true;
+                    // Son soruysa "Daha Fazla Egzersiz" butonunu göster
+                    if (interactiveFunctionCounter === maxInteractiveFunctions - 1) {
+                        showMoreExercisesButton();
+                    } else {
+                        // Sonraki butonunu etkinleştir
+                        const nextBtn = document.getElementById('nextBtn');
+                        if (nextBtn) nextBtn.disabled = false;
+                    }
+                }
+                updateProgressInfo();
+            };
+
+            // Her seçim değiştiğinde kontrol butonunu tekrar aktif et ve hücre stilini sıfırla
+            for (let i = 0; i < currentInteractiveData.length; i++) {
+                const selectElement = document.getElementById(`sign_${i}`);
+                if (selectElement) {
+                    selectElement.onchange = () => {
+                        kontrolBtn.disabled = false;
+                        feedback.textContent = '';
+                        nextButtonEnabled = false;
+                        // Hücre stilini sıfırla
+                        const cell = selectElement.parentElement;
+                        cell.style.backgroundColor = '';
+                        cell.style.border = '';
+                        updateProgressInfo();
+                    };
+                }
+            }
+
             updateInteractiveAnalysisSummary();
             console.log('Interactive table creation completed');
+        }
+
+        // Son soru doğruysa "Daha Fazla Egzersiz" butonu göster
+        function showMoreExercisesButton() {
+            let moreBtn = document.getElementById('moreExercisesBtn');
+            if (!moreBtn) {
+                moreBtn = document.createElement('button');
+                moreBtn.id = 'moreExercisesBtn';
+                moreBtn.textContent = 'Daha Fazla Egzersiz';
+                moreBtn.style = 'margin: 24px auto 0 auto; display: block; padding: 12px 36px; font-size: 1.1em; background: linear-gradient(135deg, #007bff, #00c6ff); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;';
+                const parent = document.getElementById('monotonicityTableBody').parentElement;
+                parent.appendChild(moreBtn);
+            }
+            moreBtn.onclick = function() {
+                // Sıra Sizde bölümünü başa sar
+                interactiveFunctionCounter = 0;
+                nextButtonEnabled = false;
+                // Rastgele yeni 5 fonksiyon seç
+                interactiveFunctions = pickRandomFunctions(allJsonFunctions, 5, simulationFunctions);
+                showInteractiveFunction();
+                // Butonu ve geri bildirimleri kaldır
+                moreBtn.remove();
+                const feedback = document.getElementById('signTableFeedback');
+                if (feedback) feedback.remove();
+            };
         }
         
         // İşaret tablosu oluştur - tüm modlar için
@@ -2036,14 +2293,14 @@
                 
                 // Sınır noktası hücresi
                 const boundaryCell = document.createElement('td');
-                boundaryCell.textContent = boundary.toString();
+                boundaryCell.textContent = formatNumber(boundary);
                 boundaryCell.className = isRoot ? 'root-cell-x' : 'boundary-cell-x';
                 xRow.appendChild(boundaryCell);
                 
                 // Aralık hücresi (son sınır hariç)
                 if (i < boundaries.length - 1) {
                     const intervalCell = document.createElement('td');
-                    intervalCell.textContent = `(${boundary}, ${boundaries[i + 1]})`;
+                    intervalCell.textContent = `(${formatNumber(boundary)}, ${formatNumber(boundaries[i + 1])})`;
                     intervalCell.style.backgroundColor = '#f8f9fa';
                     intervalCell.style.fontSize = '11px';
                     intervalCell.style.padding = '4px 2px';
@@ -2090,8 +2347,7 @@
                     boundaryFxCell.className = 'root-cell-fx';
                 } else {
                     const value = calculateFunctionValue(boundary);
-                    // Ondalıklı değeri virgül ile göster
-                    boundaryFxCell.textContent = value.toString().replace('.', ',');
+                    boundaryFxCell.textContent = formatNumber(value);
                     boundaryFxCell.className = 'boundary-cell-fx';
                 }
                 fxRow.appendChild(boundaryFxCell);
@@ -2379,6 +2635,14 @@
             intervalAnalysis.style.display = 'block';
         }
         
+    // Sayıları virgüllü ve tam sayı olarak gösteren yardımcı fonksiyon
+    function formatNumber(num) {
+        if (Number.isInteger(num)) {
+            return num.toString();
+        } else {
+            return num.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+    }
     </script>
 </body>
 </html>
