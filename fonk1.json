@@ -1,0 +1,2560 @@
+{
+  "exportDate": "2025-07-25T15:20:23.142Z",
+  "version": "1.0",
+  "totalFunctions": 40,
+  "functions": [
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": -2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -1,
+        2
+      ],
+      "timestamp": "25/07/2025, 13:19:52",
+      "id": 1753438792422
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -8,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": -3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -5,
+        0,
+        4
+      ],
+      "timestamp": "25/07/2025, 13:20:04",
+      "id": 1753438804065
+    },
+    {
+      "points": [
+        {
+          "x": -6,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 6,
+          "y": -2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 10,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        0,
+        5,
+        7
+      ],
+      "timestamp": "25/07/2025, 13:20:08",
+      "id": 1753438808790
+    },
+    {
+      "points": [
+        {
+          "x": -8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": -1,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -5,
+        4
+      ],
+      "timestamp": "25/07/2025, 13:20:15",
+      "id": 1753438815177
+    },
+    {
+      "points": [
+        {
+          "x": -10,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -9,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": -4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 2,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 10,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -6,
+        -1,
+        6
+      ],
+      "timestamp": "25/07/2025, 13:20:22",
+      "id": 1753438822243
+    },
+    {
+      "points": [
+        {
+          "x": -10,
+          "y": 5,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": -2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 6,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -6,
+        2
+      ],
+      "timestamp": "25/07/2025, 13:20:29",
+      "id": 1753438829809
+    },
+    {
+      "points": [
+        {
+          "x": -8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": -4,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": 1,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -5,
+        -2
+      ],
+      "timestamp": "25/07/2025, 13:20:39",
+      "id": 1753438839096
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -7,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 10,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -7,
+        -4,
+        6
+      ],
+      "timestamp": "25/07/2025, 13:20:45",
+      "id": 1753438845296
+    },
+    {
+      "points": [
+        {
+          "x": -8,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -4,
+        1,
+        5
+      ],
+      "timestamp": "25/07/2025, 13:20:51",
+      "id": 1753438851546
+    },
+    {
+      "points": [
+        {
+          "x": -7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": 3,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        1,
+        5
+      ],
+      "timestamp": "25/07/2025, 13:20:56",
+      "id": 1753438856290
+    },
+    {
+      "points": [
+        {
+          "x": -1,
+          "y": 6,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 4,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 4,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        4,
+        6
+      ],
+      "timestamp": "25/07/2025, 13:21:00",
+      "id": 1753438860262
+    },
+    {
+      "points": [
+        {
+          "x": -10,
+          "y": 8,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": -5,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -7,
+        0
+      ],
+      "timestamp": "25/07/2025, 13:21:08",
+      "id": 1753438868495
+    },
+    {
+      "points": [
+        {
+          "x": -6,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -6,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": 6,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 4,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -4,
+        -2,
+        1
+      ],
+      "timestamp": "25/07/2025, 13:21:13",
+      "id": 1753438873103
+    },
+    {
+      "points": [
+        {
+          "x": -10,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 2,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -6,
+        -2,
+        6
+      ],
+      "timestamp": "25/07/2025, 13:21:23",
+      "id": 1753438883086
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": -4,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -6,
+        -2
+      ],
+      "timestamp": "25/07/2025, 13:21:33",
+      "id": 1753438893063
+    },
+    {
+      "points": [
+        {
+          "x": -5,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -2,
+        0,
+        4
+      ],
+      "timestamp": "25/07/2025, 13:21:47",
+      "id": 1753438907775
+    },
+    {
+      "points": [
+        {
+          "x": -8,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 4,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -5,
+        -1,
+        3
+      ],
+      "timestamp": "25/07/2025, 13:21:53",
+      "id": 1753438913128
+    },
+    {
+      "points": [
+        {
+          "x": -2,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": 3,
+          "y": -7,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        1,
+        5
+      ],
+      "timestamp": "25/07/2025, 13:22:00",
+      "id": 1753438920330
+    },
+    {
+      "points": [
+        {
+          "x": -6,
+          "y": -1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -4,
+        0
+      ],
+      "timestamp": "25/07/2025, 13:22:05",
+      "id": 1753438925778
+    },
+    {
+      "points": [
+        {
+          "x": -8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -1,
+        5
+      ],
+      "timestamp": "25/07/2025, 13:22:10",
+      "id": 1753438930858
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -3,
+        4
+      ],
+      "timestamp": "25/07/2025, 13:22:18",
+      "id": 1753438938327
+    },
+    {
+      "points": [
+        {
+          "x": -8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": -1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -3,
+        3
+      ],
+      "timestamp": "25/07/2025, 13:22:21",
+      "id": 1753438941053
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": -4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 4,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -5,
+        -2,
+        2
+      ],
+      "timestamp": "25/07/2025, 13:22:25",
+      "id": 1753438945577
+    },
+    {
+      "points": [
+        {
+          "x": -10,
+          "y": 7,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -7,
+        0
+      ],
+      "timestamp": "25/07/2025, 13:22:32",
+      "id": 1753438952331
+    },
+    {
+      "points": [
+        {
+          "x": -7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": 6,
+          "y": 7,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        2,
+        4
+      ],
+      "timestamp": "25/07/2025, 13:22:35",
+      "id": 1753438955583
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": 8,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -4,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -5,
+        0
+      ],
+      "timestamp": "25/07/2025, 13:22:39",
+      "id": 1753438959189
+    },
+    {
+      "points": [
+        {
+          "x": -10,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -8,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -7,
+        1,
+        8
+      ],
+      "timestamp": "25/07/2025, 13:22:46",
+      "id": 1753438966704
+    },
+    {
+      "points": [
+        {
+          "x": -6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": 5,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": 3,
+          "y": 8,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -2,
+        1
+      ],
+      "timestamp": "25/07/2025, 13:22:51",
+      "id": 1753438971336
+    },
+    {
+      "points": [
+        {
+          "x": -7,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 1,
+          "y": -1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -5,
+        0,
+        2
+      ],
+      "timestamp": "25/07/2025, 13:22:54",
+      "id": 1753438974579
+    },
+    {
+      "points": [
+        {
+          "x": -7,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 6,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": -1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -1,
+        5,
+        8
+      ],
+      "timestamp": "25/07/2025, 13:22:59",
+      "id": 1753438979177
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": 1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": -5,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 8,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -7,
+        2
+      ],
+      "timestamp": "25/07/2025, 13:23:02",
+      "id": 1753438982935
+    },
+    {
+      "points": [
+        {
+          "x": -4,
+          "y": 9,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": -1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": -5,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 10,
+          "y": 5,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        0,
+        7
+      ],
+      "timestamp": "25/07/2025, 13:23:07",
+      "id": 1753438987167
+    },
+    {
+      "points": [
+        {
+          "x": -5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -1,
+        3
+      ],
+      "timestamp": "25/07/2025, 13:23:12",
+      "id": 1753438992371
+    },
+    {
+      "points": [
+        {
+          "x": -8,
+          "y": 1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 4,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": -1,
+          "y": 3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -7,
+        -2
+      ],
+      "timestamp": "25/07/2025, 13:23:15",
+      "id": 1753438995576
+    },
+    {
+      "points": [
+        {
+          "x": -7,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        0,
+        3,
+        7
+      ],
+      "timestamp": "25/07/2025, 13:23:20",
+      "id": 1753439000087
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": -5,
+          "y": 7,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -6,
+        -2,
+        5
+      ],
+      "timestamp": "25/07/2025, 13:23:24",
+      "id": 1753439004012
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 3,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 10,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -3,
+        2,
+        4,
+        6
+      ],
+      "timestamp": "25/07/2025, 13:23:28",
+      "id": 1753439008036
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": -9,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 2,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -3,
+        -1,
+        5
+      ],
+      "timestamp": "25/07/2025, 13:23:34",
+      "id": 1753439014594
+    },
+    {
+      "points": [
+        {
+          "x": -8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": 1,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -4,
+          "y": 0,
+          "type": "inflection",
+          "multiplicity": 3
+        },
+        {
+          "x": -2,
+          "y": -3,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": 1,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "curved",
+      "xIntercepts": [
+        -4,
+        0
+      ],
+      "timestamp": "25/07/2025, 13:23:41",
+      "id": 1753439021789
+    },
+    {
+      "points": [
+        {
+          "x": -9,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -7,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -6,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -5,
+          "y": -10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": -3,
+          "y": 0,
+          "type": "cross",
+          "multiplicity": 1
+        },
+        {
+          "x": -2,
+          "y": 2,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "tangent",
+          "multiplicity": 2
+        },
+        {
+          "x": 3,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 4,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "type": "normal",
+          "multiplicity": 1
+        }
+      ],
+      "graphType": "linear",
+      "xIntercepts": [
+        -7,
+        -3,
+        0
+      ],
+      "timestamp": "25/07/2025, 13:23:50",
+      "id": 1753439030376
+    }
+  ]
+}
