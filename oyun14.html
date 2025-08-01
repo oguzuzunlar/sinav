@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB Dijital İçerik - Fonksiyon Simetri Oyunu</title>
+    <style>
+        :root {
+            --primary-color: #ffc107;      /* Sarı */
+            --secondary-color: #03a9f4;    /* Mavi (Sabit Noktalar) */
+            --error-color: #f44336;        /* Kırmızı (Kullanıcı Noktaları) */
+            --success-color: #8bc34a;    /* Yeşil */
+            --graph-line-color: #9c27b0;   /* Mor (Grafik Çizgisi) */
+            --bg-dark: #212121;
+            --bg-light: #333333;
+            --text-color: #f5f5f5;
+            --axis-color: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 1%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard syntax */
+        }
+
+        .container { max-width: 1500px; width: 98%; margin: 0 auto; }
+
+        /* --- Giriş Ekranı Stilleri --- */
+        #introScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .intro-content { background: var(--bg-light); padding: 30px 40px; border-radius: 15px; max-width: 900px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        .intro-content h1 { color: var(--primary-color); margin-bottom: 25px; font-size: 2.8rem; }
+        .intro-content h2 { color: var(--secondary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 10px; margin-top: 20px; margin-bottom: 15px; }
+        .intro-content p, .intro-content li { font-size: 1.1rem; line-height: 1.7; text-align: left; }
+        .intro-content ul { list-style-position: inside; padding-left: 0; }
+        #initiateGameBtn { margin-top: 30px; padding: 15px 40px; font-size: 1.5rem; background: linear-gradient(to right, var(--success-color), #66bb6a); }
+        
+        /* --- Oyun Ekranı Stilleri --- */
+        #gameScreen { display: none; }
+        header { text-align: center; margin-bottom: 20px; }
+        header h1 { font-size: 2.5rem; }
+        .game-stats { display: flex; justify-content: space-around; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 1.5rem; text-align: center; }
+        .stat-item h3 { font-size: 1rem; color: var(--primary-color); text-transform: uppercase; }
+        .stat-item p { font-weight: bold; }
+        #timerDisplay { color: var(--error-color); font-weight: 700; }
+        .game-area { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; background: var(--bg-light); border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        .animation-column, .info-column { background: rgba(0, 0, 0, 0.2); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; }
+        .canvas-container { background: #1a1a2e; border-radius: 8px; overflow: hidden; flex-grow: 1; display: flex; justify-content: center; align-items: center; cursor: grab; touch-action: none; }
+        .canvas-container:active { cursor: grabbing; }
+        canvas { display: block; max-width: 100%; }
+        h2 { font-size: 1.8rem; margin-bottom: 15px; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px;}
+        .controls { display: flex; gap: 15px; margin-top: auto; flex-wrap: wrap; }
+        button { background: linear-gradient(to right, #007BFF, #00BFFF); border: none; border-radius: 50px; color: white; padding: 12px 25px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; flex: 1; min-width: 150px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        button:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+        button:disabled { background: #555; cursor: not-allowed; opacity: 0.6; }
+        #exitGameBtn { background: linear-gradient(to right, #607d8b, #78909c); }
+        .feedback { margin: 20px 0; padding: 15px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .feedback.default { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); }
+        .feedback.success { background: rgba(139, 195, 74, 0.3); border: 2px solid var(--success-color); color: #dcedc8; }
+        .feedback.error { background: rgba(244, 67, 54, 0.3); border: 2px solid var(--error-color); color: #ffcdd2; }
+        
+        /* --- MOBİL UYUM İYİLEŞTİRMELERİ --- */
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr; /* Dikeyde tek sütun */
+                padding: 10px; /* Dış boşluğu azalt */
+            }
+            .animation-column, .info-column {
+                padding: 15px; /* Sütun içi boşluğu azalt */
+            }
+            header h1, .intro-content h1 { font-size: 1.8rem; } /* Başlıkları küçült */
+            .intro-content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- GİRİŞ EKRANI -->
+        <div id="introScreen">
+            <div class="intro-content">
+                <h1>Fonksiyon Simetri Oyunu</h1>
+                <h2>Oyunun Amacı</h2>
+                <p>Bu oyunda amacınız, koordinat düzleminin bir yarısında verilen grafik parçasını, istenen fonksiyon türüne (Tek veya Çift) göre simetrisini alarak doğru bir şekilde tamamlamaktır.</p>
+                <h2>Seviyeler ve Puanlama</h2>
+                <ul>
+                    <li><strong>Seviye 1:</strong> 5 noktalı grafikler. Soru başına <strong>45 saniye</strong> süreniz var. Seviye atlamak için <strong>80 puana</strong> ulaşmalısınız.</li>
+                    <li><strong>Seviye 2:</strong> 5 noktalı grafikler. Süre <strong>35 saniyeye</strong> düşer. Seviye atlamak için <strong>180 puana</strong> ulaşmalısınız.</li>
+                    <li><strong>Seviye 3:</strong> 5 noktalı grafikler. Süre <strong>25 saniyeye</strong> düşer. Bu seviyede amaç en yüksek puanı yapmaktır.</li>
+                    <li>Her doğru cevapta, <strong>kalan süre kadar</strong> puan kazanırsınız.</li>
+                    <li>Süre dolduğunda soru yanlış sayılır ve <strong>10 puan</strong> silinir.</li>
+                </ul>
+                <h2>Kontroller</h2>
+                <p>Kırmızı renkli hareketli noktaları fareyle veya parmağınızla sürükleyerek ızgara üzerindeki doğru kesişim noktalarına taşıyın ve "Kontrol Et" butonuna basın.</p>
+                <button id="initiateGameBtn">Oyuna Başla</button>
+            </div>
+        </div>
+
+        <!-- OYUN EKRANI -->
+        <div id="gameScreen">
+            <header><h1>Fonksiyon Simetri Oyunu</h1></header>
+            <div class="game-stats">
+                <div class="stat-item"><h3>SEVİYE</h3><p id="levelDisplay">1</p></div>
+                <div class="stat-item"><h3>PUAN</h3><p id="scoreDisplay">0</p></div>
+                <div class="stat-item"><h3>KALAN SÜRE</h3><p id="timerDisplay">--:--</p></div>
+            </div>
+            <div class="game-area">
+                <div class="animation-column">
+                    <h2>Grafik Tamamlama Alanı</h2>
+                    <div class="canvas-container"><canvas id="graphCanvas" width="600" height="500"></canvas></div>
+                </div>
+                <div class="info-column">
+                    <div class="function-info">
+                        <h3>Fonksiyon Tipi Olmalı</h3>
+                        <p id="functionType" style="font-size: 1.5rem; font-weight: bold;">OYUN BAŞLAMADI</p>
+                        <p id="functionRule" style="font-size: 1.1rem; font-style: italic; opacity: 0.9;"></p>
+                    </div>
+                    <div class="feedback default" id="feedback">Oyuna hoş geldiniz!</div>
+                    <div class="controls">
+                        <button id="checkBtn" disabled>Kontrol Et</button>
+                        <button id="resetBtn" disabled>Sıfırla</button>
+                        <button id="exitGameBtn">Oyundan Çık</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SES EFEKTLERİ -->
+    <audio id="clickSound" src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YV7vT18=" preload="auto"></audio>
+    <audio id="grabSound" src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YV7vT18=" preload="auto"></audio>
+    <audio id="dropSound" src="data:audio/wav;base64,UklGRl5vT19XQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YV5vT18=" preload="auto"></audio>
+    <audio id="correctSound" src="data:audio/wav;base64,UklGRohvT19XQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YZhvT18=" preload="auto"></audio>
+    <audio id="errorSound" src="data:audio/wav;base64,UklGRohvT19XQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YYhvT18=" preload="auto"></audio>
+    <audio id="levelUpSound" src="data:audio/wav;base64,UklGRpRvT19XQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YYZvT18=" preload="auto"></audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // --- EKRANLAR VE BUTONLAR ---
+    const introScreen = document.getElementById('introScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const initiateGameBtn = document.getElementById('initiateGameBtn');
+    const exitGameBtn = document.getElementById('exitGameBtn');
+
+    // --- SES ELEMENTLERİ ---
+    const clickSound = document.getElementById('clickSound');
+    const grabSound = document.getElementById('grabSound');
+    const dropSound = document.getElementById('dropSound');
+    const correctSound = document.getElementById('correctSound');
+    const errorSound = document.getElementById('errorSound');
+    const levelUpSound = document.getElementById('levelUpSound');
+    
+    // Ses çalma fonksiyonu
+    function playSound(soundElement) {
+        soundElement.currentTime = 0;
+        soundElement.play().catch(e => console.log("Ses çalma engellendi:", e));
+    }
+
+    // --- OYUN İÇİ ELEMENTLER ---
+    const canvas = document.getElementById('graphCanvas'), ctx = canvas.getContext('2d');
+    const levelDisplay = document.getElementById('levelDisplay'), scoreDisplay = document.getElementById('scoreDisplay'), timerDisplay = document.getElementById('timerDisplay');
+    const functionTypeEl = document.getElementById('functionType'), functionRuleEl = document.getElementById('functionRule');
+    const checkBtn = document.getElementById('checkBtn'), resetBtn = document.getElementById('resetBtn');
+    const feedbackEl = document.getElementById('feedback');
+
+    // --- DEĞİŞKENLER VE AYARLAR ---
+    const width = canvas.width, height = canvas.height, scale = 40;
+    const originX = Math.round(width / 2), originY = Math.round(height / 2);
+    const maxX = Math.floor((width / 2) / scale) - 2, maxY = Math.floor((height / 2) / scale) - 2;
+    const COLORS = { primary: '#ffc107', secondary: '#03a9f4', error: '#f44336', graphLine: '#9c27b0', axis: '#ffffff' };
+    const levelConfig = { 1: { pointsToNext: 80, time: 45 }, 2: { pointsToNext: 180, time: 35 }, 3: { pointsToNext: 9999, time: 25 } };
+    let gameState = { level: 1, score: 0, timerId: null, timeLeft: 0, isGameActive: false, currentQuestion: null, draggedPoint: null, lastQuestionType: null };
+
+    // --- GRAFİK ÇİZİM FONKSİYONLARI ---
+    function drawCoordinateSystem() {
+        ctx.clearRect(0, 0, width, height); ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0, 0, width, height);
+        ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        for (let x = originX % scale; x < width; x += scale) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
+        for (let y = originY % scale; y < height; y += scale) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
+        ctx.lineWidth = 2; ctx.strokeStyle = COLORS.axis;
+        ctx.beginPath(); ctx.moveTo(0, originY); ctx.lineTo(width, originY); ctx.stroke(); ctx.beginPath(); ctx.moveTo(originX, 0); ctx.lineTo(originX, height); ctx.stroke();
+        ctx.fillStyle = COLORS.axis;
+        ctx.beginPath(); ctx.moveTo(width - 15, originY - 6); ctx.lineTo(width, originY); ctx.lineTo(width - 15, originY + 6); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(15, originY - 6); ctx.lineTo(0, originY); ctx.lineTo(15, originY + 6); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(originX - 6, 15); ctx.lineTo(originX, 0); ctx.lineTo(originX + 6, 15); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(originX - 6, height - 15); ctx.lineTo(originX, height); ctx.lineTo(originX + 6, height - 15); ctx.fill();
+        ctx.font = 'bold 16px Arial';
+        ctx.fillText('O', originX - 20, originY + 20); ctx.fillText('x', width - 25, originY - 15); ctx.fillText('y', originX + 15, 25);
+        ctx.font = '12px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        for (let i = 1; i <= maxX; i++) { ctx.fillText(i, originX + i * scale, originY + 15); ctx.fillText(-i, originX - i * scale, originY + 15); }
+        for (let i = 1; i <= maxY; i++) { ctx.fillText(i, originX + 15, originY - i * scale); ctx.fillText(-i, originX + 15, originY + i * scale); }
+    }
+    function drawEverything() {
+        if (!gameState.currentQuestion) { drawCoordinateSystem(); return; }
+        drawCoordinateSystem();
+        const { givenPoints, userPoints } = gameState.currentQuestion;
+        const allPoints = [...givenPoints.map(p => ({...p, type: 'given'})), ...userPoints.map(p => ({...p, type: 'user'}))].sort((a, b) => a.x - b.x);
+        if (allPoints.length > 1) {
+            ctx.beginPath(); ctx.strokeStyle = COLORS.graphLine; ctx.lineWidth = 4; ctx.lineJoin = 'round';
+            ctx.moveTo(originX + allPoints[0].x * scale, originY - allPoints[0].y * scale);
+            for (let i = 1; i < allPoints.length; i++) { ctx.lineTo(originX + allPoints[i].x * scale, originY - allPoints[i].y * scale); }
+            ctx.stroke();
+        }
+        allPoints.forEach(p => {
+            const canvasX = originX + p.x * scale, canvasY = originY - p.y * scale;
+            ctx.beginPath(); ctx.arc(canvasX, canvasY, 8, 0, Math.PI * 2);
+            if (p.type === 'given') { ctx.fillStyle = COLORS.secondary; } 
+            else { ctx.fillStyle = p === gameState.draggedPoint ? COLORS.primary : COLORS.error; }
+            ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+        });
+    }
+
+    // --- OYUN AKIŞI FONKSİYONLARI ---
+    function startGame() { gameState = { level: 1, score: 0, timerId: null, timeLeft: 0, isGameActive: true, currentQuestion: null, draggedPoint: null, lastQuestionType: null }; updateUI(); startNewQuestion(); }
+    function endGame() { clearInterval(gameState.timerId); gameState.isGameActive = false; gameScreen.style.display = 'none'; introScreen.style.display = 'flex'; }
+    function startNewQuestion() { if (!gameState.isGameActive) return; const config = levelConfig[gameState.level]; const currentType = gameState.lastQuestionType === 'even' ? 'odd' : 'even'; gameState.lastQuestionType = currentType; const initialSide = Math.random() > 0.5 ? 1 : -1; let given = [], user = [], solution = []; const numPoints = 5; const yAxisPoint = { x: 0, y: Math.floor(Math.random() * (2*maxY-1)) - (maxY-1) }; if (currentType === 'odd') yAxisPoint.y = 0; given.push(yAxisPoint); let xValues = new Set([0]); for (let i = 0; i < Math.floor(numPoints / 2); i++) { let x; do { x = (Math.floor(Math.random() * (maxX)) + 1) * initialSide; } while (xValues.has(x)); xValues.add(x); const y = Math.floor(Math.random() * (2*maxY-1)) - (maxY-1); given.push({ x, y }); } given.forEach(p => { if (p.x === 0) return; const mirrorX = -p.x; const mirrorY = (currentType === 'even') ? p.y : -p.y; user.push({ x: mirrorX, y: 0, initialX: mirrorX, initialY: 0 }); solution.push({ x: mirrorX, y: mirrorY }); }); gameState.currentQuestion = { type: currentType, givenPoints: given, userPoints: user, solutionPoints: solution }; updateQuestionUI(currentType); startTimer(config.time); drawEverything(); }
+    function updateQuestionUI(type) { const typeMap = { 'odd': { name: 'TEK FONKSİYON', rule: 'f(-x) = -f(x) (Orijine göre simetrik)' }, 'even': { name: 'ÇİFT FONKSİYON', rule: 'f(-x) = f(x) (Y eksenine göre simetrik)' } }; functionTypeEl.textContent = typeMap[type].name; functionRuleEl.textContent = typeMap[type].rule; setFeedback('Kırmızı noktaları doğru konuma sürükleyin!', 'default'); checkBtn.disabled = false; resetBtn.disabled = false; }
+    function updateUI() { levelDisplay.textContent = gameState.level; scoreDisplay.textContent = gameState.score; }
+    function startTimer(duration) { clearInterval(gameState.timerId); gameState.timeLeft = duration; timerDisplay.textContent = `00:${String(duration).padStart(2, '0')}`; gameState.timerId = setInterval(() => { gameState.timeLeft--; timerDisplay.textContent = `00:${String(gameState.timeLeft).padStart(2, '0')}`; if (gameState.timeLeft <= 0) { clearInterval(gameState.timerId); playSound(errorSound); handleIncorrectAnswer("Süre doldu! -10 Puan"); } }, 1000); }
+    function setFeedback(message, type) { feedbackEl.textContent = message; feedbackEl.className = `feedback ${type}`; }
+    function handleCorrectAnswer() {
+        playSound(correctSound);
+        clearInterval(gameState.timerId);
+        const pointsAwarded = gameState.timeLeft;
+        gameState.score += pointsAwarded;
+        setFeedback(`Doğru! +${pointsAwarded} Puan`, 'success');
+        updateUI();
+        const config = levelConfig[gameState.level];
+        if (gameState.score >= config.pointsToNext) {
+            if (gameState.level < 3) {
+                playSound(levelUpSound);
+                gameState.level++;
+                setFeedback(`Seviye Atladın! Seviye ${gameState.level}`, 'success');
+                updateUI();
+            } else {
+                playSound(levelUpSound);
+                setFeedback(`TEBRİKLER! Oyunu ${gameState.score} puanla bitirdiniz!`, 'success');
+                setTimeout(endGame, 2000);
+                return;
+            }
+        }
+        checkBtn.disabled = true; resetBtn.disabled = true;
+        setTimeout(startNewQuestion, 2000);
+    }
+    function handleIncorrectAnswer(message = "Hatalı! Noktaların konumlarını kontrol et.") {
+        playSound(errorSound);
+        clearInterval(gameState.timerId);
+        if (message.includes("Süre doldu")) {
+            gameState.score -= 10;
+            if(gameState.score < 0) gameState.score = 0; // Puanın eksilere düşmesini engelle
+            updateUI();
+        }
+        setFeedback(message, 'error');
+        checkBtn.disabled = true;
+        resetBtn.disabled = true;
+        setTimeout(startNewQuestion, 2000);
+    }
+    function checkAnswer() { const { userPoints, solutionPoints } = gameState.currentQuestion; if (userPoints.length !== solutionPoints.length) { handleIncorrectAnswer(); return; } const sortedUserPoints = [...userPoints].sort((a,b) => a.x - b.x); const sortedSolutionPoints = [...solutionPoints].sort((a,b) => a.x - b.x); let isCorrect = true; for(let i=0; i < sortedUserPoints.length; i++){ if(sortedUserPoints[i].x !== sortedSolutionPoints[i].x || sortedUserPoints[i].y !== sortedSolutionPoints[i].y) { isCorrect = false; break; } } isCorrect ? handleCorrectAnswer() : handleIncorrectAnswer(); }
+
+    // --- ANA KONTROL EVENTLERİ ---
+    initiateGameBtn.addEventListener('click', () => { playSound(clickSound); introScreen.style.display = 'none'; gameScreen.style.display = 'block'; startGame(); });
+    exitGameBtn.addEventListener('click', () => { playSound(clickSound); endGame(); });
+    
+    // --- OYUN İÇİ EVENTLER ---
+    checkBtn.addEventListener('click', () => { playSound(clickSound); checkAnswer(); });
+    resetBtn.addEventListener('click', () => { playSound(clickSound); if(!gameState.isGameActive || !gameState.currentQuestion) return; gameState.currentQuestion.userPoints.forEach(p => { p.x = p.initialX; p.y = p.initialY; }); drawEverything(); });
+    
+    // --- NOKTA SÜRÜKLEME KONTROLLERİ (MOBİL VE MASAÜSTÜ) ---
+    function getEventPosition(e) {
+        const rect = canvas.getBoundingClientRect();
+        if (e.touches && e.touches.length > 0) {
+            return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+        }
+        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    function handleDragStart(e) {
+        if (!gameState.isGameActive || !gameState.currentQuestion) return;
+        const pos = getEventPosition(e);
+        for (const p of gameState.currentQuestion.userPoints) {
+            const canvasX = originX + p.x * scale;
+            const canvasY = originY - p.y * scale;
+            if (Math.sqrt(Math.pow(pos.x - canvasX, 2) + Math.pow(pos.y - canvasY, 2)) < 20) { // Dokunma alanını biraz büyüttük
+                gameState.draggedPoint = p;
+                playSound(grabSound);
+                drawEverything();
+                e.preventDefault(); // Sayfanın kaymasını engelle
+                break;
+            }
+        }
+    }
+
+    function handleDragMove(e) {
+        if (!gameState.draggedPoint) return;
+        const pos = getEventPosition(e);
+        const snappedX = Math.round((pos.x - originX) / scale);
+        const snappedY = Math.round((pos.y - originY) / scale) * -1;
+        const finalX = Math.max(-maxX, Math.min(maxX, snappedX));
+        const finalY = Math.max(-maxY, Math.min(maxY, snappedY));
+        
+        // Sadece kendi ilk konumuna değil, diğer tüm noktalara da çakışmayı kontrol et
+        const allFixedPoints = [...gameState.currentQuestion.givenPoints, ...gameState.currentQuestion.userPoints.filter(up => up !== gameState.draggedPoint)];
+        const isOccupied = allFixedPoints.some(p => p.x === finalX && p.y === finalY);
+        
+        // Sadece kullanıcı tarafından sürüklenebilir noktaların olduğu x sütunlarına yerleşmeyi engelle
+        const isUserColumnOccupied = gameState.currentQuestion.userPoints.some(p => p.x === finalX && p !== gameState.draggedPoint);
+
+        if (!isUserColumnOccupied) { // Diğer kullanıcı noktalarıyla aynı x sütununda olamaz
+            gameState.draggedPoint.x = finalX;
+            gameState.draggedPoint.y = finalY;
+        }
+        drawEverything();
+        e.preventDefault(); // Sayfanın kaymasını engelle
+    }
+
+    function handleDragEnd() {
+        if(gameState.draggedPoint) {
+            playSound(dropSound);
+            gameState.draggedPoint = null;
+            drawEverything();
+        }
+    }
+
+    // Mouse Events
+    canvas.addEventListener('mousedown', handleDragStart);
+    canvas.addEventListener('mousemove', handleDragMove);
+    window.addEventListener('mouseup', handleDragEnd);
+
+    // Touch Events
+    canvas.addEventListener('touchstart', handleDragStart, { passive: false });
+    canvas.addEventListener('touchmove', handleDragMove, { passive: false });
+    window.addEventListener('touchend', handleDragEnd);
+
+});
+</script>
+</body>
+</html>
