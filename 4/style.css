@@ -1,0 +1,292 @@
+:root {
+    --page-width: 98%;
+    --regular-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --primary-color: #333;
+    --ground-color: #2c6b22;
+}
+
+body {
+    font-family: var(--regular-font);
+    background-color: #f4f4f9;
+    color: var(--primary-color);
+    margin: 0;
+    padding: 0;
+    font-weight: normal; /* Regüler yazı karakteri */
+}
+
+/* Sınav pasif olduğunda görünüm */
+.exam-disabled {
+    opacity: 0.85;
+    position: relative;
+}
+.exam-disabled:after {
+    content: 'Sınav kilitlendi. Çözüm butonlarını kullanabilirsiniz.';
+    position: absolute;
+    top: -40px;
+    left: 0;
+    font-size: 0.9rem;
+    color: #b22222;
+}
+input:disabled, textarea:disabled {
+    background: #eee !important;
+    cursor: not-allowed;
+}
+.highlight-temp {
+    animation: pulseBtn 1.2s ease-in-out 2;
+}
+@keyframes pulseBtn {
+    0% { box-shadow: 0 0 0 0 rgba(255,165,0,0.7); }
+    70% { box-shadow: 0 0 0 12px rgba(255,165,0,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,165,0,0); }
+}
+
+/* --- Sınav ve YZ Değerlendirme Ek Stiller (örnek.html uyarlaması) --- */
+.quiz-question { background:#fff; border:1px solid #e2e8f0; border-left:6px solid #2563eb; padding:16px 18px 18px; border-radius:14px; margin:22px 0 26px; box-shadow:0 4px 14px -6px rgba(0,0,0,.18); }
+.quiz-question p { margin-top:0; }
+.point-badge { background:#1e40af; color:#fff; padding:4px 10px 5px; border-radius:18px; font-size:.65rem; letter-spacing:.5px; vertical-align:middle; box-shadow:0 2px 6px -1px rgba(0,0,0,.3); }
+.fill-in { border:2px solid #cbd5e1; border-radius:10px; padding:6px 9px; font-weight:500; font-size:.85rem; background:#f8fafc; transition:.18s; }
+.fill-in:focus { outline:none; border-color:#2563eb; background:#fff; box-shadow:0 0 0 3px rgba(37,99,235,.18); }
+.feedback { margin-top:8px; font-size:.7rem; font-weight:600; letter-spacing:.4px; color:#334155; }
+.exam-actions { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+.btn { cursor:pointer; font-size:.85rem; font-weight:600; border:none; border-radius:10px; padding:9px 18px; background:#1a2a6c; color:#fff; letter-spacing:.3px; box-shadow:0 4px 14px -4px rgba(0,0,0,.35); transition:.18s; display:inline-flex; align-items:center; gap:6px; }
+.btn:hover { transform:translateY(-2px); box-shadow:0 8px 20px -6px rgba(0,0,0,.4); filter:brightness(1.08); }
+.btn:active { transform:translateY(0); box-shadow:0 4px 14px -4px rgba(0,0,0,.4); }
+.btn-secondary { background:#64748b; }
+.btn-secondary:hover { background:#4b5c70; }
+.btn-success { background:linear-gradient(135deg,#1a6c2a,#3ac55f); }
+.btn-success:hover { background:linear-gradient(135deg,#0d4d1b,#2abd4b); }
+.helper-btn { background:#2563eb; }
+.helper-btn:hover { background:#1d4ed8; }
+.exam-hint-box { background:#f5f9ff; border:1px solid #d8e7ff; padding:14px 16px 16px; border-radius:14px; font-size:.8rem; }
+.piecewise-block { letter-spacing:0.6px; word-spacing:4px; margin-top:6px; }
+.exam-container { max-width:1000px; }
+.q-grid { display:flex; flex-wrap:wrap; gap:8px 14px; }
+.q-grid label { display:flex; flex-direction:column; font-size:.65rem; font-weight:600; color:#334155; align-items:flex-start; gap:4px; }
+.q-grid input { width:70px; }
+.exam-helper-overlay { position:fixed; inset:0; background:rgba(20,28,47,.70); z-index:9999; backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:22px 20px 28px; }
+.exam-helper-modal { background:#fff; border-radius:24px; padding:30px 34px 38px; width:100%; max-width:760px; box-shadow:0 20px 55px -15px rgba(0,0,0,.45),0 8px 28px -10px rgba(0,0,0,.35); position:relative; }
+.exam-helper-modal .helper-close { position:absolute; top:12px; right:12px; width:38px; height:38px; border:none; background:#f1f5f9; font-size:22px; line-height:1; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#334155; box-shadow:0 3px 10px -3px rgba(0,0,0,.3); transition:.18s; }
+.exam-helper-modal .helper-close:hover { background:#e2e8f0; transform:scale(1.07); }
+.solution-scroll { max-height:50vh; overflow:auto; font-size:.85rem; line-height:1.45; }
+.ai-score-card { background:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%); color:#fff; padding:30px 26px 34px; border-radius:18px; text-align:center; margin:20px 0 30px; box-shadow:0 15px 35px -10px rgba(79,172,254,0.45); }
+.score-main { font-size:3rem; font-weight:800; margin-bottom:10px; text-shadow:0 2px 10px rgba(0,0,0,0.25); }
+.score-percent { font-size:1.2rem; font-weight:600; margin-bottom:6px; }
+.score-grade { font-size:1rem; opacity:.9; }
+.ai-eval-box { background:#fff; border-radius:16px; padding:24px 26px 30px; box-shadow:0 8px 25px -10px rgba(0,0,0,0.18); min-height:160px; }
+.results-summary { background:#f1f5f9; padding:12px 18px; border-radius:12px; font-weight:600; display:inline-block; margin-bottom:16px; }
+.eval-buttons { display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; }
+.results-feedback { font-size:.9rem; line-height:1.4; }
+.solution-btn { opacity:0; pointer-events:none; transform:scale(.9); transition:.25s; }
+body.solutions-enabled .solution-btn { opacity:1; pointer-events:auto; transform:scale(1); }
+#view-solutions,#view-solutions-2 { display:none; }
+body.solutions-enabled #view-solutions,body.solutions-enabled #view-solutions-2 { display:inline-flex; }
+.eval-table-wrapper { overflow:auto; max-width:100%; }
+.eval-detail-table { border-collapse:collapse; width:100%; font-size:.72rem; background:#fff; box-shadow:0 4px 14px -6px rgba(0,0,0,.12); border-radius:10px; overflow:hidden; }
+.eval-detail-table th, .eval-detail-table td { border:1px solid #e2e8f0; padding:6px 8px; text-align:left; vertical-align:top; }
+.eval-detail-table thead th { background:#0f172a; color:#fff; font-weight:600; letter-spacing:.5px; }
+.eval-detail-table tbody tr:nth-child(even){ background:#f8fafc; }
+.eval-detail-table tbody tr:hover { background:#eef6ff; }
+.detailed-explanations { margin-top:18px; display:grid; gap:14px; }
+.q-explain-block { background:#ffffff; border:1px solid #e2e8f0; border-left:5px solid #0f62fe; padding:10px 14px 12px; border-radius:10px; font-size:.72rem; line-height:1.35; box-shadow:0 3px 10px -6px rgba(0,0,0,.15); }
+.q-explain-block h4 { margin:0 0 6px; font-size:.78rem; color:#0f172a; }
+
+
+/* Sayfa ve içerik yönetimi */
+.page { display: none; }
+.page.active { display: block; }
+
+.content-box, header {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+#exam-page .question-block { text-align:left; margin-bottom:20px; }
+#exam-page textarea { width:100%; min-height:90px; resize:vertical; font-family: var(--regular-font); font-size:14px; padding:8px; box-sizing:border-box; }
+#exam-page button[type=submit] { margin-top:10px; }
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+}
+header p { margin-bottom: 20px; }
+
+ul { list-style-position: inside; text-align: left; padding-left: 0; }
+li { margin-bottom: 10px; }
+
+/* Ana Simülasyon Düzeni */
+.simulation-layout {
+    display: flex;
+    flex-direction: row;
+    width: var(--page-width);
+    margin: auto;
+    gap: 20px;
+}
+
+/* Sütunlar eşit alan kaplasın */
+#animation-column, #graph-column {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0; /* overflow sorunlarını önler */
+}
+
+#simulation-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10; /* Biraz daha yatay alan */
+    border: 2px solid #555;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #87CEEB;
+}
+
+/* Grafik alanı kapsayıcı ayarı */
+#graph-column {
+    padding: 0;
+}
+
+#main-canvas {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 16 / 10;
+    max-width: none;
+    flex: 1;
+    border: 2px solid #555;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Küçük ekranlarda üst üste, her biri benzer yükseklik */
+@media (max-width: 800px) {
+    #simulation-container, #main-canvas {
+        aspect-ratio: 3 / 2;
+    }
+}
+
+#sky {
+    width: 100%;
+    height: 100%;
+    transition: background 1.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Şehir arka plan katmanı */
+#sky::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("simulasyon sehir.PNG") center bottom / cover no-repeat;
+    opacity: 0.9;
+    transition: filter 1.5s ease, opacity 1.5s ease;
+    pointer-events: none;
+}
+
+/* Yükleme sorunu durumunda şehir resmi gizlenir */
+.no-city-img #sky::after { display: none; }
+
+/* Zaman dilimlerine göre şehir parlaklık/kontrast efektleri */
+#sky.night::after { filter: brightness(0.25) contrast(1.1) saturate(0.7); }
+#sky.dawn::after { filter: brightness(0.65) contrast(1.05) saturate(0.9); }
+#sky.day::after { filter: brightness(1) contrast(1) saturate(1); }
+#sky.dusk::after { filter: brightness(0.55) contrast(1.05) saturate(0.85); }
+
+#ground {
+    position: absolute;
+    width: 100%;
+    height: 25%;
+    bottom: 0;
+    background-color: var(--ground-color);
+}
+
+#celestial-body {
+    position: absolute;
+    width: clamp(52px, 6vw, 82px);
+    height: clamp(52px, 6vw, 82px);
+    border-radius: 50%;
+    transition: top 0.35s linear, left 0.35s linear, filter 0.6s ease;
+    z-index: 3;
+    will-change: top,left,filter;
+}
+#celestial-body.no-transition { transition: none !important; }
+.sun {
+    background: radial-gradient(circle at 30% 30%, #fff8d6 0%, #ffe066 40%, #ffbf1f 65%, #ff9d00 85%, #ff7b00 100%);
+    box-shadow: 0 0 12px 4px #ffd54d, 0 0 38px 14px #ff9800aa, 0 0 70px 28px #ff6d0080;
+    animation: sunPulse 6s ease-in-out infinite;
+}
+.moon {
+    background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ececec 55%, #d2d2d2 75%, #bdbdbd 100%);
+    box-shadow: 0 0 10px 3px #e0e0e0, 0 0 26px 10px #b0c4de90;
+    position: relative;
+}
+#celestial-body.moon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 30% 40%, #c9c9c9 0 7%, transparent 8%),
+        radial-gradient(circle at 62% 55%, #c9c9c9 0 6%, transparent 7%),
+        radial-gradient(circle at 48% 72%, #c9c9c9 0 5%, transparent 6%),
+        radial-gradient(circle at 70% 35%, #d0d0d0 0 4%, transparent 5%);
+    opacity: .55;
+    mix-blend-mode: multiply;
+}
+@keyframes sunPulse {
+    0%,100% { filter: brightness(1) saturate(1); }
+    50% { filter: brightness(1.25) saturate(1.15); }
+}
+
+#info-panel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.65);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 1em;
+}
+.info-item { margin-bottom: 5px; }
+.static-info { margin-top: 10px; font-size: 0.9em; opacity: 0.9; }
+.static-info span { margin-right: 10px; }
+
+/* Eski canvas stilini yeni stil ile güncelledik */
+
+button {
+    font-family: var(--regular-font);
+    font-size: 1.1em;
+    padding: 12px 25px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+button:hover { background-color: #0056b3; }
+
+/* Mobil Uyumluluk (Responsive Tasarım) */
+@media (max-width: 800px) {
+    .simulation-layout {
+        flex-direction: column;
+    }
+    #animation-column, #graph-column {
+        width: 100%;
+    }
+}
+
+/* Yatay Mobil Görünüm için Masaüstü Tasarımı */
+@media (max-height: 500px) and (min-width: 801px) {
+    .simulation-layout {
+        flex-direction: row;
+    }
+}
+
+/* --- Responsive Fix: Q5 uzun birleşim girişleri panel dışına taşmasın --- */
+#q5inc, #q5dec {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+}
