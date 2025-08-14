@@ -246,11 +246,21 @@ document.addEventListener('DOMContentLoaded', () => {
         actx.stroke();
     // Küçük etiket (fonksiyon f(x))
     actx.fillStyle='#e74c3c'; actx.font='11px Segoe UI, Tahoma, sans-serif'; actx.save(); actx.translate(anchorX - massW/2 - 45, (eqCenterY+currentCenterY)/2); actx.rotate(-Math.PI/2); actx.textAlign='center'; actx.fillText('f(x)',0,0); actx.restore();
-    // Bilgi paneli (x zamanı, y konumu)
-    actx.fillStyle='rgba(0,0,0,0.6)'; actx.fillRect(12,12,150,58);
-    actx.fillStyle='#fff'; actx.textAlign='left'; actx.font='13px Segoe UI, Tahoma, sans-serif';
-	actx.fillText('x: '+FORMAT.format(t), 24,34);
-	actx.fillText('y: '+FORMAT.format(displacement(t)), 24,56);
+    // Bilgi paneli (x zamanı, y konumu) – mobilde daralt
+    const isMobile = w <= 480;
+    const isTiny = w <= 380; // çok dar mobil ekranlar için ekstra küçültme
+    const panelW = isTiny ? 96 : (isMobile ? 110 : 150);
+    const panelH = isTiny ? 44 : (isMobile ? 50 : 58);
+    const fontSize = isTiny ? 11 : (isMobile ? 12 : 13);
+    const line1Y = isTiny ? 30 : (isMobile ? 32 : 34);
+    const line2Y = isTiny ? 44 : (isMobile ? 50 : 56);
+    actx.fillStyle='rgba(0,0,0,0.6)';
+    actx.fillRect(12,12,panelW,panelH);
+    actx.fillStyle='#fff';
+    actx.textAlign='left';
+    actx.font=fontSize+'px Segoe UI, Tahoma, sans-serif';
+	actx.fillText('x: '+FORMAT.format(t), 24, line1Y);
+	actx.fillText('y: '+FORMAT.format(displacement(t)), 24, line2Y);
     }
 
     function step(timestamp){
