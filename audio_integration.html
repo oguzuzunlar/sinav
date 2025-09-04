@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Effects Integration for Function Definition Exam</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .audio-control {
+            margin: 20px 0;
+            text-align: center;
+        }
+        audio {
+            width: 300px;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Audio Effects Integration</h1>
+
+    <div class="audio-control">
+        <h2>Sound Effects</h2>
+        <audio id="soundEffect" controls preload="auto">
+            <source src="path/to/sound-effect.mp3" type="audio/mpeg">
+            Your browser does not support the audio tag.
+        </audio>
+        <button onclick="playSound()">Play Sound Effect</button>
+    </div>
+
+    <div class="audio-control">
+        <h2>Background Music</h2>
+        <audio id="backgroundMusic" controls loop preload="auto">
+            <source src="path/to/background-music.mp3" type="audio/mpeg">
+            Your browser does not support the audio tag.
+        </audio>
+        <button onclick="toggleMusic()">Toggle Music</button>
+    </div>
+
+    <script>
+        function playSound() {
+            const soundEffect = document.getElementById('soundEffect');
+            soundEffect.currentTime = 0; // Rewind to start
+            soundEffect.play();
+        }
+
+        function toggleMusic() {
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+            } else {
+                backgroundMusic.pause();
+            }
+        }
+    </script>
+
+</body>
+</html>
