@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4. Basamak Değerlendirme | Gelir Optimizasyonu</title>
+    <title>4. Basamak Değerlendirme</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
         MathJax = { tex: { macros: { rm: ['\\mathrm{#1}', 1] } }, loader: { load: ['[tex]/noerrors'] } };
@@ -32,21 +32,21 @@
         /* MathJax: tüm matematik ifadelerini dik (non-italic) yap */
         mjx-container, mjx-container * { font-style: normal !important; }
         /* CHTML çıktısındaki tüm MathJax düğümleri için fontu da düz aileye çekiyoruz */
-        mjx-container[jax="CHTML"], mjx-container[jax="CHTML"] * { 
-            font-style: normal !important; 
-            font-weight: normal !important; 
-            font-family: 'Poppins', Arial, sans-serif !important; 
+        mjx-container[jax="CHTML"], mjx-container[jax="CHTML"] * {
+            font-style: normal !important;
+            font-weight: normal !important;
+            font-family: 'Poppins', Arial, sans-serif !important;
         }
-        .mjx-chtml, .mjx-chtml * { 
-            font-style: normal !important; 
-            font-weight: normal !important; 
-            font-family: 'Poppins', Arial, sans-serif !important; 
+        .mjx-chtml, .mjx-chtml * {
+            font-style: normal !important;
+            font-weight: normal !important;
+            font-family: 'Poppins', Arial, sans-serif !important;
         }
         /* MathJax class adlarının gerçek halleri (MJX-TEX-I / MJX-TEX-BI) ve inline italic stillerini de zorla kapat */
-        .mjx-chtml .MJX-TEX-I, .mjx-chtml .MJX-TEX-BI, .mjx-chtml .TEX-I, .mjx-chtml .TEX-BI, .mjx-chtml .mjx-i, .mjx-chtml mjx-mi { 
-            font-style: normal !important; 
-            font-weight: normal !important; 
-            font-family: 'Poppins', Arial, sans-serif !important; 
+        .mjx-chtml .MJX-TEX-I, .mjx-chtml .MJX-TEX-BI, .mjx-chtml .TEX-I, .mjx-chtml .TEX-BI, .mjx-chtml .mjx-i, .mjx-chtml mjx-mi {
+            font-style: normal !important;
+            font-weight: normal !important;
+            font-family: 'Poppins', Arial, sans-serif !important;
         }
         /* Inline style ile gelen italic'leri de kapat */
         .mjx-chtml [style*="font-style:italic"], .mjx-chtml [style*="font-style: italic"] { font-style: normal !important; }
@@ -78,14 +78,15 @@
         .info-box { padding: 15px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin-top: 10px; }
         .formula-box { background: var(--secondary-bg); padding: 15px; border-radius: 8px; margin-top: 15px; }
         .formula-box code { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; color: var(--secondary-text); display: block; word-wrap: break-word; }
-        .question-group { 
-            margin-bottom: 20px; 
+        .question-group {
+            margin-bottom: 20px;
             background-color: var(--secondary-bg);
             padding: 20px;
             border-radius: 12px;
         }
-        .question-group > label { font-weight: bold; display: block; margin-bottom: 8px; }
+        .question-group > label { font-weight: bold; display: block; margin-bottom: 8px; line-height: 1.5; }
         .question-group input, .question-group textarea { width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; background: var(--bg-color); color: var(--text-color); font-size: 1rem; }
+        .question-group input:disabled, .question-group textarea:disabled { opacity: 0.7; cursor: not-allowed; }
         .input-row { display: flex; gap: 20px; }
         .coeff-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .point-badge { display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--card-bg); color: var(--secondary-text); border: 1px solid var(--border-color); font-size: 0.85rem; font-weight: 700; }
@@ -99,7 +100,7 @@
         .answer-block { background: var(--secondary-bg); padding: 20px; border-radius: 8px; margin-bottom: 15px; text-align: left; }
         .answer-block h4 { color: var(--secondary-text); border-bottom: 2px solid var(--border-color); padding-bottom: 8px; margin-bottom: 12px; }
         .answer-block p { word-wrap: break-word; }
-        
+
         @media (max-width: 900px) {
             .simulation-container, .problem-container { grid-template-columns: 1fr; }
             .page { padding: 20px; }
@@ -113,25 +114,99 @@
         <div class="header">
             <button id="theme-toggle" title="Temayı Değiştir">☀️</button>
             <h1 style="margin-bottom:0.3em;">4. Basamak Değerlendirme</h1>
-            <h2 style="margin-top:0; font-size:1.5rem;">Gerçek Sayılarda Tanımlı Karesel Fonksiyonlar ve Nitel Özellikleri</h2>
+            <h2 style="margin-top:0; font-size:1.5rem;">Gerçek Sayılarda Tanımlı Karesel Fonksiyonlar</h2>
         </div>
-        
+
         <div class="page active" id="page-intro">
              <div style="text-align: center;">
                 <div style="max-width: 700px; margin: 20px auto 0; background: var(--secondary-bg); border-radius: 18px; box-shadow: var(--card-shadow); padding: 32px 28px 28px 28px; color: var(--secondary-text);">
                     <h2 style="color: var(--header-color); font-size:2rem; margin-bottom:18px;">Bilgilendirme</h2>
                     <ul style="list-style-type: none; padding-left: 0; font-size:1.08em; text-align:left; margin-bottom:28px; color: var(--text-color);">
                         <li style="margin-bottom:12px;">Bu değerlendirme, gerçek sayılarda tanımlı karesel fonksiyonlar ve nitel özellikleri konusundaki modelleme ve analiz becerilerinizi ölçmek amacıyla hazırlanmıştır.</li>
-                        <li style="margin-bottom:12px;"><strong>Uygulama Akışı:</strong> Önce bir kavramı ve simülasyonu keşfedecek, ardından gerçek bir senaryoya dayalı problemi çözeceksiniz.</li>
+                        <li style="margin-bottom:12px;"><strong>Uygulama Akışı:</strong> Ana bölüm bir probleme dayalı sınavdır. Ancak, konuyu daha iyi anlamak için hazırlanan kavram ve simülasyon sayfalarını dilediğiniz zaman inceleyebilirsiniz.</li>
                         <li style="margin-bottom:12px;"><strong>Puanlama (Toplam 25 Puan):</strong> Sınavdaki adımların puan değerleri yanlarında belirtilmiştir. Cevaplarınız yapay zeka tarafından değerlendirilecektir.</li>
                         <li style="color: var(--header-color); font-weight: bold; margin-top:20px;">Lütfen dikkat: Sınavı bitirdikten sonra puanınız sisteme gönderilecektir.</li>
                     </ul>
-                     <div class="warning-note">
-                        <h3>⚠️ YZ Destekli Değerlendirme Hakkında</h3>
-                        <p>Bu etkinlikte verilen otomatik değerlendirmeler ve geri bildirimler yapay zeka tarafından sağlanmaktadır. Amaç, öğrenmenize destek olmak ve farklı çözüm yollarını göstermektir. YZ çıktıları bir uzman görüşünün yerine geçmez ve nadiren hatalar içerebilir. Kararsız kaldığınız noktalarda öğretmeninizden teyit alınız.</p>
+
+                    <div class="info-box" style="text-align: left; background: var(--bg-color); margin-bottom: 25px;">
+                        <h4 style="color: var(--header-color);">İpucu: Kavram ve Simülasyon Sayfaları</h4>
+                        <p style="font-size: 0.95em; color: var(--text-color);">Sınav sorularını daha etkili çözmek ve karesel fonksiyonların <strong>gelir ve fiyatlandırma gibi gerçek hayat problemlerinde</strong> nasıl kullanıldığını daha derinlemesine anlamak için, aşağıdaki "Gelir Modellemesi" ve "İnteraktif Simülasyon" bölümlerini incelemeniz önerilir. Bu kaynaklar, problemi modellemenize ve doğru çözüme ulaşmanıza yardımcı olacaktır.</p>
+                        <div style="margin-top: 15px; text-align: center;">
+                            <button class="button secondary" onclick="showPage('page-concept')">Gelir Modellemesini İncele</button>
+                            <button class="button secondary" onclick="showPage('page-simulation')">Simülasyonu Keşfet</button>
+                        </div>
                     </div>
-                    <button class="button" onclick="showPage('page-concept')" style="border-radius:24px; padding:12px 38px; font-size:1.15rem; margin-top: 25px;">Başla</button>
+
+                    <button class="button" onclick="beginExam()" style="border-radius:24px; padding:12px 38px; font-size:1.15rem; margin-top: 10px;">Değerlendirmeye Başla</button>
                 </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-exam">
+            <h2>Sınav: Tiyatro Problemi (25 Puan)</h2>
+            <div class="info-box" style="margin-bottom: 20px; text-align: center;">
+                <p>Yardıma mı ihtiyacınız var? Konu anlatımı için <strong>Kavram Sayfasına</strong> veya interaktif bir örnek için <strong>Simülasyona</strong> göz atabilirsiniz.</p>
+            </div>
+            <div class="problem-container">
+                <div class="problem-context">
+                    <img src="resim.PNG" alt="Boş bir tiyatro sahnesi ve koltuklar" class="context-image">
+                    <h4>Problem Durumu</h4>
+                    <p>Bir tiyatro salonunda bir biletin fiyatı <strong>80 TL</strong> olarak belirlendiğinde oyunu <strong>300 kişi</strong> izlemektedir. Bilet fiyatında yapılan her <strong>10 TL</strong>'lik artışın izleyici sayısını <strong>20 kişi</strong> azalttığı gözlemlenmiştir.</p>
+                    <p>Bu bilgilere göre, geliri en üst düzeye çıkarmak için <strong>Sorular</strong> bölümündeki soruları yanıtlayınız. Değişken olarak, bilet fiyatında yapılan artış sayısı 'x' alınacaktır.</p>
+                </div>
+                <div class="problem-questions">
+                    <h3>SORULAR</h3>
+                    <div class="question-group">
+                        <label><strong>Soru 1 <span class="point-badge">5 Puan</span>:</strong> Problem durumuna göre, bilet fiyatındaki artış sayısına (x) bağlı olarak Bilet Fiyatını F(x) ve İzleyici Sayısını S(x) modelleyen fonksiyonları yazınız.</label>
+                        <div class="input-row">
+                            <div style="flex:1; display:flex; gap:8px; align-items:center;">
+                                <input type="text" id="p2_q1_price" placeholder="Fiyat F(x) = ?" style="flex:1;">
+                                <span class="point-badge" title="Bu alanın puanı">3 p</span>
+                            </div>
+                            <div style="flex:1; display:flex; gap:8px; align-items:center;">
+                                <input type="text" id="p2_q1_sales" placeholder="İzleyici S(x) = ?" style="flex:1;">
+                                <span class="point-badge" title="Bu alanın puanı">2 p</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="question-group">
+                        <label><strong>Soru 2 <span class="point-badge">5 Puan</span>:</strong> Soru 1'de oluşturduğunuz fonksiyonlardan yararlanarak, toplam geliri ifade eden G(x) fonksiyonunu  `ax² + bx + c` biçiminde ifade ediniz.</label>
+                        <div class="coeff-row">
+                            <span>G(x) =</span>
+                            <div style="display:inline-flex; align-items:center; gap:6px;">
+                                <input type="text" id="p2_q2_a" style="width: 80px;" placeholder="a">
+                                <span class="point-badge" title="Bu alanın puanı">2 p</span>
+                            </div>
+                            <span> x² + </span>
+                            <div style="display:inline-flex; align-items:center; gap:6px;">
+                                <input type="text" id="p2_q2_b" style="width: 80px;" placeholder="b">
+                                <span class="point-badge" title="Bu alanın puanı">2 p</span>
+                            </div>
+                            <span> x + </span>
+                            <div style="display:inline-flex; align-items:center; gap:6px;">
+                                <input type="text" id="p2_q2_c" style="width: 100px;" placeholder="c">
+                                <span class="point-badge" title="Bu alanın puanı">1 p</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="question-group">
+                        <label><strong>Soru 3 <span class="point-badge">5 Puan</span>:</strong> Soru 2'de elde ettiğiniz G(x) gelir fonksiyonunun maksimum değerini almasını sağlayan 'x' değişkeninin değerini hesaplayınız.</label>
+                        <input type="text" id="p2_q3_x" style="width: 120px;" placeholder="x değeri">
+                    </div>
+                    <div class="question-group">
+                        <label><strong>Soru 4 <span class="point-badge">5 Puan</span>:</strong> Soru 3'te bulduğunuz 'x' değerini kullanarak, en yüksek geliri sağlayacak olan bilet fiyatını hesaplayınız.</label>
+                        <input type="text" id="p2_q4_price" placeholder="Bilet Fiyatı (TL)">
+                    </div>
+                    <div class="question-group">
+                        <label><strong>Soru 5 <span class="point-badge">5 Puan</span>:</strong> Bulduğunuz değerleri kullanarak tiyatronun elde edeceği maksimum geliri hesaplayınız.</label>
+                        <input type="text" id="p2_q5_revenue" placeholder="Maksimum Gelir (TL)">
+                    </div>
+                </div>
+            </div>
+             <div style="text-align: center; margin-top: 30px;">
+                <button class="button secondary" onclick="showPage('page-concept')">Kavram Sayfasına Dön</button>
+                <button class="button secondary" onclick="showPage('page-simulation')">Simülasyona Geri Dön</button>
+                <button class="button" id="finish-exam-btn" onclick="checkAndFinish()">Sınavı Bitir ve Değerlendir</button>
             </div>
         </div>
         
@@ -139,103 +214,58 @@
             <h2 style="text-align: center;">Gelir Modellemesi</h2>
             <p>Ekonomide en temel hedeflerden biri, kârı veya geliri en üst düzeye çıkarmaktır. Bir ürünün fiyatını belirlerken hassas bir denge kurulmalıdır: Fiyat çok yüksek olursa müşteri sayısı düşer, çok düşük olursa birim kâr azalır. En uygun fiyat nerede gizlidir?</p>
             <p>Bu "en uygun" noktayı bulma problemi, genellikle karesel fonksiyonlar kullanılarak modellenir. Gelir, basitçe <strong>Fiyat × Satış Miktarı</strong> olarak hesaplanır. Fiyat ile satış miktarı arasındaki ters ilişki (biri artarken diğeri azalır), bu iki doğrusal fonksiyonun çarpımının bize kolları aşağıya bakan bir parabol vermesine neden olur.</p>
-            <img src="gorsel.PNG" alt="Karesel fonksiyonun tepe noktası gelir maksimizasyonunu gösterir" style="width: 100%; max-width: 600px; margin: 15px auto 25px; display: block; border-radius: 10px;">
-            <p>Bu parabolün <strong>maksimum noktası</strong>, gelirin maksimum olduğu sihirli noktadır. Bu aktivitede, önce bu ilişkiyi dinamik bir simülasyonla keşfedecek, ardından bu keşiflerinizle farklı bir problemi adım adım çözeceksiniz.</p>
+            <img src="gorsel.PNG" alt="Karesel fonksiyonun maksimum noktası gelir maksimizasyonunu gösterir" style="width: 100%; max-width: 600px; margin: 15px auto 25px; display: block; border-radius: 10px;">
+            <p>Bu parabolün <strong>maksimum noktası</strong>, gelirin en yüksek olduğu sihirli noktadır. Bu aktivitede, önce bu ilişkiyi dinamik bir simülasyonla keşfedecek, ardından bu keşiflerinizle farklı bir problemi adım adım çözeceksiniz.</p>
             <div style="text-align: center; margin-top: 30px;">
-                <button class="button" onclick="showPage('page-simulation')">Simülasyonu Başlat</button>
+                <button class="button secondary" onclick="showPage('page-exam')">Sınava Geri Dön</button>
+                <button class="button" onclick="showPage('page-simulation')">Simülasyonu Keşfet</button>
             </div>
         </div>
 
         <div class="page" id="page-simulation">
-            <h2>İnteraktif Simülasyon: Pide Salonu Senaryosu</h2>
-            <p>Bu simülasyonda başlangıç durumu şöyle: Birim fiyatı <strong>100 TL</strong> olan ve ortalama <strong>200 adet</strong> satış yapan bir pide salonu, gelirini artırmak için farklı fiyatlandırma stratejileri deniyor. Aşağıdaki kontrol panelinden indirim miktarını ve buna tepki olarak satıştaki artışı değiştirerek, <strong>fiyat–satış ilişkisine</strong> bağlı gelirin <em>(G(x) = F(x) • S(x))</em> nasıl değiştiğini anlık olarak gözlemleyin.</p>
+            <h2>İnteraktif Simülasyon: Gurme Pide Salonu Senaryosu</h2>
+            <!-- DEĞİŞİKLİK: Senaryo metni yeni değerlere göre güncellendi. -->
+            <p>Bu simülasyonda başlangıç durumu şöyle: Birim fiyatı <strong>200 TL</strong> olan ve ortalama <strong>500 adet</strong> satış yapan bir pide salonu, daha kaliteli malzemeler kullanarak 'gurme pide' konseptine geçiyor ve gelirini artırmak için farklı fiyatlandırma stratejileri deniyor. Aşağıdaki kontrol panelinden fiyat artış miktarını ve buna tepki olarak satıştaki azalışı değiştirerek, <strong>fiyat–satış ilişkisine</strong> bağlı gelirin <em>(G(x) = F(x) • S(x))</em> nasıl değiştiğini anlık olarak gözlemleyin.</p>
             <div class="simulation-container">
                 <div class="controls">
                     <h4>Senaryo Değişkenleri</h4>
                     <div class="control-group">
-                        <label for="discount-slider">İndirim Miktarı (TL)</label>
-                        <input type="range" id="discount-slider" min="1" max="10" value="5" step="1" style="width: 100%;">
-                        <div class="value-display">Her adımda <span id="discount-display">5</span> TL indirim</div>
+                        <label for="discount-slider">Fiyat Artış Miktarı (TL)</label>
+                        <input type="range" id="discount-slider" min="1" max="20" value="14" step="1" style="width: 100%;">
+                        <div class="value-display">Her adımda <span id="discount-display">14</span> TL fiyat artışı</div>
                     </div>
                     <div class="control-group">
-                        <label for="sales-increase-slider">Artan Satış Adedi</label>
-                        <input type="range" id="sales-increase-slider" min="5" max="50" value="20" step="5" style="width: 100%;">
-                        <div class="value-display">Her indirimde <span id="sales-increase-display">20</span> adet satış artışı</div>
+                        <label for="sales-increase-slider">Azalan Satış Adedi</label>
+                        <input type="range" id="sales-increase-slider" min="5" max="50" value="10" step="5" style="width: 100%;">
+                        <div class="value-display">Her artışta <span id="sales-increase-display">10</span> adet satış azalışı</div>
                     </div>
                     <hr style="border-color: var(--border-color); margin: 20px 0;">
                     <h4>Fonksiyon Tanımları</h4>
                     <div class="formula-box" style="text-align: left; padding: 10px;">
-                        <code><strong>Fiyat Fonksiyonu</strong><br>F(x) = <span id="formula-fx">100 - 5x</span></code>
-                        <code style="margin-top: 10px;"><strong>Satış Fonksiyonu</strong><br>S(x) = <span id="formula-sx">200 + 20x</span></code>
+                        <code><strong>Fiyat Fonksiyonu</strong><br>F(x) = <span id="formula-fx">200 + 14x</span></code>
+                        <code style="margin-top: 10px;"><strong>Satış Fonksiyonu</strong><br>S(x) = <span id="formula-sx">500 - 10x</span></code>
                     </div>
                     <h4>Gelir Fonksiyonu ve Maksimum Noktası</h4>
                     <div class="formula-box" style="text-align: left; padding: 10px;">
-                        <code><strong>Gelir G(x) = F(x) • S(x)</strong><br><span id="formula-gx-standard">G(x) = -100x² + 1000x + 20000</span></code>
-                        <code style="margin-top: 10px;"><strong>Tam Kare Formu </strong><br><span id="formula-gx-vertex">G(x) = -100(x - 5)² + 22500</span></code>
+                        <code><strong>Gelir G(x) = F(x) • S(x)</strong><br><span id="formula-gx-standard">G(x) = -140x² + 5000x + 100000</span></code>
+                        <code style="margin-top: 10px;"><strong>Tam Kare Formu </strong><br><span id="formula-gx-vertex">G(x) = -140(x - 17,86)² + 144642,86</span></code>
                     </div>
                 </div>
                 <div>
                     <canvas id="sim-canvas"></canvas>
                      <div class="info-box" style="text-align: center;">
-                        <p><strong>İndirim Sayısı (x):</strong> <span id="x-display">0</span> | <strong>Fiyat:</strong> <span id="price-display">100</span> TL | <strong>Satış:</strong> <span id="sales-display">200</span> | <strong>Gelir:</strong> <span id="revenue-display">20000</span> TL</p>
+                        <!-- DEĞİŞİKLİK: Başlangıç değerleri yeni senaryoya göre güncellendi. -->
+                        <p><strong>Fiyat Artış Sayısı (x):</strong> <span id="x-display">0</span> | <strong>Fiyat:</strong> <span id="price-display">200</span> TL | <strong>Satış:</strong> <span id="sales-display">500</span> | <strong>Gelir:</strong> <span id="revenue-display">100000</span> TL</p>
                     </div>
                     <div style="text-align: center; margin-top: 10px;">
-                        <label for="x-slider">İndirim Sayısını Değiştirerek Grafiği Keşfet</label>
-                        <input type="range" id="x-slider" min="0" max="20" value="0" step="1" style="width: 100%;">
+                        <label for="x-slider">Fiyat Artış Sayısını Değiştirerek Grafiği Keşfet</label>
+                        <!-- DEĞİŞİKLİK: Slider'ın max değeri yeni tepe noktasına göre ayarlandı. -->
+                        <input type="range" id="x-slider" min="0" max="25" value="0" step="0.5" style="width: 100%;">
                     </div>
                 </div>
             </div>
             <div style="text-align: center; margin-top: 30px;">
                 <button class="button" onclick="showPage('page-exam')">Anladım, Sınava Geç</button>
-            </div>
-        </div>
-        
-        <div class="page" id="page-exam">
-            <h2>Sınav: Tiyatro Problemi (25 Puan)</h2>
-            <div class="problem-container">
-                <div class="problem-context">
-                    <img src="resim.PNG" alt="Boş bir tiyatro sahnesi ve koltuklar" class="context-image">
-                    <h4>Problem Senaryosu</h4>
-                    <p>Bir tiyatro salonunda bir biletin fiyatı <strong>80 TL</strong> olarak belirlendiğinde oyunu <strong>300 kişi</strong> izlemektedir. Bilet fiyatında yapılan her <strong>10 TL</strong>'lik artışın izleyici sayısını <strong>20 kişi</strong> azalttığı gözlemlenmiştir.</p>
-                    <p>Bu bilgilere göre, geliri en üst düzeye çıkarmak için aşağıdaki adımları tamamlayınız. (Değişken olarak 'x' yapılan zam sayısını temsil etmektedir)</p>
-                </div>
-                <div class="problem-questions">
-                    <h3>Çözüm Adımları</h3>
-                    <div class="question-group">
-                        <label><strong>Adım 1 <span class="point-badge">5 Puan</span>:</strong> Fiyat F(x) ve İzleyici Sayısı S(x) fonksiyonlarını yazınız.</label>
-                        <div class="input-row"><input type="text" id="p2_q1_price" placeholder="Fiyat F(x) = ?"><input type="text" id="p2_q1_sales" placeholder="Satış S(x) = ?"></div>
-                    </div>
-                    <div class="question-group">
-                        <label><strong>Adım 2 <span class="point-badge">5 Puan</span>:</strong> Gelir fonksiyonunu G(x) standart biçimde (ax²+bx+c) yazınız.</label>
-                        <div class="coeff-row">
-                            <span>G(x) =</span>
-                            <input type="text" id="p2_q2_a" style="width: 80px;" placeholder="a"> x² +
-                            <input type="text" id="p2_q2_b" style="width: 80px;" placeholder="b"> x +
-                            <input type="text" id="p2_q2_c" style="width: 100px;" placeholder="c">
-                        </div>
-                    </div>
-                    <div class="question-group">
-                        <label><strong>Adım 3 <span class="point-badge">5 Puan</span>:</strong> Geliri en uygun yapan 'x' kaçtır? (Virgül kullanınız.)</label>
-                        <input type="text" id="p2_q3_x" style="width: 120px;" placeholder="x değeri">
-                    </div>
-                    <div class="question-group">
-                        <label><strong>Adım 4 <span class="point-badge">5 Puan</span>:</strong> En uygun bilet fiyatını ve maksimum geliri hesaplayınız.</label>
-                        <div class="input-row"><input type="text" id="p2_q4_price" placeholder="Fiyat (TL)"><input type="text" id="p2_q4_revenue" placeholder="Gelir (TL)"></div>
-                    </div>
-                     <hr style="margin: 25px 0; border-color: var(--border-color);">
-                    <div class="question-group">
-                        <label><strong>Adım 5 <span class="point-badge">3 Puan</span> [Yorum]:</strong> Fiyatı tepe noktasından daha da yükseltmek geliri neden düşürür?</label>
-                        <textarea id="p2_q5_comment1" placeholder="Parabol ve tepe noktası ile açıklayınız..."></textarea>
-                    </div>
-                    <div class="question-group">
-                        <label><strong>Adım 6 <span class="point-badge">2 Puan</span> [Yorum]:</strong> Eğer her zamda 20 yerine 10 izleyici azalsaydı, en uygun fiyat daha mı yüksek olurdu?</label>
-                        <textarea id="p2_q6_comment2" placeholder="Nedenini kısaca açıklayınız..."></textarea>
-                    </div>
-                </div>
-            </div>
-             <div style="text-align: center; margin-top: 30px;">
-                <button class="button secondary" onclick="showPage('page-simulation')">Simülasyona Geri Dön</button>
-                <button class="button" id="finish-exam-btn" onclick="checkAndFinish()">Sınavı Bitir ve Değerlendir</button>
             </div>
         </div>
         
@@ -264,14 +294,21 @@
     <!-- Solution Modal -->
     <div id="solution-modal" class="modal"><div class="modal-content"><span class="close-button" onclick="closeSolutionsModal()">&times;</span><h2 style="text-align:center;">Detaylı Çözümler</h2><div id="solutionContent"></div></div></div>
     
-    <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+    <!-- Ses dosyası isteğe bağlı, dosya yoksa yüklemeyi denemeyelim -->
+    <audio id="clickSound" src="click.mp3" preload="none"></audio>
 
 <script>
-    const simParams = { basePrice: 100, baseSales: 200, discount: 5, salesIncrease: 20 };
+    // DEĞİŞİKLİK: Başlangıçta sürgüler 14 (fiyat artışı) ve 10 (azalan satış) olsun
+    const simParams = { basePrice: 200, baseSales: 500, priceIncrease: 14, salesDecrease: 10 };
+    
+    // Sınav gönderim durumu (kalıcı)
+    let examSubmitted = false;
     
     document.addEventListener('DOMContentLoaded', () => {
         setupThemeToggle();
         showPage('page-intro');
+        // Sayfa yüklendiğinde sınavın gönderim durumunu yükle
+        try { examSubmitted = (localStorage.getItem('examSubmitted') === 'true'); } catch {}
         
         document.querySelectorAll('button').forEach(button => {
             button.addEventListener('click', playClickSound);
@@ -281,7 +318,7 @@
     function playClickSound() {
         try {
             const sound = document.getElementById('clickSound');
-            if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+            if (sound && sound.src && sound.src.length > 0) { sound.currentTime = 0; sound.play().catch(e => {}); }
         } catch (e) { console.error("Ses dosyası hatası:", e); }
     }
 
@@ -290,7 +327,24 @@
         document.getElementById(pageId).classList.add('active');
         if (pageId === 'page-simulation') {
             initializeSimulation();
+        } else if (pageId === 'page-exam') {
+            // Sınav sayfasına gelindiğinde duruma göre alan ve butonları ayarla
+            const finishBtn = document.getElementById('finish-exam-btn');
+            const fields = document.querySelectorAll('#page-exam input, #page-exam textarea');
+            if (examSubmitted) {
+                if (finishBtn) { finishBtn.textContent = 'Sonuçları Gör'; finishBtn.disabled = false; }
+                fields.forEach(field => field.disabled = true);
+            } else {
+                if (finishBtn) { finishBtn.textContent = 'Sınavı Bitir ve Değerlendir'; finishBtn.disabled = false; }
+                fields.forEach(field => field.disabled = false);
+            }
         }
+    }
+
+    // Öğrenci yeni bir denemeye buradan başlar; kilit kaldırılır ve sınav açılır
+    function beginExam() {
+        resetExam(true);
+        showPage('page-exam');
     }
 
     function setupThemeToggle() {
@@ -314,30 +368,101 @@
         let formattedNum = parseFloat(num.toFixed(2));
         return formattedNum.toString().replace('.', ',');
     }
+    function localizeDecimalDots(text){
+        try {
+            if (!text || typeof text !== 'string') return text;
+            return text.replace(/(\d+)\.(\d+)/g, '$1,$2');
+        } catch { return text; }
+    }
+
+    // LMS'e puan gönderme
+    function sendScoreToLMS(ogrenciPuani) {
+        try {
+            const rounded = Math.round(ogrenciPuani || 0);
+            const result = {
+                score: { max: 25, min: 0, raw: rounded, scaled: rounded / 25 },
+                completion: true,
+                success: true,
+                duration: "PT4.95S"
+            };
+            const lmsWindow = window.parent?.document?.getElementById("frmApp-0")?.contentWindow;
+            if (lmsWindow?.onCompleted) {
+                console.log("📡 LMS'e veri gönderiyorum...");
+                lmsWindow.onCompleted(result);
+            } else {
+                console.error("❌ LMS'ye sinyal gönderilemedi!");
+            }
+        } catch (error) {
+            console.error("LMS'e puan gönderilirken hata oluştu:", error);
+        }
+    }
+
+    // Sınavı sıfırla: kilidi kaldır, istenirse alanları temizle
+    function resetExam(clearFields = false) {
+        try { localStorage.removeItem('examSubmitted'); } catch {}
+        examSubmitted = false;
+        const fields = document.querySelectorAll('#page-exam input, #page-exam textarea');
+        if (fields && fields.length) {
+            fields.forEach(field => {
+                field.disabled = false;
+                if (clearFields) field.value = '';
+            });
+        }
+        const finishBtn = document.getElementById('finish-exam-btn');
+        if (finishBtn) { finishBtn.textContent = 'Sınavı Bitir ve Değerlendir'; finishBtn.disabled = false; }
+    }
     
-    // --- SIMULATION (Pide Salonu) ---
+    // --- SIMULATION (Gurme Pide Salonu - GÜNCELLENDİ) ---
     function initializeSimulation() {
         ['discount-slider', 'sales-increase-slider', 'x-slider'].forEach(id => {
-            document.getElementById(id).addEventListener('input', updateSimulation);
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', updateSimulation);
         });
         const canvas = document.getElementById('sim-canvas');
         const container = canvas.parentElement;
         canvas.width = container.clientWidth;
         canvas.height = Math.max(400, container.clientWidth * 0.7);
+        // Varsayılan slider değerlerini ayarla
+        document.getElementById('discount-slider').value = simParams.priceIncrease;
+        document.getElementById('sales-increase-slider').value = simParams.salesDecrease;
+        // x için tanım aralığını (S(x) >= 0) temel al: x in [0, baseSales/salesDecrease]
+        const xSlider = document.getElementById('x-slider');
+        if (xSlider) {
+            const xMaxDomain = simParams.baseSales / simParams.salesDecrease;
+            xSlider.min = 0;
+            xSlider.step = 0.5;
+            xSlider.max = String(Number(xMaxDomain.toFixed(1)));
+            // Geçerli değer üst sınırı aşıyorsa kırp
+            const current = parseFloat(xSlider.value);
+            if (!isFinite(current) || current > xMaxDomain) xSlider.value = String(Number(xMaxDomain.toFixed(1)));
+            if (current < 0) xSlider.value = '0';
+        }
         updateSimulation();
     }
 
     function updateSimulation() {
-        simParams.discount = parseInt(document.getElementById('discount-slider').value);
-        simParams.salesIncrease = parseInt(document.getElementById('sales-increase-slider').value);
-        const x = parseFloat(document.getElementById('x-slider').value);
+        simParams.priceIncrease = parseInt(document.getElementById('discount-slider').value);
+        simParams.salesDecrease = parseInt(document.getElementById('sales-increase-slider').value);
+        const xSlider = document.getElementById('x-slider');
+        // Satışın negatif olmayacağı x üst sınırını her güncellemede yeniden hesapla
+        const step = parseFloat(xSlider.step) || 0.5;
+        let xMaxDomain = simParams.baseSales / simParams.salesDecrease; // S(x) >= 0
+        if (isFinite(step) && step > 0) {
+            xMaxDomain = Math.floor(xMaxDomain / step) * step; // adıma uygun yuvarla
+        }
+        xSlider.max = String(Number(xMaxDomain.toFixed(2)));
+        let x = parseFloat(xSlider.value);
+        if (!isFinite(x)) x = 0;
+        if (x < 0) { x = 0; }
+        if (x > xMaxDomain) { x = xMaxDomain; }
+        xSlider.value = String(x);
         
-        document.getElementById('discount-display').textContent = simParams.discount;
-        document.getElementById('sales-increase-display').textContent = simParams.salesIncrease;
+        document.getElementById('discount-display').textContent = simParams.priceIncrease;
+        document.getElementById('sales-increase-display').textContent = simParams.salesDecrease;
         document.getElementById('x-display').textContent = formatNumber(x);
 
-        const currentPrice = simParams.basePrice - simParams.discount * x;
-        const currentSales = simParams.baseSales + simParams.salesIncrease * x;
+    const currentPrice = simParams.basePrice + simParams.priceIncrease * x;
+    const currentSales = Math.max(simParams.baseSales - simParams.salesDecrease * x, 0);
         const currentRevenue = currentPrice * currentSales;
 
         document.getElementById('price-display').textContent = formatNumber(currentPrice);
@@ -348,17 +473,18 @@
         const vertexX = -b / (2 * a);
         const vertexY = a * vertexX * vertexX + b * vertexX + c;
 
-        document.getElementById('formula-fx').textContent = `${simParams.basePrice} - ${simParams.discount}x`;
-        document.getElementById('formula-sx').textContent = `${simParams.baseSales} + ${simParams.salesIncrease}x`;
-        document.getElementById('formula-gx-standard').textContent = `G(x) = ${a}x² + ${b}x + ${c}`;
+        document.getElementById('formula-fx').textContent = `${simParams.basePrice} + ${simParams.priceIncrease}x`;
+        document.getElementById('formula-sx').textContent = `${simParams.baseSales} - ${simParams.salesDecrease}x`;
+        document.getElementById('formula-gx-standard').textContent = `G(x) = ${a}x² ${b >= 0 ? '+' : ''} ${b}x ${c >= 0 ? '+' : ''} ${c}`;
         document.getElementById('formula-gx-vertex').textContent = `G(x) = ${a}(x - ${formatNumber(vertexX)})² + ${formatNumber(vertexY)}`;
         
         drawSimulationGraph(x);
     }
 
     function getSimRevenueFunction(params) {
-        const a = -params.discount * params.salesIncrease;
-        const b = params.basePrice * params.salesIncrease - params.baseSales * params.discount;
+        // G(x) = (basePrice + priceIncrease*x) * (baseSales - salesDecrease*x)
+        const a = -params.priceIncrease * params.salesDecrease;
+        const b = params.baseSales * params.priceIncrease - params.basePrice * params.salesDecrease;
         const c = params.basePrice * params.baseSales;
         return { a, b, c, G: (x) => a * x * x + b * x + c };
     }
@@ -372,8 +498,8 @@
         const vertexX = -b / (2 * a);
         const vertexY = G(vertexX);
 
-        const xMax = Math.max(20, vertexX * 2.2);
-        const yMax = vertexY > 0 ? vertexY * 1.15 : 20000;
+    const xMax = parseFloat(document.getElementById('x-slider').max); // Tanım aralığı üst sınırı
+        const yMax = vertexY > 0 ? vertexY * 1.15 : 100000;
 
         ctx.clearRect(0, 0, w, h);
         const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
@@ -403,7 +529,7 @@
     ctx.font = 'normal 12px Poppins';
         ctx.textAlign = 'center'; ctx.textBaseline = 'top';
         for (let i = 1; i <= 5; i++) ctx.fillText(formatNumber(i * xMax / 5), toX(i * xMax / 5), h - padding + 8);
-        ctx.fillText("İndirim Sayısı (x)", w / 2, h - padding + 30);
+        ctx.fillText("Fiyat Artış Sayısı (x)", w / 2, h - padding + 30);
         ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
         for (let i = 1; i <= 5; i++) ctx.fillText(Math.round(i * yMax / 5), padding - 8, toY(i * yMax / 5));
         ctx.textAlign = 'right'; ctx.textBaseline = 'top';
@@ -411,23 +537,38 @@
         ctx.save(); ctx.translate(padding - 45, h / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText("Gelir (TL)", 0, 0); ctx.restore();
 
         ctx.beginPath(); ctx.strokeStyle = headerColor; ctx.lineWidth = 3;
-        for (let x = 0; x <= xMax; x += xMax / 100) {
+        for (let x = 0; x <= xMax; x += xMax / 200) {
             const y = G(x);
-            if(y < 0 && x > vertexX) continue;
+            if (y < 0) break; // x ekseninin altına inmeyelim
             if (x === 0) ctx.moveTo(toX(x), toY(y)); else ctx.lineTo(toX(x), toY(y));
         }
         ctx.stroke();
 
-        if (vertexY > 0) {
+        if (vertexY >= 0 && vertexX >= 0 && vertexX <= xMax) {
             ctx.fillStyle = '#16a34a'; ctx.beginPath(); ctx.arc(toX(vertexX), toY(vertexY), 6, 0, 2*Math.PI); ctx.fill();
         }
-        ctx.fillStyle = textColor; ctx.beginPath(); ctx.arc(toX(currentX), toY(G(currentX)), 6, 0, 2*Math.PI); ctx.fill();
+        const currentY = G(currentX);
+        if(currentY >= 0) {
+           ctx.fillStyle = textColor; ctx.beginPath(); ctx.arc(toX(currentX), toY(currentY), 6, 0, 2*Math.PI); ctx.fill();
+        }
     }
     
-    // --- EXAM (Tiyatro Problemi) ---
+    // --- EXAM (Tiyatro Problemi - DEĞİŞİKLİK YOK) ---
     async function checkAndFinish() {
-        document.getElementById('finish-exam-btn').disabled = true;
+        if (examSubmitted) { showPage('page-evaluation'); return; }
+        const finishBtn = document.getElementById('finish-exam-btn');
+        if (finishBtn) finishBtn.disabled = true;
+        document.querySelectorAll('#page-exam input, #page-exam textarea').forEach(field => field.disabled = true);
+        examSubmitted = true;
+        try { localStorage.setItem('examSubmitted', 'true'); } catch {}
+        if (finishBtn) finishBtn.textContent = 'Sonuçları Gör';
         showPage('page-evaluation');
+        const subtitleEl = document.getElementById('evaluation-subtitle');
+        if (subtitleEl) subtitleEl.textContent = 'Yanıtlarınız yapay zeka tarafından analiz ediliyor.';
+        const evalContent = document.getElementById('evaluationContent');
+        if (evalContent) evalContent.innerHTML = '<div style="text-align: center; padding: 40px 0;"><div class="spinner-border" role="status" style="width: 3rem; height: 3rem; color: var(--header-color);"></div><h4 style="margin-top: 20px;">Değerlendirme Sürüyor...</h4></div>';
+        const solutionsBtn = document.getElementById('viewSolutionsBtn');
+        if (solutionsBtn) solutionsBtn.style.display = 'none';
         let totalScore = 0;
         try {
             if (!navigator.onLine) throw new Error('İnternet bağlantısı yok.');
@@ -436,55 +577,140 @@
             const result = await callGemini(prompt);
             const evaluation = formatAIScoringResponse(result);
             document.getElementById('evaluationContent').innerHTML = evaluation.html;
-            totalScore = evaluation.score || 0;
+            totalScore = evaluation.score;
         } catch (err) {
             console.error("AI Evaluation Failed:", err);
             totalScore = runFallbackEvaluation(err);
         }
-        updateAllScoreDisplays(totalScore);
+    updateAllScoreDisplays(totalScore);
+    try { sendScoreToLMS(totalScore); } catch (error) { console.error("LMS'e puan gönderilirken hata oluştu:", error); }
         populateSolutionModal();
         document.getElementById('viewSolutionsBtn').style.display = 'inline-block';
     }
     
     function cleanNumber(value) { return value.trim().replace(/\s/g, '').replace(',', '.'); }
     function cleanExpression(value) { return value.trim().replace(/\s/g, '').toLowerCase(); }
+
+    function parseFlexibleNumber(input) {
+        if (input == null) return NaN;
+        let str = String(input).trim();
+        if (!str) return NaN;
+        str = str.replace(/[^0-9.,\/-]/g, '');
+        if (!str) return NaN;
+        if (str.includes('/')) {
+            const [num, den] = str.split('/');
+            const n = parseFlexibleNumber(num);
+            const d = parseFlexibleNumber(den);
+            if (!isFinite(n) || !isFinite(d) || d === 0) return NaN;
+            return n / d;
+        }
+        const hasDot = str.includes('.');
+        const hasComma = str.includes(',');
+        if (hasDot && hasComma) {
+            const lastDot = str.lastIndexOf('.');
+            const lastComma = str.lastIndexOf(',');
+            const decSep = lastComma > lastDot ? ',' : '.';
+            const thouSep = decSep === ',' ? '.' : ',';
+            str = str.split(thouSep).join('');
+            if (decSep === ',') str = str.replace(',', '.');
+        } else if (hasComma) {
+            if (/[,]\d{1,2}$/.test(str)) {
+                str = str.replace(',', '.');
+            } else {
+                str = str.split(',').join('');
+            }
+        } else if (hasDot) {
+            if (/[.]\d{1,2}$/.test(str)) {
+            } else {
+                str = str.split('.').join('');
+            }
+        }
+        const val = parseFloat(str);
+        return isFinite(val) ? val : NaN;
+    }
+
+    function parseLinearExpression(expr) {
+        if (!expr) return { ok: false };
+        let e = cleanExpression(String(expr));
+        e = e.replace(/·|\*/g, '');
+        e = e.replace(/^[a-z]\(x\)=/i, '');
+        const xMatch = e.match(/([+-]?\d*(?:[.,]?\d+)?)x/);
+        if (!xMatch) return { ok: false };
+        let aStr = xMatch[1];
+        if (aStr === '' || aStr === '+' || aStr === undefined) aStr = '1';
+        if (aStr === '-') aStr = '-1';
+        const a = parseFlexibleNumber(aStr);
+        const rest = e.replace(xMatch[0], '');
+        const tokens = rest.match(/[+-]?\d+(?:[.,]\d+)?/g) || [];
+        const b = tokens.reduce((sum, t) => sum + (parseFlexibleNumber(t) || 0), 0);
+        return { ok: isFinite(a) && isFinite(b), a, b };
+    }
+
+    function roughlyEqual(n1, n2, eps = 1e-2) {
+        const a = parseFloat(n1), b = parseFloat(n2);
+        if (!isFinite(a) || !isFinite(b)) return false;
+        return Math.abs(a - b) <= eps;
+    }
     
     function runFallbackEvaluation(error) {
         document.getElementById('evaluation-subtitle').textContent = "Standart Değerlendirme Sonuçları";
         const user = collectUserResponses();
         const correct = {
-            f: '80+10x', s: '300-20x',
-            a: '-200', b: '1400', c: '24000',
-            x: '3.5', price: '115', revenue: '26450'
+            f: { a: 10, b: 80 },
+            s: { a: -20, b: 300 },
+            a: -200, b: 1400, c: 24000,
+            x: 3.5, price: 115, revenue: 26450
         };
-        let score = 0;
+        let totalScore = 0;
         let feedbackHTML = `<div style="padding:15px; background:var(--incorrect-bg); color:var(--incorrect-text); border:1px solid var(--incorrect-border); border-radius:8px; text-align:center; margin-bottom:20px;"><strong>YZ Değerlendirmesi Başarısız:</strong> ${error.message}. Standart puanlama devreye girdi.</div>`;
-        
-        const q_scores = {};
-        q_scores.q1 = (cleanExpression(user['Adim-1'].fiyat) === correct.f ? 2.5 : 0) + (cleanExpression(user['Adim-1'].satis) === correct.s ? 2.5 : 0);
-        q_scores.q2 = (cleanNumber(user['Adim-2'].a) === correct.a ? 2 : 0) + (cleanNumber(user['Adim-2'].b) === correct.b ? 2 : 0) + (cleanNumber(user['Adim-2'].c) === correct.c ? 1 : 0);
-        q_scores.q3 = Math.abs(cleanNumber(user['Adim-3'].x) - correct.x) < 0.01 ? 5 : 0;
-        q_scores.q4 = (Math.abs(cleanNumber(user['Adim-4'].fiyat) - correct.price) < 1 ? 2.5 : 0) + (Math.abs(cleanNumber(user['Adim-4'].gelir) - correct.revenue) < 1 ? 2.5 : 0);
-        q_scores.q5 = user['Adim-5'].trim().length > 10 ? 1.5 : 0;
-        q_scores.q6 = user['Adim-6'].trim().length > 10 ? 1 : 0;
-        
-        feedbackHTML += createEvalCard('Adım 1: Fonksiyonlar', q_scores.q1, 5, `Doğru: F(x)=${correct.f}, S(x)=${correct.s}`);
-        feedbackHTML += createEvalCard('Adım 2: Gelir Denklemi', q_scores.q2, 5, `Doğru: a=${correct.a}, b=${correct.b}, c=${correct.c}`);
-        feedbackHTML += createEvalCard('Adım 3: En Uygun \'x\'', q_scores.q3, 5, `Doğru: x = 3,5`);
-        feedbackHTML += createEvalCard('Adım 4: Sonuçlar', q_scores.q4, 5, `Doğru: Fiyat=${correct.price}, Gelir=${correct.revenue}`);
-        feedbackHTML += createEvalCard('Adım 5: Yorum 1', q_scores.q5, 3, 'Yanıtınız deneme olarak kabul edildi.');
-        feedbackHTML += createEvalCard('Adım 6: Yorum 2', q_scores.q6, 2, 'Yanıtınız deneme olarak kabul edildi.');
-        
-        score = Object.values(q_scores).reduce((a, b) => a + b, 0);
+    const parsedF = parseLinearExpression(user['Soru-1'].fiyat);
+    const q1_f = (parsedF.ok && roughlyEqual(parsedF.a, correct.f.a) && roughlyEqual(parsedF.b, correct.f.b)) ? 3 : 0;
+    const parsedS = parseLinearExpression(user['Soru-1'].satis);
+    const q1_s = (parsedS.ok && roughlyEqual(parsedS.a, correct.s.a) && roughlyEqual(parsedS.b, correct.s.b)) ? 2 : 0;
+        const q1_total = q1_f + q1_s;
+    const q2_a = roughlyEqual(parseFlexibleNumber(user['Soru-2'].a), correct.a) ? 2 : 0;
+    const q2_b = roughlyEqual(parseFlexibleNumber(user['Soru-2'].b), correct.b) ? 2 : 0;
+    const q2_c = roughlyEqual(parseFlexibleNumber(user['Soru-2'].c), correct.c) ? 1 : 0;
+        const q2_total = q2_a + q2_b + q2_c;
+    const q3_val = parseFlexibleNumber(user['Soru-3'].x);
+    const q3_total = roughlyEqual(q3_val, correct.x) ? 5 : 0;
+    const q4_val = parseFlexibleNumber(user['Soru-4'].fiyat);
+    const q4_total = roughlyEqual(q4_val, correct.price, 0.5) ? 5 : 0;
+    const q5_val = parseFlexibleNumber(user['Soru-5'].gelir);
+    const q5_total = roughlyEqual(q5_val, correct.revenue, 0.5) ? 5 : 0;
+
+        feedbackHTML += createEvalCard(
+            'Soru 1: Fonksiyonlar', q1_total, 5,
+            `Doğru: F(x)=80 + 10x, S(x)=300 - 20x`,
+            [ {label:'F(x)', score:q1_f, max:3}, {label:'S(x)', score:q1_s, max:2} ]
+        );
+        feedbackHTML += createEvalCard(
+            'Soru 2: Gelir Denklemi', q2_total, 5,
+            `Doğru: a=-200, b=1400, c=24000`,
+            [ {label:'a', score:q2_a, max:2}, {label:'b', score:q2_b, max:2}, {label:'c', score:q2_c, max:1} ]
+        );
+        feedbackHTML += createEvalCard('Soru 3: En Uygun \'x\'', q3_total, 5, `Doğru: x = 3,5`);
+        feedbackHTML += createEvalCard('Soru 4: En Uygun Fiyat', q4_total, 5, `Doğru: Fiyat=115 TL`);
+        feedbackHTML += createEvalCard('Soru 5: Maksimum Gelir', q5_total, 5, `Doğru: Gelir=26450 TL`);
+
+        totalScore = q1_total + q2_total + q3_total + q4_total + q5_total;
         document.getElementById('evaluationContent').innerHTML = feedbackHTML;
-        return score;
+        return totalScore;
     }
     
-    function createEvalCard(title, score, max, body) {
-        const perc = max > 0 ? (score/max)*100 : 0;
+    function createEvalCard(title, score, max, body, breakdown) {
+        const s = Math.max(0, parseInt(score || 0));
+        const m = Math.max(0, parseInt(max || 0));
+        const perc = m > 0 ? (s/m)*100 : 0;
         const color = perc >= 99 ? '#22c55e' : (perc >= 50 ? '#f59e0b' : '#ef4444');
-        const bodySection = body ? `<div class="evaluation-body">${body}</div>` : '';
-        return `<div class="evaluation-card" style="border-left-color: ${color};"><div class="evaluation-header"><h4>${title}</h4><div class="evaluation-score">${formatNumber(score)} / ${max} Puan</div></div>${bodySection}</div>`;
+        const bodyText = body ? localizeDecimalDots(body) : '';
+        const bodySection = bodyText ? `<div class="evaluation-body">${bodyText}</div>` : '';
+        let breakdownHtml = '';
+        if (Array.isArray(breakdown) && breakdown.length > 0) {
+            const items = breakdown.map(b => `<li><strong>${b.label}:</strong> ${parseInt(b.score||0)} / ${parseInt(b.max||0)} puan</li>`).join('');
+            breakdownHtml = `<ul style="margin:8px 0 0 16px;">${items}</ul>`;
+        }
+        return `<div class="evaluation-card" style="border-left-color: ${color};"><div class="evaluation-header"><h4>${title}</h4><div class="evaluation-score">${s} / ${m} Puan</div></div>${bodySection}${breakdownHtml}</div>`;
     }
 
     function updateAllScoreDisplays(finalScore) {
@@ -500,41 +726,48 @@
 
     function collectUserResponses(){
         return {
-            'Adim-1': { fiyat: document.getElementById('p2_q1_price').value, satis: document.getElementById('p2_q1_sales').value },
-            'Adim-2': { a: document.getElementById('p2_q2_a').value, b: document.getElementById('p2_q2_b').value, c: document.getElementById('p2_q2_c').value },
-            'Adim-3': { x: document.getElementById('p2_q3_x').value },
-            'Adim-4': { fiyat: document.getElementById('p2_q4_price').value, gelir: document.getElementById('p2_q4_revenue').value },
-            'Adim-5': document.getElementById('p2_q5_comment1').value,
-            'Adim-6': document.getElementById('p2_q6_comment2').value
+            'Soru-1': { fiyat: document.getElementById('p2_q1_price').value, satis: document.getElementById('p2_q1_sales').value },
+            'Soru-2': { a: document.getElementById('p2_q2_a').value, b: document.getElementById('p2_q2_b').value, c: document.getElementById('p2_q2_c').value },
+            'Soru-3': { x: document.getElementById('p2_q3_x').value },
+            'Soru-4': { fiyat: document.getElementById('p2_q4_price').value },
+            'Soru-5': { gelir: document.getElementById('p2_q5_revenue').value }
         };
     }
 
-    function buildAIScoringPrompt(data){
-        return `YALNIZCA JSON FORMATINDA CEVAP VER. Genel performans yorumu ekleme. Her soru için kısa bir açıklama (açıklama) ve puan ver. "Hata taşıma" kuralını uygula.
+        function buildAIScoringPrompt(data){
+                return `YALNIZCA JSON FORMATINDA CEVAP VER. TÜM ÇIKTI TÜRKÇE OLSUN. GENEL YORUM EKLEME.
 
-        DOĞRU CEVAPLAR VE PUANLAMA (TOPLAM 25 PUAN):
-        1. (5 Puan) Fonksiyonlar: F(x) = 80 + 10x (2.5p), S(x) = 300 - 20x (2.5p)
-        2. (5 Puan) Gelir Denklemi: a = -200 (2p), b = 1400 (2p), c = 24000 (1p)
-        3. (5 Puan) En Uygun 'x': x = 3,5
-        4. (5 Puan) Sonuçlar: Fiyat = 115 TL (2.5p), Gelir = 26450 TL (2.5p)
-        5. (3 Puan) Yorum 1 (Tepe Noktası)
-        6. (2 Puan) Yorum 2 (Senaryo Değişimi)
+UZMAN DEĞERLENDİRME: Kendini uzman bir matematik öğretmeni gibi konumlandır. Açıklamaları kısa, isabetli ve pedagojik tut. Hata analizi yap.
 
-        ÖĞRENCİNİN YANITLARI: ${JSON.stringify(data)}
+PUANLAMA KURALLARI:
+- Tüm puanlar TAM SAYI olmalıdır (ondalık YOK).
+- Her çok alanlı soru için alan bazlı puan dağılımını belirt (ör. q1.alanlar, q2.alanlar).
+- Gerekli gördüğün yerde, çözüm AŞAMALARI için PARÇALI puanlama yapabilirsin. Bunun için opsiyonel "adımlar" alanını kullan (her adım: {"ad": string, "puan": int}).
+- HATA TAŞIMA: İlk sorularda yapılan bir hata sonraki cevapları etkiliyorsa, yöntemin doğruluğunu dikkate alarak uygun KISMİ puan ver (örn. yanlış değeri doğru yöntemle kullanmışsa puan kır ama tamamını sıfırlama).
+- Açıklamalarda ondalık gerekiyorsa nokta yerine virgül kullan (3,5 gibi).
 
-        JSON ÇIKTISI (GENEL YORUM YOK):
-        {
-            "q1": {"puan": 0-5, "açıklama": "..."}, "q2": {"puan": 0-5, "açıklama": "..."}, "q3": {"puan": 0-5, "açıklama": "..."},
-            "q4": {"puan": 0-5, "açıklama": "..."}, "q5": {"puan": 0-3, "açıklama": "..."}, "q6": {"puan": 0-2, "açıklama": "..."},
-            "toplam_puan": 0-25
-        }`;
-    }
+DOĞRU CEVAPLAR VE PUANLAMA (TOPLAM 25 PUAN):
+1. (5 puan) Fonksiyonlar: F(x)=80+10x (3p), S(x)=300-20x (2p)
+2. (5 puan) Gelir Denklemi: a=-200 (2p), b=1400 (2p), c=24000 (1p)
+3. (5 puan) En Uygun x: 3,5
+4. (5 puan) En Uygun Fiyat: 115 TL
+5. (5 puan) Maksimum Gelir: 26450 TL
+
+ÖĞRENCİNİN YANITLARI: ${JSON.stringify(data)}
+
+JSON ŞEMASI (anahtarları TÜRKÇE kullan):
+{
+    "q1": {"puan": 0-5, "açıklama": "...", "alanlar": {"fiyat": 0-3, "satis": 0-2}, "adımlar": [{"ad": "...", "puan": 0-3}]},
+    "q2": {"puan": 0-5, "açıklama": "...", "alanlar": {"a": 0-2, "b": 0-2, "c": 0-1}, "adımlar": [{"ad": "...", "puan": 0-3}]},
+    "q3": {"puan": 0-5, "açıklama": "...", "adımlar": [{"ad": "...", "puan": 0-5}]},
+    "q4": {"puan": 0-5, "açıklama": "...", "adımlar": [{"ad": "...", "puan": 0-5}]},
+    "q5": {"puan": 0-5, "açıklama": "...", "adımlar": [{"ad": "...", "puan": 0-5}]}
+}`;
+        }
 
     async function callGemini(prompt) {
         const apiKey = "AIzaSyCEhU3erLOAJB9cADTqaGanVidc2DRbhr8";
-        // 404'nin en yaygın nedeni: model adının hatalı olması. Doğrusu 'gemini-2.0-flash'.
         const model = 'gemini-2.0-flash';
-        // Bazı 2.0 modelleri v1beta yerine v1 altında sunulur; v1 kullanıyoruz.
         const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
         const body = { contents: [{ parts: [{ text: prompt }] }] };
         const controller = new AbortController();
@@ -554,36 +787,64 @@
 
     function formatAIScoringResponse(raw) {
         let parsed;
-        try { parsed = JSON.parse(raw.trim().replace(/^```json\s*|```\s*$/g, ''));
+        let totalScore = 0;
+        try { 
+            parsed = JSON.parse(raw.trim().replace(/^```json\s*|```\s*$/g, ''));
         } catch (e) { throw new Error("YZ yanıtı JSON formatında değil."); }
+        
         const questions = [
-            { id: 'q1', title: 'Adım 1: Fonksiyonlar', max: 5 }, { id: 'q2', title: 'Adım 2: Gelir Denklemi', max: 5 },
-            { id: 'q3', title: 'Adım 3: En Uygun "x"', max: 5 }, { id: 'q4', title: 'Adım 4: Sonuçlar', max: 5 },
-            { id: 'q5', title: 'Adım 5: Yorum 1', max: 3 }, { id: 'q6', title: 'Adım 6: Yorum 2', max: 2 }
+            { id: 'q1', title: 'Soru 1: Fonksiyon Modelleme', max: 5 }, 
+            { id: 'q2', title: 'Soru 2: Gelir Fonksiyonu', max: 5 },
+            { id: 'q3', title: 'Soru 3: Optimum Değişken Değeri', max: 5 }, 
+            { id: 'q4', title: 'Soru 4: En Uygun Bilet Fiyatı', max: 5 },
+            { id: 'q5', title: 'Soru 5: Maksimum Gelir', max: 5 }
         ];
+        
         let html = '';
         questions.forEach(q => {
             const data = parsed[q.id];
-            if (data) html += createEvalCard(q.title, data.puan || 0, q.max, data.açıklama || '');
+            if (data) {
+                const score = parseInt(data.puan || 0) || 0;
+                totalScore += score;
+                const aciklama = (data['açıklama'] || data['aciklama'] || '').toString();
+                let breakdown = undefined;
+                if (data.alanlar && typeof data.alanlar === 'object') {
+                    if (q.id === 'q1') {
+                        breakdown = [
+                            { label: 'F(x)', score: parseInt(data.alanlar.fiyat || 0) || 0, max: 3 },
+                            { label: 'S(x)', score: parseInt(data.alanlar.satis || 0) || 0, max: 2 }
+                        ];
+                    } else if (q.id === 'q2') {
+                        breakdown = [
+                            { label: 'a', score: parseInt(data.alanlar.a || 0) || 0, max: 2 },
+                            { label: 'b', score: parseInt(data.alanlar.b || 0) || 0, max: 2 },
+                            { label: 'c', score: parseInt(data.alanlar.c || 0) || 0, max: 1 }
+                        ];
+                    }
+                }
+                html += createEvalCard(q.title, score, q.max, aciklama, breakdown);
+            }
         });
-        return { html, score: parsed.toplam_puan || 0 };
+        
+        return { html, score: totalScore };
     }
+
 
     function populateSolutionModal() {
         document.getElementById('solutionContent').innerHTML = `
-            <div class="answer-block"><h4>Adım 1: Fonksiyonlar</h4><p>\\[F(x) = 80 + 10x\\]\\[S(x) = 300 - 20x\\]</p></div>
-            <div class="answer-block"><h4>Adım 2: Gelir Denklemi</h4><p>\\[G(x) = (80 + 10x)(300 - 20x)\\] <br>\\[= -200x^2 + 1400x + 24000\\]</p></div>
-            <div class="answer-block"><h4>Adım 3: Tam Kareye Tamamlama ve En Uygun 'x'</h4>
-            <p>G(x) = -200(x² - 7x) + 24000<br>
-            G(x) = -200(x² - 7x + 12,25 - 12,25) + 24000<br>
-            G(x) = -200[(x - 3,5)² - 12,25] + 24000<br>
-            G(x) = -200(x - 3,5)² + 2450 + 24000<br>
-            G(x) = -200(x - 3,5)² + 26450<br>
-            Maksimum gelir için maksimum noktasının apsisi olan x = 3,5 olmalıdır.</p></div>
-            <div class="answer-block"><h4>Adım 4: Sonuçlar</h4><p>Fiyat: \\(F(3,5) = 80 + 10(3,5) = 115\\) TL<br>Maks. Gelir: \\(G(3,5) = 26450\\) TL</p></div>
-            <hr>
-            <div class="answer-block"><h4>Adım 5: Yorum (Maksimum Noktası)</h4><p>Gelir fonksiyonu, başkatsayısı (-200) negatif olduğu için kolları aşağıya bakan bir paraboldür. Bu tür paraboller, maksimum noktasında (x=3,5) maksimum değerine ulaşır. Fiyatı bu noktanın ötesinde artırmak, parabolün azalan kolu üzerinde hareket etmek anlamına gelir, bu da geliri düşürür.</p></div>
-            <div class="answer-block"><h4>Adım 6: Yorum (Senaryo Değişimi)</h4><p>Eğer her 10 TL'lik artışta 10 izleyici azalsaydı, yeni Gelir Fonksiyonu \\(G(x) = -100x^2 + 2200x + 24000\\) olurdu. Bu yeni parabolün maksimum noktası x=11'de bulunur, bu da 190 TL'lik bir bilet fiyatına karşılık gelir. Sonuç: Fiyat <strong>daha yüksek</strong> olurdu.</p></div>
+            <div class="answer-block"><h4>Soru 1: Fonksiyon Modelleme (5 Puan)</h4><p>\\[F(x) = 80 + 10x\\]\\[S(x) = 300 - 20x\\]</p></div>
+            <div class="answer-block"><h4>Soru 2: Gelir Fonksiyonu (5 Puan)</h4><p>\\[G(x) = (80 + 10x)(300 - 20x)\\] <br>\\[= -200x^2 + 1400x + 24000\\]</p></div>
+            <div class="answer-block"><h4>Soru 3: Optimum Değişken Değeri (5 Puan)</h4>
+            <p>Gelir fonksiyonu G(x)'i tam kareye tamamlama yöntemiyle maksimum değerini bulalım:<br>
+            \\[G(x) = -200x^2 + 1400x + 24000\\]
+            \\[G(x) = -200(x^2 - 7x) + 24000\\]
+            \\[G(x) = -200(x^2 - 7x + 12,25 - 12,25) + 24000\\]
+            \\[G(x) = -200((x - 3,5)^2 - 12,25) + 24000\\]
+            \\[G(x) = -200(x - 3,5)^2 + 2450 + 24000\\]
+            \\[G(x) = -200(x - 3,5)^2 + 26450\\]
+            Bu ifadenin maksimum olması için \\((x - 3,5)^2\\) teriminin en küçük değeri olan 0'a eşit olması gerekir. Bu durumda \\(x = 3,5\\) olur.</p></div>
+            <div class="answer-block"><h4>Soru 4: En Uygun Bilet Fiyatı (5 Puan)</h4><p>En uygun fiyat, x=3,5 değeri F(x) fonksiyonunda yerine yazılarak bulunur: <br> \\(F(3,5) = 80 + 10(3,5) = 115\\) TL</p></div>
+            <div class="answer-block"><h4>Soru 5: Maksimum Gelir (5 Puan)</h4><p>x = 3,5 için G(x) fonksiyonunun aldığı maksimum değer, tam kareye tamamlanmış ifadedeki sabit terim olan 26450 TL'dir.</p></div>
             `;
         MathJax.typesetPromise();
     }
