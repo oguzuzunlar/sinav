@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karesel Fonksiyonların Nitel Özelliklerini Keşfet</title>
+    <style>
+        :root {
+            --primary-color: #005a9c; --secondary-color: #e6f2ff;
+            --text-color: #333; --highlight-color-increase: #28a745; --highlight-color-decrease: #dc3545;
+            --background-color: #f0f8ff; --container-bg: white;
+            --container-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --border-color: #dee2e6; --button-border: #b3d9ff;
+            --button-text: #005a9c; --tab-text: #495057;
+        }
+        body[data-theme="dark"] {
+            --primary-color: #4dabf7; --secondary-color: #2c2e33;
+            --text-color: #e9ecef; --highlight-color-increase: #37b24d; --highlight-color-decrease: #f03e3e;
+            --background-color: #121212; --container-bg: #1e1e1e;
+            --container-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            --border-color: #444; --button-border: #005a9c;
+            --button-text: #e6f2ff; --tab-text: #adb5bd;
+        }
+        html, body { height: 100%; margin: 0; padding: 0; background-color: var(--background-color); }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-color); display: flex; justify-content: center;
+            align-items: flex-start; padding: 10px; box-sizing: border-box;
+        }
+        .container {
+            width: 100%; max-width: 1200px; margin: 20px auto; background: var(--container-bg);
+            padding: 25px; border-radius: 12px; box-shadow: var(--container-shadow);
+            max-height: 95vh; overflow-y: auto;
+        }
+        .header {
+            text-align: center; border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px; margin-bottom: 25px; position: relative;
+        }
+        h1 { color: var(--primary-color); margin: 0; font-size: 1.8em; }
+        .tab-nav { display: flex; justify-content: center; border-bottom: 2px solid var(--border-color); margin-bottom: 25px; }
+        .tab-btn { padding: 15px 30px; cursor: pointer; border: none; background-color: transparent; font-size: 1.1em; font-weight: 600; color: var(--tab-text); position: relative; bottom: -2px; transition: all 0.2s; }
+        .tab-btn.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .selection-panel { text-align: center; margin-bottom: 25px; }
+        .function-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 15px; }
+        .func-btn { font-size: 1.2em; padding: 10px 16px; background-color: var(--container-bg); border: 1px solid var(--button-border); color: var(--button-text); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+        .func-btn.active-anim, .func-btn.active-quiz { background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; border-color: #2563eb; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; }
+        .explanation-panel p { font-size: 1.1em; line-height: 1.7; }
+        .controls { text-align: center; margin-top: 30px; }
+        .nav-btn, .step-btn { background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin: 0 10px; transition: all 0.2s; }
+        .nav-btn:hover, .step-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .nav-btn:disabled, .step-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+        .feedback { margin-top: 15px; padding: 10px; border-radius: 5px; font-weight: 500; display: none; }
+        .feedback.correct { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .feedback.incorrect { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        code { font-family: "Courier New", monospace; background-color: var(--secondary-color); padding: 2px 4px; border-radius: 4px;}
+        #theme-toggle-btn { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; font-size: 24px; line-height: 1; transition: transform 0.2s ease; }
+        #theme-toggle-btn:hover { transform: translateY(-50%) scale(1.1) rotate(15deg); }
+        canvas { 
+            border: 2px solid var(--border-color); 
+            border-radius: 8px; 
+            background-color: var(--container-bg);
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        /* Canvas responsive boyutlandırma */
+        @media (max-width: 768px) {
+            canvas {
+                width: 90vw !important;
+                height: 90vw !important;
+                max-width: 400px;
+                max-height: 400px;
+            }
+            .layout {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+        
+        /* Canvas yükleme hatası stilleri */
+        .canvas-error {
+            background: #ff6b6b; 
+            color: white; 
+            padding: 15px; 
+            margin: 20px 0;
+            border-radius: 8px; 
+            text-align: center; 
+            font-weight: bold;
+        }
+        b.increase { color: var(--highlight-color-increase); font-weight: bold; }
+        b.decrease { color: var(--highlight-color-decrease); font-weight: bold; }
+        b.domain { color: var(--primary-color); font-weight: bold; }
+        b.onetoone { color: orange; font-weight: bold; }
+        .quiz-container { display: grid; grid-template-columns: 1fr; justify-items: center; gap: 20px; }
+        .quiz-inputs { max-width: 400px; display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .input-group { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+        .input-group label { font-weight: bold; }
+        .input-group input, .input-group select { width: 100%; box-sizing: border-box; padding: 8px; border-radius: 5px; border: 1px solid var(--border-color); background-color: var(--container-bg); color: var(--text-color); font-size: 1em; }
+        .final-controls { grid-column: 1 / -1; text-align: center; }
+
+        /* Yardımcı sembol butonları: daha çekici ve büyük */
+        .symbol-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .symbol-btn {
+            padding: 8px 12px;
+            font-size: 1.05em;
+            font-weight: 700; /* bold text */
+            border-radius: 8px;
+            border: 1px solid var(--button-border);
+            color: var(--button-text);
+            background: linear-gradient(135deg, #f0f7ff, #e2ecff);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+        /* Dark mode override for better contrast on light button background */
+        body[data-theme="dark"] .symbol-btn {
+            color: #0f172a; /* dark text for readability */
+            font-weight: 700;
+        }
+        .symbol-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+            background: linear-gradient(135deg, #e6f0ff, #d7e6ff);
+        }
+        .symbol-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08) inset;
+        }
+
+        /* YENİ: Yönlendirme Uyarısı Stilleri */
+        #orientation-warning {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            z-index: 10000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        #orientation-warning h2 { color: white; }
+        #orientation-warning svg { width: 80px; height: 80px; margin-bottom: 20px; animation: rotate-bounce 2.5s infinite ease-in-out; }
+        @keyframes rotate-bounce {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg) scale(1.1); }
+        }
+
+        /* YENİ: Mobil Cihazlar İçin Genel Duyarlılık */
+        @media (max-width: 900px) {
+            body { align-items: flex-start; }
+            .container { padding: 15px; margin: 0; border-radius: 0; min-height: 100vh; }
+            h1 { font-size: 1.5em; }
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        /* YENİ: Dikey Modda Uyarıyı Göster */
+        @media (max-width: 900px) and (orientation: portrait) {
+            .container { display: none; }
+            #orientation-warning { display: flex; }
+            body { overflow: hidden; }
+        }
+
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- YENİ: Yönlendirme Uyarı Ekranı -->
+    <div id="orientation-warning">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+            <path d="M16.5,4.5a1.5,1.5,0,0,1,1.5,1.5v12a1.5,1.5,0,0,1-1.5,1.5h-9A1.5,1.5,0,0,1,6,18V6A1.5,1.5,0,0,1,7.5,4.5h9M12,21a1,1,0,0,0,1-1V4a1,1,0,0,0-1-1H7A3,3,0,0,0,4,6V18a3,3,0,0,0,3,3h5Z"/>
+        </svg>
+        <h2>Daha İyi Bir Deneyim İçin</h2>
+        <p>Lütfen cihazınızı yatay konuma çevirin.</p>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Karesel Fonksiyonların Nitel Özelliklerini Keşfet</h1>
+            <button id="theme-toggle-btn" title="Temayı Değiştir"></button>
+        </div>
+        
+        <div class="tab-nav">
+            <button class="tab-btn active" id="anim-tab-btn">Adım Adım İzle</button>
+            <button class="tab-btn" id="quiz-tab-btn">Sıra Sende</button>
+        </div>
+
+        <div class="tab-content active" id="anim-content">
+            <div class="selection-panel">
+                 <div class="function-buttons" id="anim-buttons"></div>
+            </div>
+            <div class="layout">
+                <canvas id="anim-canvas" width="500" height="500"></canvas>
+                <div class="explanation-panel">
+                    <h3 id="explanation-title"></h3>
+                    <p id="explanation-text"></p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prev-btn" class="nav-btn">Geri</button>
+                <button id="next-btn" class="nav-btn">İleri</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="quiz-content">
+             <div class="selection-panel">
+                <div class="function-buttons" id="quiz-buttons"></div>
+            </div>
+            <div id="quiz-container" class="quiz-container"></div>
+        </div>
+    </div>
+    
+    <script src="scorm.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize SCORM (if available)
+        try {
+            if (window.SCORM && typeof window.SCORM.init === 'function') {
+                window.SCORM.init();
+            }
+        } catch (e) { console.warn('SCORM init error', e); }
+
+        // track whether we've already reported completion to LMS
+        let scormCompletionSent = false;
+        // Grafikler (canvas) için sabit Gündüz (Light) renk paleti
+        const GRAPH_LIGHT_THEME = {
+            '--primary-color': '#005a9c',
+            '--secondary-color': '#e6f2ff',
+            '--text-color': '#333',
+            '--highlight-color-increase': '#28a745',
+            '--highlight-color-decrease': '#dc3545',
+            '--background-color': '#f0f8ff',
+            '--container-bg': '#ffffff',
+            '--border-color': '#dee2e6'
+        };
+        
+        // Canvas yükleme koruması ve hata yakalama
+        function initializeCanvas() {
+            try {
+                const animCanvas = document.getElementById('anim-canvas');
+                const animCtx = animCanvas.getContext('2d');
+                
+                if (!animCanvas || !animCtx) {
+                    throw new Error('Canvas yüklenemedi');
+                }
+                
+                // Canvas test çizimi
+                animCtx.clearRect(0, 0, animCanvas.width, animCanvas.height);
+                animCtx.fillStyle = 'rgba(0,0,0,0.1)';
+                animCtx.fillRect(0, 0, 10, 10);
+                animCtx.clearRect(0, 0, animCanvas.width, animCanvas.height);
+                // Canvas hep gündüz görünümü
+                animCanvas.style.backgroundColor = GRAPH_LIGHT_THEME['--container-bg'];
+                animCanvas.style.borderColor = GRAPH_LIGHT_THEME['--border-color'];
+                
+                return { animCanvas, animCtx };
+            } catch (error) {
+                console.warn('Canvas başlatma hatası:', error);
+                showCanvasError();
+                return null;
+            }
+        }
+        
+        function showCanvasError() {
+            const container = document.querySelector('.container');
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                background: #ff6b6b; color: white; padding: 15px; margin: 20px 0;
+                border-radius: 8px; text-align: center; font-weight: bold;
+            `;
+            errorDiv.innerHTML = `
+                <div>⚠️ Grafik yükleme sorunu tespit edildi!</div>
+                <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; 
+                        background: white; color: #ff6b6b; border: none; border-radius: 4px; 
+                        cursor: pointer; font-weight: bold;">Manuel Yenile</button>
+            `;
+            container.insertBefore(errorDiv, container.firstChild);
+        }
+        
+        // Canvas boyutlarını ekran boyutuna göre ayarla
+        function resizeCanvas() {
+            const animCanvas = document.getElementById('anim-canvas');
+            if (!animCanvas) return;
+            
+            const container = animCanvas.parentElement;
+            const maxWidth = Math.min(500, container.clientWidth * 0.9);
+            const maxHeight = Math.min(500, window.innerHeight * 0.6);
+            
+            animCanvas.style.width = maxWidth + 'px';
+            animCanvas.style.height = maxHeight + 'px';
+            animCanvas.style.maxWidth = '100%';
+            animCanvas.style.height = 'auto';
+        }
+        
+        // Sayfa yüklendikten sonra canvas boyutunu ayarla
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Canvas başlatma
+        const canvasData = initializeCanvas();
+        if (!canvasData) return; // Canvas yüklenemezse işlemi durdur
+        
+        const { animCanvas, animCtx } = canvasData;
+        
+        let animationFrameId = null;
+
+        const animationFunctions = [
+            { name: 'f: [-3, 2] → ℝ, f(x) = -x²', a: -1, b: 0, c: 0, func: x => -x*x, domain: [-3, 2], range: '[-9, 0]', signPositive: 'Yok', signNegative: '[-3, 0) U (0, 2]', zeros: '0', decreasingInterval: '[0, 2]', increasingInterval: '[-3, 0]', maxPoint: 'x = 0', maxValue: 0, minPoint: 'x = -3', minValue: -9, isOneToOne: 'Hayır', isOnto: 'Hayır', vertex: [0,0] },
+            { name: 'f: [-2, 3] → ℝ, f(x) = (x-1)²', a: 1, b: -2, c: 1, func: x => (x-1)*(x-1), domain: [-2, 3], range: '[0, 9]', signPositive: '[-2, 1) U (1, 3]', signNegative: 'Yok', zeros: '1', decreasingInterval: '[-2, 1]', increasingInterval: '[1, 3]', maxPoint: 'x = -2', maxValue: 9, minPoint: 'x = 1', minValue: 0, isOneToOne: 'Hayır', isOnto: 'Hayır', vertex: [1,0] },
+            { name: 'f: [0, 4] → ℝ, f(x) = x² - 2x + 2', a: 1, b: -2, c: 2, func: x => x*x - 2*x + 2, domain: [0, 4], range: '[1, 10]', signPositive: '[0, 4]', signNegative: 'Yok', zeros: 'Yok', decreasingInterval: '[0, 1]', increasingInterval: '[1, 4]', maxPoint: 'x = 4', maxValue: 10, minPoint: 'x = 1', minValue: 1, isOneToOne: 'Hayır', isOnto: 'Hayır', vertex: [1,1] },
+            { name: 'f: [-4, -1] → ℝ, f(x) = -x² - 6x - 5', a: -1, b: -6, c: -5, func: x => -x*x - 6*x - 5, domain: [-4, -1], range: '[0, 4]', signPositive: '(-4, -1)', signNegative: 'Yok', zeros: '-5, -1', decreasingInterval: '[-3, -1]', increasingInterval: '[-4, -3]', maxPoint: 'x = -3', maxValue: 4, minPoint: 'x = -1', minValue: 0, isOneToOne: 'Hayır', isOnto: 'Hayır', vertex: [-3,4] }
+        ];
+        const quizFunctions = [
+            { name: 'f: [-1, 3] → ℝ, f(x) = x²', a: 1, func: x => x*x, domain: [-1, 3], range: '[0, 9]', signPositive: '[-1, 0) U (0, 3]', signNegative: 'Yok', zeros: '0', decreasingInterval: '[-1, 0]', increasingInterval: '[0, 3]', maxPoint: 'x = 3', maxValue: 9, minPoint: 'x = 0', minValue: 0, isOneToOne: 'Hayır', isOnto: 'Hayır', vertex: [0,0] },
+            { name: 'f: [-4, 1] → ℝ, f(x) = -(x+1)²', a: -1, func: x => -((x+1)*(x+1)), domain: [-4, 1], range: '[-9, 0]', signPositive: 'Yok', signNegative: '[-4, -1) U (-1, 1]', zeros: '-1', decreasingInterval: '[-1, 1]', increasingInterval: '[-4, -1]', maxPoint: 'x = -1', maxValue: 0, minPoint: 'x = -4', minValue: -9, isOneToOne: 'Hayır', isOnto: 'Hayır', vertex: [-1,0] },
+            { name: 'f: [0, 3] → ℝ, f(x) = (x-2)² + 1', a: 1, func: x => (x-2)*(x-2) + 1, domain: [0, 3], range: '[1, 5]', signPositive: '[0, 3]', signNegative: 'Yok', zeros: 'Yok', decreasingInterval: '[0, 2]', increasingInterval: '[2, 3]', maxPoint: 'x = 0', maxValue: 5, minPoint: 'x = 2', minValue: 1, isOneToOne: 'Hayır', isOnto: 'Hayır', vertex: [2,1] },
+            { name: 'f: [-2, 2] → ℝ, f(x) = -x² + 4', a: -1, func: x => -x*x + 4, domain: [-2, 2], range: '[0, 4]', signPositive: '(-2, 2)', signNegative: 'Yok', zeros: '-2, 2', decreasingInterval: '[0, 2]', increasingInterval: '[-2, 0]', maxPoint: 'x = 0', maxValue: 4, minPoint: 'x = -2, x = 2', minValue: 0, isOneToOne: 'Hayır', isOnto: 'Hayır', vertex: [0,4] }
+        ];
+
+        // Türeyen nitelikler: simetri ekseni (x = -b/(2a))
+        function attachDerivedProps(list) {
+            list.forEach(f => {
+                if (typeof f.a === 'number') {
+                    if ('b' in f && 'c' in f) {
+                        const h = -f.b / (2 * f.a);
+                        f.axisOfSymmetry = `x = ${Math.abs(h) < 1e-10 ? 0 : Math.round(h*1000)/1000}`;
+                    } else if (f.vertex && Array.isArray(f.vertex)) {
+                        f.axisOfSymmetry = `x = ${f.vertex[0]}`;
+                    } else {
+                        f.axisOfSymmetry = 'x = 0';
+                    }
+                } else {
+                    f.axisOfSymmetry = 'x = 0';
+                }
+            });
+        }
+        attachDerivedProps(animationFunctions);
+        attachDerivedProps(quizFunctions);
+
+        const animationStepsConfig = [
+            { title: 'Genel Bakış ve Tanım Kümesi', text: 'Fonksiyonumuz: <code>{name}</code>. Grafiğin sadece x-eksenindeki <b class="domain">[{domain}]</b> aralığında var olduğuna dikkat edin.', state: 'full' },
+            { title: 'a) Görüntü Kümesi', text: 'Fonksiyonun tanım aralığındaki alabileceği en küçük değer <b class="increase">{minValue}</b>, en büyük değer ise <b class="decrease">{maxValue}</b>\'dur. Bu nedenle y-ekseninde vurgulanan <b>görüntü kümesi</b> <b class="domain">{range}</b> aralığıdır.', state: 'range' },
+            { title: 'a2) Simetri Ekseni', text: 'Parabolün simetri ekseni: <b class="domain">{axisOfSymmetry}</b>. Bu eksen, en küçük/en büyük değerinin alındığı x değerini de verir.', state: 'axis' },
+            { title: 'b) İşaret Analizi', text: '{signAnalysisText}', state: 'sign' },
+            { title: 'c) Fonksiyonun Sıfırı', text: 'f(x) = 0 denkleminin çözümü <b class="decrease">{zeros}</b>\'dır. Bu, grafiğin x-eksenini kestiği noktadır.', state: 'zeros' },
+            { title: 'ç) Artan-Azalan Aralıklar', text: 'Grafiğin kırmızı bölümü, x-eksenindeki <b class="decrease">{decreasingInterval}</b> aralığında azalandır. Yeşil bölüm ise <b class="increase">{increasingInterval}</b> aralığında artandır.', state: 'intervals' },
+            { title: 'd) Maksimum-Minimum Değerler', text: 'Fonksiyon minimum değerini <b class="increase">{minPoint}</b>\'da alır ve değeri <b class="increase">{minValue}</b>\'dir. Maksimum değerini ise <b class="decrease">{maxPoint}</b>\'de alır ve değeri <b class="decrease">{maxValue}</b>\'dir.', state: 'extrema' },
+            { title: 'e) Bire Bir Olma Durumu', text: 'Hareketli yatay doğru, grafiği birden fazla noktada kestiği için fonksiyon <b>bire bir değildir</b>. Örneğin f(-2)=4 ve f(2)=4 gibi farklı girdiler aynı sonucu verir.', state: 'one-to-one' },
+            { title: 'f) Örten Olma Durumu', text: 'Değer kümesi tüm <b class="domain">gerçek sayılar (ℝ)</b> iken görüntü kümesi <b class="domain">{range}</b> olduğu için fonksiyon <b>örten değildir</b>.', state: 'onto' }
+        ];
+        
+        const explanationTitle = document.getElementById('explanation-title'), explanationText = document.getElementById('explanation-text');
+        const prevBtn = document.getElementById('prev-btn'), nextBtn = document.getElementById('next-btn');
+        const animButtonsContainer = document.getElementById('anim-buttons'), quizButtonsContainer = document.getElementById('quiz-buttons');
+        const quizContainer = document.getElementById('quiz-container');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        
+        let currentAnimFunc, currentAnimStep = 0, currentQuizFunc;
+        const scale = 30;
+
+        // Sesler: klasördeki mp3 dosyalarını kullan
+        const sounds = {
+            correct: new Audio('correct_answer.mp3'),
+            wrong: new Audio('wrong_answer.mp3'),
+            step: new Audio('step_complete.mp3'),
+            swoosh: new Audio('swoosh.mp3'),
+            click: new Audio('click.mp3')
+        };
+        Object.values(sounds).forEach(a => { try { a.preload = 'auto'; a.volume = 0.8; } catch(e){} });
+        function playSound(key) {
+            const a = sounds[key];
+            if (!a) return;
+            try { a.currentTime = 0; a.play().catch(() => {}); } catch(e) {}
+        }
+        
+        function mapCoords(p, customOrigin) { return { x: customOrigin.x + p[0] * scale, y: customOrigin.y - p[1] * scale }; }
+        // Renkleri sabit light palette göre çöz
+        function resolveColor(color) { 
+            const m = color.match(/^var\((--[^)]+)\)/); 
+            if (m) { 
+                const key = m[1];
+                if (GRAPH_LIGHT_THEME[key]) return GRAPH_LIGHT_THEME[key];
+            } 
+            return color; 
+        }
+        
+        // Tam kareye çevirme yardımcıları (ax² + bx + c)
+        function toSquareFormString(a, b, c) {
+            if (a === 0 && b === 0) return null;
+            const round = (v) => {
+                const r = Math.round(v * 1000) / 1000;
+                return Math.abs(r) < 1e-10 ? 0 : r;
+            };
+            const fmt = (v) => {
+                const r = round(v);
+                return Number.isInteger(r) ? String(r) : r.toString();
+            };
+            if (a === 0) return `${b>=0?'+':''}${b}x ${c>=0?'+':''}${c}`.replace(/^\+/, '');
+            const h = -b / (2 * a);
+            const k = c - (b * b) / (4 * a);
+            const hSign = h >= 0 ? '-' : '+';
+            const hAbs = fmt(Math.abs(h));
+            let base = '';
+            if (a === 1) base = `(x ${hSign} ${hAbs})²`;
+            else if (a === -1) base = `-(x ${hSign} ${hAbs})²`;
+            else base = `${fmt(a)}(x ${hSign} ${hAbs})²`;
+            const kPart = (round(k) === 0) ? '' : (k > 0 ? ` + ${fmt(k)}` : ` - ${fmt(Math.abs(k))}`);
+            return base + kPart;
+        }
+        function isVertexFormLike(nameText) {
+            const t = nameText.replace(/\s/g, '').toLowerCase();
+            if (/^\-?\(x[+\-]\d+(?:\.\d+)?\)²(?:[+\-]\d+(?:\.\d+)?)?$/.test(t)) return true;
+            if (/^\-?x²(?:[+\-]\d+(?:\.\d+)?)?$/.test(t)) return true;
+            return false;
+        }
+
+        // ax² + bx + c = 0 için gerçek kökleri döndürür
+        function solveQuadratic(a, b, c) {
+            if (Math.abs(a) < 1e-12) {
+                if (Math.abs(b) < 1e-12) return [];
+                return [-c / b];
+            }
+            const d = b*b - 4*a*c;
+            if (d < -1e-12) return [];
+            if (Math.abs(d) < 1e-12) return [ -b / (2*a) ];
+            const sqrtD = Math.sqrt(d);
+            return [ (-b - sqrtD)/(2*a), (-b + sqrtD)/(2*a) ];
+        }
+
+        function drawAxes(ctx, canvas, customOrigin) {
+            ctx.strokeStyle = resolveColor('var(--text-color)');
+            ctx.fillStyle = resolveColor('var(--text-color)');
+            ctx.font = "14px Arial"; 
+            ctx.lineWidth = 2;
+            
+            // X ekseni çiz
+            ctx.beginPath();
+            ctx.moveTo(20, customOrigin.y); 
+            ctx.lineTo(canvas.width - 20, customOrigin.y);
+            ctx.stroke();
+            
+            // Y ekseni çiz
+            ctx.beginPath();
+            ctx.moveTo(customOrigin.x, canvas.height - 20); 
+            ctx.lineTo(customOrigin.x, 20);
+            ctx.stroke();
+            
+            // X ekseni sağ ok
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 20, customOrigin.y);
+            ctx.lineTo(canvas.width - 35, customOrigin.y - 8);
+            ctx.lineTo(canvas.width - 35, customOrigin.y + 8);
+            ctx.closePath();
+            ctx.fill();
+            
+            // X ekseni sol ok
+            ctx.beginPath();
+            ctx.moveTo(20, customOrigin.y);
+            ctx.lineTo(35, customOrigin.y - 8);
+            ctx.lineTo(35, customOrigin.y + 8);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Y ekseni üst ok
+            ctx.beginPath();
+            ctx.moveTo(customOrigin.x, 20);
+            ctx.lineTo(customOrigin.x - 8, 35);
+            ctx.lineTo(customOrigin.x + 8, 35);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Y ekseni alt ok
+            ctx.beginPath();
+            ctx.moveTo(customOrigin.x, canvas.height - 20);
+            ctx.lineTo(customOrigin.x - 8, canvas.height - 35);
+            ctx.lineTo(customOrigin.x + 8, canvas.height - 35);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Orijin etiketi
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'top';
+            ctx.font = "bold 16px Arial";
+            ctx.fillText('O', customOrigin.x - 8, customOrigin.y + 8);
+            
+            // X ekseni etiketi
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.font = "bold 18px Arial";
+            ctx.fillText('x', canvas.width - 20, customOrigin.y + 15);
+            
+            // Y ekseni etiketi
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.font = "bold 18px Arial";
+            ctx.fillText('y', customOrigin.x + 15, 20);
+            
+            // Sayı etiketleri
+            ctx.font = "12px Arial";
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            
+            const yMax = customOrigin.y / scale;
+            const yMin = (customOrigin.y - canvas.height) / scale;
+            
+            // X ekseni sayıları
+            for (let i = -7; i <= 7; i++) {
+                if (i === 0) continue;
+                const x = customOrigin.x + i * scale;
+                if (x > 30 && x < canvas.width - 30) {
+                    ctx.beginPath(); 
+                    ctx.moveTo(x, customOrigin.y - 6); 
+                    ctx.lineTo(x, customOrigin.y + 6); 
+                    ctx.stroke();
+                    ctx.fillText(i, x, customOrigin.y + 12);
+                }
+            }
+            
+            // Y ekseni sayıları
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            for (let i = Math.floor(yMin); i <= Math.ceil(yMax); i++) {
+                if (i === 0) continue;
+                const y = customOrigin.y - i * scale;
+                if (y > 30 && y < canvas.height - 30) {
+                    ctx.beginPath(); 
+                    ctx.moveTo(customOrigin.x - 6, y); 
+                    ctx.lineTo(customOrigin.x + 6, y); 
+                    ctx.stroke();
+                    ctx.fillText(i, customOrigin.x - 12, y);
+                }
+            }
+            
+            ctx.lineWidth = 1;
+        }
+        function drawGraph(ctx, canvas, func, color, domain, interval = null) {
+            ctx.beginPath(); 
+            ctx.strokeStyle = resolveColor(color);
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            const localOrigin = { x: canvas.width / 2, y: func.a > 0 ? 440 : 140 };
+            let firstPoint = true;
+            let lastValidPoint = null;
+        
+            // Daha yüksek çözünürlük için daha küçük adımlar
+            const step = 0.02;
+        
+            for (let x = domain[0]; x <= domain[1]; x += step) {
+                if (interval && (x < interval[0] || x > interval[1])) continue;
+            
+                const y = func.func(x);
+                const px = localOrigin.x + x * scale;
+                const py = localOrigin.y - y * scale;
+            
+                // Canvas sınırları içinde kontrol
+                if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+                    if (firstPoint) { 
+                        ctx.moveTo(px, py); 
+                        firstPoint = false; 
+                    } else {
+                        // Düzgün geçiş için son nokta ile bağla
+                        if (lastValidPoint && Math.abs(px - lastValidPoint.x) > 2) {
+                            ctx.lineTo(px, py);
+                        } else {
+                            ctx.lineTo(px, py);
+                        }
+                    }
+                    lastValidPoint = { x: px, y: py };
+                }
+            }
+        
+            ctx.stroke(); 
+            ctx.lineWidth = 1;
+            ctx.lineCap = 'butt';
+            ctx.lineJoin = 'miter';
+        }
+        function drawPoint(ctx, canvas, func, p, color, radius = 6) {
+            const localOrigin = { x: canvas.width / 2, y: func.a > 0 ? 440 : 140 };
+            const mappedP = mapCoords(p, localOrigin);
+            ctx.beginPath(); ctx.fillStyle = resolveColor(color); ctx.arc(mappedP.x, mappedP.y, radius, 0, 2 * Math.PI); ctx.fill();
+        }
+        function drawSignMarkers(ctx, func, domain) {
+            ctx.font = "bold 20px Arial";
+            const localOrigin = { x: ctx.canvas.width / 2, y: func.a > 0 ? 440 : 140 };
+            for (let x = domain[0]; x <= domain[1]; x += 0.5) {
+                const y = func.func(x);
+                if(Math.abs(y) < 0.1) continue;
+                const text = y > 0 ? '+' : '-';
+                const color = y > 0 ? 'var(--highlight-color-increase)' : 'var(--highlight-color-decrease)';
+                const yOffset = y > 0 ? -15 : 15;
+                ctx.fillStyle = resolveColor(color);
+                const pos = mapCoords([x, y], localOrigin);
+                ctx.fillText(text, pos.x, pos.y + yOffset);
+            }
+        }
+        function drawAxisInterval(ctx, canvas, func, start, end, color) {
+            const localOrigin = { x: canvas.width / 2, y: func.a > 0 ? 440 : 140 };
+            const startPos = mapCoords([start, 0], localOrigin);
+            const endPos = mapCoords([end, 0], localOrigin);
+            ctx.beginPath();
+            ctx.strokeStyle = resolveColor(color);
+            ctx.lineWidth = 6;
+            ctx.globalAlpha = 0.6;
+            ctx.moveTo(startPos.x, startPos.y);
+            ctx.lineTo(endPos.x, endPos.y);
+            ctx.stroke();
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = 1.0;
+        }
+        function redrawCanvas(ctx, canvas, func, state) {
+            if(animationFrameId) cancelAnimationFrame(animationFrameId);
+            const localOrigin = { x: canvas.width / 2, y: func.a > 0 ? 440 : 140 };
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawAxes(ctx, canvas, localOrigin);
+            drawGraph(ctx, canvas, func, resolveColor('var(--primary-color)'), func.domain);
+            drawPoint(ctx, canvas, func, [func.domain[0], func.func(func.domain[0])], 'blue');
+            drawPoint(ctx, canvas, func, [func.domain[1], func.func(func.domain[1])], 'blue');
+
+            if (state === 'full') { drawAxisInterval(ctx, canvas, func, func.domain[0], func.domain[1], 'var(--primary-color)'); }
+            else if (state === 'axis') {
+                // Simetri ekseni: x = h
+                const m = (func.axisOfSymmetry || '').match(/x\s*=\s*(-?\d+(?:\.\d+)?)/);
+                if (m) {
+                    const h = parseFloat(m[1]);
+                    const px = mapCoords([h, 0], localOrigin).x;
+                    ctx.beginPath();
+                    ctx.setLineDash([6, 6]);
+                    ctx.moveTo(px, 20);
+                    ctx.lineTo(px, canvas.height - 20);
+                    ctx.strokeStyle = 'orange';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+            else if (state === 'range') {
+                ctx.fillStyle = "rgba(0, 123, 255, 0.2)";
+                const y1 = mapCoords([0, func.minValue], localOrigin).y;
+                const y2 = mapCoords([0, func.maxValue], localOrigin).y;
+                ctx.fillRect(localOrigin.x - 10, y2, 20, y1 - y2);
+            } else if (state === 'sign') { 
+                drawSignMarkers(ctx, func, func.domain);
+                if(func.signPositive !== 'Yok') {
+                     const intervals = func.signPositive.split('U').map(s => s.match(/-?[\d\.]+/g).map(Number));
+                     intervals.forEach(interval => drawAxisInterval(ctx, canvas, func, interval[0], interval[1], 'var(--highlight-color-increase)'));
+                }
+                 if(func.signNegative !== 'Yok') {
+                     const intervals = func.signNegative.split('U').map(s => s.match(/-?[\d\.]+/g).map(Number));
+                     intervals.forEach(interval => drawAxisInterval(ctx, canvas, func, interval[0], interval[1], 'var(--highlight-color-decrease)'));
+                }
+            } else if (state === 'zeros') {
+                let zeros = [];
+                if (typeof func.a === 'number' && 'b' in func && 'c' in func) {
+                    zeros = solveQuadratic(func.a, func.b, func.c);
+                } else if (func.zeros && func.zeros.toUpperCase() !== 'YOK') {
+                    zeros = func.zeros.split(',').map(s => parseFloat(s.trim())).filter(v => !Number.isNaN(v));
+                }
+                zeros
+                    .filter(z => z >= func.domain[0] && z <= func.domain[1])
+                    .forEach(z => drawPoint(ctx, canvas, func, [z, 0], 'red'));
+            } else if (state === 'intervals') {
+                const vertexX = func.vertex ? func.vertex[0] : 0;
+                drawGraph(ctx, canvas, func, 'var(--highlight-color-decrease)', func.domain, [func.domain[0], vertexX]);
+                drawGraph(ctx, canvas, func, 'var(--highlight-color-increase)', func.domain, [vertexX, func.domain[1]]);
+                drawAxisInterval(ctx, canvas, func, func.domain[0], vertexX, 'var(--highlight-color-decrease)');
+                drawAxisInterval(ctx, canvas, func, vertexX, func.domain[1], 'var(--highlight-color-increase)');
+            } 
+            else if (state === 'extrema') {
+                let pulseRadius = 6 + Math.sin(Date.now() / 200) * 2;
+                const minPoints = func.minPoint.split(',').map(s => s.split('=')[1].trim());
+                const maxPoints = func.maxPoint.split(',').map(s => s.split('=')[1].trim());
+                minPoints.forEach(p => drawPoint(ctx, canvas, func, [parseFloat(p), func.minValue], 'green', pulseRadius));
+                maxPoints.forEach(p => drawPoint(ctx, canvas, func, [parseFloat(p), func.maxValue], 'red', pulseRadius));
+                animationFrameId = requestAnimationFrame(() => redrawCanvas(ctx, canvas, func, state));
+            }
+            else if (state === 'one-to-one') {
+                let yStart = mapCoords([0, func.maxValue], localOrigin).y - 10;
+                let yEnd = mapCoords([0, func.minValue], localOrigin).y + 10;
+
+                const topY = Math.min(yStart, yEnd);
+                const bottomY = Math.max(yStart, yEnd);
+
+                let sweepStartTime = Date.now();
+                const sweepDuration = 4000; // 4 saniyede bir tam tarama
+
+                function animateLine() {
+                    // Yeni çerçeve için canvas'ı temizle
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Statik elemanları çiz (eksenler ve tam grafik)
+                    drawAxes(ctx, canvas, localOrigin);
+                    drawGraph(ctx, canvas, func, resolveColor('var(--primary-color)'), func.domain);
+                    drawPoint(ctx, canvas, func, [func.domain[0], func.func(func.domain[0])], 'blue');
+                    drawPoint(ctx, canvas, func, [func.domain[1], func.func(func.domain[1])], 'blue');
+
+                    // Animasyon ilerlemesini hesapla (0'dan 1'e)
+                    const elapsedTime = (Date.now() - sweepStartTime);
+                    const progress = (elapsedTime % sweepDuration) / sweepDuration;
+
+                    // Tarama çizgisinin mevcut Y konumunu hesapla
+                    let currentSweepY = topY + (bottomY - topY) * progress;
+                    
+                    // Bu y seviyesindeki kesişimleri bul
+                    const intersections = [];
+                    const currentYValue = (localOrigin.y - currentSweepY) / scale;
+                    for(let x = func.domain[0]; x <= func.domain[1]; x += 0.02) {
+                        if (Math.abs(func.func(x) - currentYValue) < 0.1) {
+                            if (!intersections.some(p => Math.abs(p[0] - x) < 0.2)) {
+                                intersections.push([x, func.func(x)]);
+                            }
+                        }
+                    }
+                    
+                    // Tarama yapan yatay çizgiyi çiz
+                    ctx.beginPath(); 
+                    ctx.setLineDash([5, 5]);
+                    ctx.moveTo(0, currentSweepY); 
+                    ctx.lineTo(canvas.width, currentSweepY);
+                    ctx.strokeStyle = 'orange'; 
+                    ctx.lineWidth = 2; 
+                    ctx.stroke(); 
+                    ctx.setLineDash([]);
+                    
+                    // Kesişim noktalarını vurgula
+                    if (intersections.length > 0) {
+                        intersections.forEach(p => drawPoint(ctx, canvas, func, p, 'orange', 7));
+                    }
+                    
+                    // Animasyona devam etmek için bir sonraki çerçeveyi iste
+                    animationFrameId = requestAnimationFrame(animateLine);
+                }
+                
+                // Animasyonu başlat
+                animateLine();
+            }
+            
+        }
+        function updateAnimState() {
+            const step = animationStepsConfig[currentAnimStep];
+            explanationTitle.textContent = step.title;
+            let text;
+            
+            if (step.state === 'sign') {
+                text = currentAnimFunc.signPositive === 'Yok'
+                    ? `Grafiğin x-ekseninin altında kalan kısımları, x-eksenindeki kırmızı ile vurgulanan <b class="decrease">${currentAnimFunc.signNegative}</b> aralığında <b class="decrease">negatif (-)</b> değerler alır.`
+                    : `Grafiğin x-ekseninin üstünde kalan kısımları, x-eksenindeki yeşil ile vurgulanan <b class="increase">${currentAnimFunc.signPositive}</b> aralığında <b class="increase">pozitif (+)</b> değerler alır.`;
+            } else if (step.state === 'zeros') {
+                let zeros = [];
+                if (typeof currentAnimFunc.a === 'number' && 'b' in currentAnimFunc && 'c' in currentAnimFunc) {
+                    zeros = solveQuadratic(currentAnimFunc.a, currentAnimFunc.b, currentAnimFunc.c);
+                } else if (currentAnimFunc.zeros && currentAnimFunc.zeros.toUpperCase() !== 'YOK') {
+                    zeros = currentAnimFunc.zeros.split(',').map(s => parseFloat(s.trim())).filter(v => !Number.isNaN(v));
+                }
+                const filtered = zeros.filter(z => z >= currentAnimFunc.domain[0] && z <= currentAnimFunc.domain[1]);
+                const zerosStr = filtered.length ? filtered.map(z => Number.isInteger(z) ? z : Math.round(z*1000)/1000).join(', ') : 'Yok';
+                text = step.text.replace('{zeros}', zerosStr);
+            } else {
+                text = step.text.replace(/{(\w+)}/g, (match, key) => {
+                    const value = currentAnimFunc[key];
+                    return (value !== undefined && value !== null) ? value : match;
+                });
+            }
+            
+            if (currentAnimFunc.minMaxPoint && currentAnimFunc.minMaxPoint !== 'Yok') {
+                text = text.replace('{minMaxPointClass}', currentAnimFunc.minMaxPoint.toLowerCase());
+            }
+            if (step.state === 'range') {
+                const expr = (currentAnimFunc.name.split('f(x) = ')[1] || '').trim();
+                const alreadyVertex = isVertexFormLike(expr);
+                if (!alreadyVertex && typeof currentAnimFunc.a === 'number' && 'b' in currentAnimFunc && 'c' in currentAnimFunc) {
+                    const a = currentAnimFunc.a, b = currentAnimFunc.b, c = currentAnimFunc.c;
+                    const squareForm = toSquareFormString(a, b, c);
+                    const h = -b / (2 * a);
+                    const k = c - (b * b) / (4 * a);
+                    const round3 = (v) => Math.abs(v) < 1e-10 ? 0 : Math.round(v * 1000) / 1000;
+                    const hStr = String(round3(h));
+                    const kStr = String(round3(k));
+                    const infoBox = `
+                        <div style="padding:10px; border:1px solid ${resolveColor('var(--border-color)')}; border-radius:8px; background:${resolveColor('var(--secondary-color)')}; margin-bottom:10px; color:#0f172a;">
+                            <b>Tam kareye çevirme:</b><br>
+                            f(x) = ${expr} = <b>${squareForm}</b><br>
+                            h = <b>${hStr}</b>, k = <b>${kStr}</b>. a > 0 ise minimum değer k; a < 0 ise maksimum değer k olur. Görüntü kümesi bu k değerine göre belirlenir.
+                        </div>`;
+                    text = infoBox + text;
+                }
+            }
+            explanationText.innerHTML = text;
+            redrawCanvas(animCtx, animCanvas, currentAnimFunc, step.state);
+            prevBtn.disabled = currentAnimStep === 0;
+            nextBtn.disabled = currentAnimStep === animationStepsConfig.length - 1;
+
+            // If the learner reached the final step, mark SCO as completed once
+            try {
+                const isLast = currentAnimStep === (animationStepsConfig.length - 1);
+                if (isLast && !scormCompletionSent && window.SCORM && typeof window.SCORM.setCompleted === 'function') {
+                    // Optionally set a small score or raw status if desired
+                    try { window.SCORM.setScore(100); } catch (e) {}
+                    window.SCORM.setCompleted();
+                    scormCompletionSent = true;
+                    console.log('SCORM: completion sent');
+                }
+            } catch (e) { console.warn('Error sending SCORM completion', e); }
+        }
+
+        // Seçim işlevleri ve quiz akışı (global)
+        function selectAnimation(btn, index) {
+            currentAnimFunc = animationFunctions[index];
+            document.querySelectorAll('#anim-buttons .func-btn').forEach(b => b.classList.remove('active-anim'));
+            if (btn) btn.classList.add('active-anim');
+            currentAnimStep = 0;
+            updateAnimState();
+        }
+        function selectQuiz(btn, index) {
+            currentQuizFunc = quizFunctions[index];
+            document.querySelectorAll('#quiz-buttons .func-btn').forEach(b => b.classList.remove('active-quiz'));
+            if (btn) btn.classList.add('active-quiz');
+            renderQuiz();
+        }
+        let currentQuizStepIndex = 0;
+        const quizSteps = [
+            { key: 'range', label: 'a) Görüntü Kümesi', placeholder: '[min, max]', state: 'range', symbols: ['[',']','(',')'] },
+            { key: 'axisOfSymmetry', label: 'a2) Simetri Ekseni', placeholder: 'x = h', state: 'axis' },
+            { key: 'signPositive', label: 'b) Pozitif Olduğu Aralık', placeholder: 'aralık veya Yok', state: 'sign', symbols: ['[',']','(',')',' U ','∞'] },
+            { key: 'zeros', label: 'c) Fonksiyonun Sıfırı', placeholder: 'sayı veya Yok', state: 'zeros' },
+            { key: 'decreasingInterval', label: 'ç) Azalan Olduğu Aralık', placeholder: 'aralık', state: 'intervals', symbols: ['[',']','(',')'] },
+            { key: 'increasingInterval', label: 'ç) Artan Olduğu Aralık', placeholder: 'aralık', state: 'intervals', symbols: ['[',']','(',')'] },
+            { key: 'maxValue', label: 'd) Maksimum Değeri', placeholder: 'sayı', state: 'extrema' },
+            { key: 'minValue', label: 'd) Minimum Değeri', placeholder: 'sayı', state: 'extrema' },
+            { key: 'isOneToOne', label: 'e) Bire bir mi?', placeholder: '', state: 'one-to-one', select: ['Hayır','Evet'] },
+            { key: 'isOnto', label: 'f) Örten mi? (Değer Kümesi: ℝ)', placeholder: '', state: 'onto', select: ['Hayır','Evet'] }
+        ];
+        function flashCanvasBorder(canvas, ok) {
+            const orig = canvas.style.boxShadow || '';
+            const color = ok ? '#16a34a' : '#dc2626';
+            canvas.style.boxShadow = `0 0 0 3px ${color}`;
+            setTimeout(() => { canvas.style.boxShadow = orig; }, 800);
+        }
+        function renderQuiz() {
+            currentQuizStepIndex = 0;
+            quizContainer.innerHTML = `
+                <canvas id="quiz-canvas" width="500" height="500"></canvas>
+                <div class="quiz-inputs" id="quiz-step-container"></div>
+                <div class="final-controls">
+                    <button class="step-btn" id="quiz-check-btn">Kontrol Et</button>
+                    <button class="step-btn" id="quiz-next-btn" disabled>Sonraki Adım</button>
+                    <div id="quiz-feedback" class="feedback"></div>
+                </div>`;
+            const quizCanvas = document.getElementById('quiz-canvas');
+            const quizCtx = quizCanvas.getContext('2d');
+            quizCanvas.style.backgroundColor = GRAPH_LIGHT_THEME['--container-bg'];
+            quizCanvas.style.borderColor = GRAPH_LIGHT_THEME['--border-color'];
+            redrawCanvas(quizCtx, quizCanvas, currentQuizFunc, 'full');
+            renderQuizStep();
+            document.getElementById('quiz-check-btn').onclick = (ev) => { playSound('click'); checkQuizStep(); };
+            document.getElementById('quiz-next-btn').onclick = () => {
+                if (currentQuizStepIndex < quizSteps.length - 1) {
+                    currentQuizStepIndex++;
+                    renderQuizStep();
+                    redrawCanvas(quizCtx, quizCanvas, currentQuizFunc, 'full');
+                    playSound('step');
+                }
+            };
+        }
+        function renderQuizStep() {
+            const step = quizSteps[currentQuizStepIndex];
+            const c = document.getElementById('quiz-step-container');
+            const fieldId = `q-${step.key}`;
+            let inputHtml = '';
+            if (step.select) {
+                inputHtml = `<select id="${fieldId}">${step.select.map(o => `<option>${o}</option>`).join('')}</select>`;
+            } else {
+                inputHtml = `<input id="${fieldId}" placeholder="${step.placeholder}">`;
+            }
+            let symbolsHtml = '';
+            if (step.symbols) {
+                symbolsHtml = `<div class="symbol-buttons">${step.symbols.map(s => `<button class=\"symbol-btn\" onclick=\"insertSymbol('${fieldId}', '${s.replace(/'/g,"&#39;")}')\">${s.trim()}</button>`).join('')}</div>`;
+            }
+            c.innerHTML = `
+                <div class="input-group">
+                    <label>${step.label}:</label>
+                    ${inputHtml}
+                    ${symbolsHtml}
+                </div>`;
+            const feedbackEl = document.getElementById('quiz-feedback');
+            feedbackEl.className = 'feedback';
+            feedbackEl.style.display = 'none';
+            document.getElementById('quiz-next-btn').disabled = true;
+        }
+        function checkQuizStep() {
+            const step = quizSteps[currentQuizStepIndex];
+            const field = document.getElementById(`q-${step.key}`);
+            const userVal = field ? field.value : '';
+            const expectedRaw = String(currentQuizFunc[step.key] ?? '');
+            const normalize = (s) => String(s).replace(/\s/g,'').toUpperCase();
+            const ok = normalize(userVal) === normalize(expectedRaw);
+            const feedbackEl = document.getElementById('quiz-feedback');
+            feedbackEl.className = ok ? 'feedback correct' : 'feedback incorrect';
+            feedbackEl.textContent = ok ? 'Doğru.' : `Yanlış. Beklenen: ${expectedRaw}`;
+            feedbackEl.style.display = 'block';
+            const quizCanvas = document.getElementById('quiz-canvas');
+            const quizCtx = quizCanvas.getContext('2d');
+            redrawCanvas(quizCtx, quizCanvas, currentQuizFunc, step.state);
+            flashCanvasBorder(quizCanvas, ok);
+            document.getElementById('quiz-next-btn').disabled = false;
+            playSound(ok ? 'correct' : 'wrong');
+        }
+
+        // Navigasyon butonları
+        prevBtn.onclick = () => {
+            if (currentAnimStep > 0) {
+                currentAnimStep--;
+                playSound('swoosh');
+                updateAnimState();
+            } else {
+                playSound('click');
+            }
+        };
+        nextBtn.onclick = () => {
+            if (currentAnimStep < animationStepsConfig.length - 1) {
+                currentAnimStep++;
+                playSound('swoosh');
+                updateAnimState();
+            } else {
+                playSound('click');
+            }
+        };
+
+        // Sekme geçişleri
+        const animTabBtn = document.getElementById('anim-tab-btn');
+        const quizTabBtn = document.getElementById('quiz-tab-btn');
+        const animContent = document.getElementById('anim-content');
+        const quizContent = document.getElementById('quiz-content');
+        animTabBtn.onclick = () => {
+            animTabBtn.classList.add('active');
+            quizTabBtn.classList.remove('active');
+            animContent.classList.add('active');
+            quizContent.classList.remove('active');
+        };
+        quizTabBtn.onclick = () => {
+            quizTabBtn.classList.add('active');
+            animTabBtn.classList.remove('active');
+            quizContent.classList.add('active');
+            animContent.classList.remove('active');
+        };
+
+        window.insertSymbol = (inputId, symbol) => {
+            const input = document.getElementById(inputId);
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const text = input.value;
+            input.value = text.substring(0, start) + symbol + text.substring(end);
+            input.focus();
+            input.selectionEnd = start + symbol.length;
+        };
+
+        // Eski toplu kontrol kaldırıldı; adım adım kontrol kullanılıyor.
+        
+        animationFunctions.forEach((data, index) => {
+            const animBtn = document.createElement('button'); animBtn.className = 'func-btn'; animBtn.textContent = data.name;
+            animBtn.onclick = () => selectAnimation(animBtn, index);
+            animButtonsContainer.appendChild(animBtn);
+        });
+        quizFunctions.forEach((data, index) => {
+            const quizBtn = document.createElement('button'); quizBtn.className = 'func-btn'; quizBtn.textContent = data.name;
+            quizBtn.onclick = () => selectQuiz(quizBtn, index);
+            quizButtonsContainer.appendChild(quizBtn);
+        });
+        
+        selectAnimation(document.querySelector('#anim-buttons .func-btn'), 0);
+        selectQuiz(document.querySelector('#quiz-buttons .func-btn'), 0);
+        
+        themeToggleBtn.onclick = () => {
+            const newTheme = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggleBtn.textContent = newTheme === 'light' ? '🌙' : '☀️';
+            if (currentAnimFunc) { redrawCanvas(animCtx, animCanvas, currentAnimFunc, animationStepsConfig[currentAnimStep].state); }
+            if (currentQuizFunc && document.getElementById('quiz-canvas')) {
+                const quizCtx = document.getElementById('quiz-canvas').getContext('2d');
+                redrawCanvas(quizCtx, document.getElementById('quiz-canvas'), currentQuizFunc, 'full');
+            }
+        };
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        themeToggleBtn.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+    });
+    </script>
+
+</body>
+</html>
