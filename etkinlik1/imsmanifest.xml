@@ -16,6 +16,8 @@
     <resource identifier="RES-1" type="webcontent" adlcp:scormtype="sco" href="index.html">
       <file href="index.html" />
       <file href="scorm.js" />
+      <file href="arkafon.mp3" />
+      <file href="favicon.svg" />
     </resource>
   </resources>
 </manifest>

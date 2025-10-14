@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karesel Fonksiyonların Nitel Özelliklerini Keşfet</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <style>
         :root {
             --primary-color: #005a9c; --secondary-color: #e6f2ff;
@@ -33,10 +34,13 @@
             max-height: 95vh; overflow-y: auto;
         }
         .header {
-            text-align: center; border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px; margin-bottom: 25px; position: relative;
+            background: var(--container-bg);
+            border-bottom: 2px solid var(--border-color);
+            margin: 0 0 25px 0;
+            padding: 12px 16px;
         }
-        h1 { color: var(--primary-color); margin: 0; font-size: 1.8em; }
+        .header-bar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; }
+        h1 { color: var(--primary-color); margin: 0; font-size: 1.8em; text-align: center; }
         .tab-nav { display: flex; justify-content: center; border-bottom: 2px solid var(--border-color); margin-bottom: 25px; }
         .tab-btn { padding: 15px 30px; cursor: pointer; border: none; background-color: transparent; font-size: 1.1em; font-weight: 600; color: var(--tab-text); position: relative; bottom: -2px; transition: all 0.2s; }
         .tab-btn.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
@@ -56,8 +60,16 @@
         .feedback.correct { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
         .feedback.incorrect { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
         code { font-family: "Courier New", monospace; background-color: var(--secondary-color); padding: 2px 4px; border-radius: 4px;}
-        #theme-toggle-btn { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; font-size: 24px; line-height: 1; transition: transform 0.2s ease; }
-        #theme-toggle-btn:hover { transform: translateY(-50%) scale(1.1) rotate(15deg); }
+    #theme-toggle-btn { background: none; border: none; cursor: pointer; padding: 5px; font-size: 24px; line-height: 1; transition: transform 0.2s ease; justify-self: end; }
+    #theme-toggle-btn:hover { transform: scale(1.1) rotate(15deg); }
+    #music-toggle-btn { background: none; border: none; cursor: pointer; padding: 6px 12px; font-size: 16px; line-height: 1; border-radius: 8px; color: var(--button-text); border: 1px solid var(--button-border); background: linear-gradient(135deg, #f0f7ff, #e2ecff); justify-self: start; }
+    #music-toggle-btn:hover { transform: scale(1.03); }
+        /* Dark mode: light button with dark text for contrast */
+        body[data-theme="dark"] #music-toggle-btn {
+            color: #0f172a;
+            background: linear-gradient(135deg, #e6f0ff, #d7e6ff);
+            border-color: #4f8edb;
+        }
         canvas { 
             border: 2px solid var(--border-color); 
             border-radius: 8px; 
@@ -162,8 +174,10 @@
         @media (max-width: 900px) {
             body { align-items: flex-start; }
             .container { padding: 15px; margin: 0; border-radius: 0; min-height: 100vh; }
-            h1 { font-size: 1.5em; }
+            h1 { font-size: 1.3em; }
             .layout { grid-template-columns: 1fr; }
+            #music-toggle-btn { font-size: 14px; padding: 6px 10px; }
+            #theme-toggle-btn { font-size: 22px; }
         }
 
         /* YENİ: Dikey Modda Uyarıyı Göster */
@@ -188,8 +202,11 @@
 
     <div class="container">
         <div class="header">
-            <h1>Karesel Fonksiyonların Nitel Özelliklerini Keşfet</h1>
-            <button id="theme-toggle-btn" title="Temayı Değiştir"></button>
+            <div class="header-bar">
+                <button id="music-toggle-btn" title="Arka plan müziği">Müziği Aç</button>
+                <h1>Karesel Fonksiyonların Nitel Özelliklerini Keşfet</h1>
+                <button id="theme-toggle-btn" title="Temayı Değiştir"></button>
+            </div>
         </div>
         
         <div class="tab-nav">
@@ -222,6 +239,8 @@
         </div>
     </div>
     
+    <!-- Arka plan müziği: varsayılan olarak yüklenir, kullanıcı etkileşimi ile oynatılır -->
+    <audio id="bgm" src="arkafon.mp3" loop preload="auto"></audio>
     <script src="scorm.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -365,7 +384,52 @@
         const prevBtn = document.getElementById('prev-btn'), nextBtn = document.getElementById('next-btn');
         const animButtonsContainer = document.getElementById('anim-buttons'), quizButtonsContainer = document.getElementById('quiz-buttons');
         const quizContainer = document.getElementById('quiz-container');
-        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const musicToggleBtn = document.getElementById('music-toggle-btn');
+    const bgm = document.getElementById('bgm');
+        // Arka plan müziği kontrolü
+        const MUSIC_KEY = 'bgmEnabled';
+        function updateMusicButton(isOn){
+            musicToggleBtn.textContent = isOn ? 'Müziği Kapat' : 'Müziği Aç';
+            musicToggleBtn.title = isOn ? 'Arka plan müziğini kapat' : 'Arka plan müziğini aç';
+        }
+        async function setMusic(on){
+            try{
+                if(on){
+                    // Autoplay politikaları nedeniyle kullanıcı etkileşimi gerekebilir
+                    await bgm.play();
+                }else{
+                    bgm.pause();
+                }
+                localStorage.setItem(MUSIC_KEY, on ? '1' : '0');
+                updateMusicButton(on);
+            }catch(e){
+                console.warn('Müzik oynatma hatası (muhtemelen kullanıcı etkileşimi gerekiyor):', e);
+                updateMusicButton(false);
+                localStorage.setItem(MUSIC_KEY, '0');
+            }
+        }
+        // İlk yüklemede sadece buton durumunu ayarla, gerçek oynatma ilk tıklamada yapılır
+        // Varsayılan: müzik açık (kayıt yoksa). Autoplay başarısız olursa ilk tıklamada başlatılır.
+        const storedMusicPref = localStorage.getItem(MUSIC_KEY);
+        let musicOn = (storedMusicPref === null) ? true : (storedMusicPref === '1');
+        updateMusicButton(musicOn);
+        if (musicOn) {
+            // Otomatik başlatmayı dener; engellenirse sessizce düşer.
+            try { bgm.play().catch(() => {}); } catch (e) {}
+        }
+        musicToggleBtn.addEventListener('click', async () => {
+            musicOn = !musicOn;
+            await setMusic(musicOn);
+        });
+        // Kullanıcı ilk etkileşimi: herhangi bir buton tıklandığında, eğer tercih açık ise başlat
+        const primePlay = async () => {
+            if(musicOn){
+                await setMusic(true);
+            }
+            document.removeEventListener('click', primePlay);
+        };
+        document.addEventListener('click', primePlay, { once: true });
         
         let currentAnimFunc, currentAnimStep = 0, currentQuizFunc;
         const scale = 30;
@@ -424,6 +488,95 @@
             if (/^\-?\(x[+\-]\d+(?:\.\d+)?\)²(?:[+\-]\d+(?:\.\d+)?)?$/.test(t)) return true;
             if (/^\-?x²(?:[+\-]\d+(?:\.\d+)?)?$/.test(t)) return true;
             return false;
+        }
+
+        // Türkçe ek uyumu: sayılardan sonra gelen "-dır/-dir/-dur/-dür" düzelticisi
+        function vowelForNumber(numStr) {
+            // normalize
+            const s = String(numStr).trim().replace(/^[-+]/,'');
+            if (!s) return 'ı';
+            // get numeric value safely
+            const n = Number(s.replace(',', '.'));
+            const lastDigit = (() => {
+                const m = s.match(/\d(?!.*\d)/);
+                return m ? parseInt(m[0], 10) : 0;
+            })();
+
+            // Özel: yalın 0 -> 'dır (sıfır)
+            if (s === '0') return 'ı';
+
+            // Çoklu 10'luklara göre tens kuralı
+            if (!Number.isNaN(n) && n % 10 === 0) {
+                const tens = Math.abs(n) % 100;
+                switch (tens) {
+                    case 10: return 'u';   // on -> 'dur
+                    case 20: return 'i';   // yirmi -> 'dir
+                    case 30: return 'u';   // otuz -> 'dur
+                    case 40: return 'ı';   // kırk -> 'dır
+                    case 50: return 'i';   // elli -> 'dir
+                    case 60: return 'ı';   // altmış -> 'dır
+                    case 70: return 'i';   // yetmiş -> 'dir
+                    case 80: return 'i';   // seksen -> 'dir
+                    case 90: return 'ı';   // doksan -> 'dır
+                    case 0:
+                        // 100, 200, ... kaba yaklaşım: yüz -> 'dür
+                        return 'ü';
+                    default:
+                        break;
+                }
+            }
+            // Son rakama göre yaklaşım
+            switch (lastDigit) {
+                case 1: case 2: case 5: case 7: case 8: return 'i'; // bir, iki, beş, yedi, sekiz
+                case 3: case 4: return 'ü'; // üç, dört
+                case 6: return 'ı'; // altı
+                case 9: return 'u'; // dokuz
+                case 0: return 'ı'; // sıfır (genel)
+                default: return 'ı';
+            }
+        }
+        function assimilationConsonantForNumber(numStr){
+            const s = String(numStr);
+            if (/[.,]/.test(s)) return 'd'; // ondalıklar için basit: d
+            let n = parseInt(s, 10);
+            if (Number.isNaN(n)) return 'd';
+            n = Math.abs(n);
+            const last = n % 10;
+            if (last === 3 || last === 4 || last === 5) return 't';
+            if (last === 0) {
+                const tens = n % 100;
+                if (tens === 40 || tens === 60 || tens === 70) return 't';
+            }
+            return 'd';
+        }
+        function vowelForLocative(numStr) {
+            // Use vowelForNumber to determine front/back, then map to 'e' or 'a'
+            const v = vowelForNumber(numStr);
+            // Treat 'i' and 'ü' as front -> 'e'
+            if (v === 'i' || v === 'ü') return 'e';
+            // Treat 'ı' and 'u' as back -> 'a'
+            return 'a';
+        }
+        function fixCopulaSuffixes(text) {
+            // 123'dir/123'dur/123'dır/123'dür/123'tir... -> sayıya göre d/t ve uygun ünlü
+            let out = text.replace(/(-?\d+(?:[.,]\d+)?)'(?:d|t)[uiı]r/gi, (m, num) => {
+                const cons = assimilationConsonantForNumber(num);
+                const v = vowelForNumber(num);
+                return `${num}'${cons}${v}r`;
+            });
+            // Etiket kapanışı ile ayrılmış durum: <b>0</b>'dur -> 0'dır
+            out = out.replace(/(-?\d+(?:[.,]\d+)?)(\s*(?:<\/[^>]+>\s*)+)'(?:d|t)[uiı]r/gi, (m, num, closers) => {
+                const cons = assimilationConsonantForNumber(num);
+                const v = vowelForNumber(num);
+                return `${num}${closers}'${cons}${v}r`;
+            });
+            // Ayrıca locative ('-da/-de') düzeltmesi: sayı'da/'de gibi
+            out = out.replace(/(-?\d+(?:[.,]\d+)?)(\s*(?:<\/[^>]+>\s*)*)'(?:d|t)[ae]/gi, (m, num, closers) => {
+                const cons = assimilationConsonantForNumber(num);
+                const v = vowelForLocative(num);
+                return `${num}${closers}'${cons}${v}`;
+            });
+            return out;
         }
 
         // ax² + bx + c = 0 için gerçek kökleri döndürür
@@ -810,7 +963,9 @@
                     text = infoBox + text;
                 }
             }
-            explanationText.innerHTML = text;
+            // Sayı + 'dur/dir/dır/dür uyumunu düzelt
+            // Ayrıca locative ve copula düzeltmelerini uygula
+            explanationText.innerHTML = fixCopulaSuffixes(text);
             redrawCanvas(animCtx, animCanvas, currentAnimFunc, step.state);
             prevBtn.disabled = currentAnimStep === 0;
             nextBtn.disabled = currentAnimStep === animationStepsConfig.length - 1;
@@ -921,7 +1076,8 @@
             const ok = normalize(userVal) === normalize(expectedRaw);
             const feedbackEl = document.getElementById('quiz-feedback');
             feedbackEl.className = ok ? 'feedback correct' : 'feedback incorrect';
-            feedbackEl.textContent = ok ? 'Doğru.' : `Yanlış. Beklenen: ${expectedRaw}`;
+            const msg = ok ? 'Doğru.' : `Yanlış. Beklenen: ${expectedRaw}`;
+            feedbackEl.textContent = fixCopulaSuffixes(msg);
             feedbackEl.style.display = 'block';
             const quizCanvas = document.getElementById('quiz-canvas');
             const quizCtx = quizCanvas.getContext('2d');
