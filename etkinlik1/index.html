@@ -14,13 +14,20 @@
             --border-color: #dee2e6; --button-border: #b3d9ff;
             --button-text: #005a9c; --tab-text: #495057;
         }
+        /* GÜNCELLENMİŞ GECE MODU PALETİ */
         body[data-theme="dark"] {
-            --primary-color: #4dabf7; --secondary-color: #2c2e33;
-            --text-color: #e9ecef; --highlight-color-increase: #37b24d; --highlight-color-decrease: #f03e3e;
-            --background-color: #121212; --container-bg: #1e1e1e;
-            --container-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            --border-color: #444; --button-border: #005a9c;
-            --button-text: #e6f2ff; --tab-text: #adb5bd;
+            --primary-color: #00ffff;           /* Neon Cyan */
+            --secondary-color: #ff1493;         /* Neon Deep Pink */
+            --text-color: #ffffff;               /* Beyaz */
+            --highlight-color-increase: #39ff14;   /* Neon Yeşil */
+            --highlight-color-decrease: #ff4500;   /* Neon Turuncu */
+            --background-color: #0a0a23;         /* Koyu Mavi-Siyah */
+            --container-bg: #0a0a23;             /* Koyu Mavi-Siyah */
+            --container-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
+            --border-color: #333333;             /* Koyu Gri */
+            --button-border: #00ffff;           /* Neon Cyan */
+            --button-text: #ffffff;               /* Beyaz */
+            --tab-text: #cccccc;                 /* Açık Gri */
         }
         html, body { height: 100%; margin: 0; padding: 0; background-color: var(--background-color); }
         body {
@@ -31,7 +38,6 @@
         .container {
             width: 100%; max-width: 1200px; margin: 20px auto; background: var(--container-bg);
             padding: 25px; border-radius: 12px; box-shadow: var(--container-shadow);
-            max-height: 95vh; overflow-y: auto;
         }
         .header {
             background: var(--container-bg);
@@ -187,6 +193,37 @@
             body { overflow: hidden; }
         }
 
+        /* Arka Plan Animasyonu */
+        #bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .math-symbol {
+            position: absolute;
+            font-size: 24px;
+            color: var(--primary-color);
+            opacity: 0.4;
+            animation: fall 15s infinite linear;
+            font-family: Arial, sans-serif;
+        }
+        .math-symbol:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .math-symbol:nth-child(2) { left: 30%; animation-delay: 3s; }
+        .math-symbol:nth-child(3) { left: 50%; animation-delay: 6s; }
+        .math-symbol:nth-child(4) { left: 70%; animation-delay: 9s; }
+        .math-symbol:nth-child(5) { left: 90%; animation-delay: 12s; }
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
     </style>
 </head>
 <body data-theme="light">
@@ -198,6 +235,14 @@
         </svg>
         <h2>Daha İyi Bir Deneyim İçin</h2>
         <p>Lütfen cihazınızı yatay konuma çevirin.</p>
+    </div>
+
+    <div id="bg-animation">
+        <span class="math-symbol">x²</span>
+        <span class="math-symbol">y=ax²+bx+c</span>
+        <span class="math-symbol">parabol</span>
+        <span class="math-symbol">tepe noktası</span>
+        <span class="math-symbol">f(x)=x²</span>
     </div>
 
     <div class="container">
@@ -280,9 +325,16 @@
                 animCtx.fillStyle = 'rgba(0,0,0,0.1)';
                 animCtx.fillRect(0, 0, 10, 10);
                 animCtx.clearRect(0, 0, animCanvas.width, animCanvas.height);
-                // Canvas hep gündüz görünümü
-                animCanvas.style.backgroundColor = GRAPH_LIGHT_THEME['--container-bg'];
-                animCanvas.style.borderColor = GRAPH_LIGHT_THEME['--border-color'];
+                // Canvas background follows current theme's container background
+                try {
+                    const cbg = getComputedStyle(document.documentElement).getPropertyValue('--container-bg') || GRAPH_LIGHT_THEME['--container-bg'];
+                    const bcol = getComputedStyle(document.documentElement).getPropertyValue('--border-color') || GRAPH_LIGHT_THEME['--border-color'];
+                    animCanvas.style.backgroundColor = cbg.trim() || GRAPH_LIGHT_THEME['--container-bg'];
+                    animCanvas.style.borderColor = bcol.trim() || GRAPH_LIGHT_THEME['--border-color'];
+                } catch(e) {
+                    animCanvas.style.backgroundColor = GRAPH_LIGHT_THEME['--container-bg'];
+                    animCanvas.style.borderColor = GRAPH_LIGHT_THEME['--border-color'];
+                }
                 
                 return { animCanvas, animCtx };
             } catch (error) {
@@ -369,15 +421,15 @@
         attachDerivedProps(quizFunctions);
 
         const animationStepsConfig = [
-            { title: 'Genel Bakış ve Tanım Kümesi', text: 'Fonksiyonumuz: <code>{name}</code>. Grafiğin sadece x-eksenindeki <b class="domain">[{domain}]</b> aralığında var olduğuna dikkat edin.', state: 'full' },
+            { title: 'Genel Bakış ve Tanım Kümesi', text: '<code>{name}</code> fonksiyonunun tanım kümesi <b class="domain">[{domain}]</b> aralığıdır.', state: 'full' },
             { title: 'a) Görüntü Kümesi', text: 'Fonksiyonun tanım aralığındaki alabileceği en küçük değer <b class="increase">{minValue}</b>, en büyük değer ise <b class="decrease">{maxValue}</b>\'dur. Bu nedenle y-ekseninde vurgulanan <b>görüntü kümesi</b> <b class="domain">{range}</b> aralığıdır.', state: 'range' },
-            { title: 'a2) Simetri Ekseni', text: 'Parabolün simetri ekseni: <b class="domain">{axisOfSymmetry}</b>. Bu eksen, en küçük/en büyük değerinin alındığı x değerini de verir.', state: 'axis' },
             { title: 'b) İşaret Analizi', text: '{signAnalysisText}', state: 'sign' },
-            { title: 'c) Fonksiyonun Sıfırı', text: 'f(x) = 0 denkleminin çözümü <b class="decrease">{zeros}</b>\'dır. Bu, grafiğin x-eksenini kestiği noktadır.', state: 'zeros' },
+            { title: 'c) Fonksiyonun Sıfırı', text: 'f(x) = 0 denkleminin çözümü x= <b class="decrease">{zeros}</b>\'dır. Bu, grafiğin x-eksenini kestiği noktadır.', state: 'zeros' },
             { title: 'ç) Artan-Azalan Aralıklar', text: 'Grafiğin kırmızı bölümü, x-eksenindeki <b class="decrease">{decreasingInterval}</b> aralığında azalandır. Yeşil bölüm ise <b class="increase">{increasingInterval}</b> aralığında artandır.', state: 'intervals' },
             { title: 'd) Maksimum-Minimum Değerler', text: 'Fonksiyon minimum değerini <b class="increase">{minPoint}</b>\'da alır ve değeri <b class="increase">{minValue}</b>\'dir. Maksimum değerini ise <b class="decrease">{maxPoint}</b>\'de alır ve değeri <b class="decrease">{maxValue}</b>\'dir.', state: 'extrema' },
             { title: 'e) Bire Bir Olma Durumu', text: 'Hareketli yatay doğru, grafiği birden fazla noktada kestiği için fonksiyon <b>bire bir değildir</b>. Örneğin f(-2)=4 ve f(2)=4 gibi farklı girdiler aynı sonucu verir.', state: 'one-to-one' },
-            { title: 'f) Örten Olma Durumu', text: 'Değer kümesi tüm <b class="domain">gerçek sayılar (ℝ)</b> iken görüntü kümesi <b class="domain">{range}</b> olduğu için fonksiyon <b>örten değildir</b>.', state: 'onto' }
+            { title: 'f) Örten Olma Durumu', text: 'Değer kümesi tüm <b class="domain">gerçek sayılar (ℝ)</b> iken görüntü kümesi <b class="domain">{range}</b> olduğu için fonksiyon <b>örten değildir</b>.', state: 'onto' },
+            { title: 'g) Simetri Ekseni', text: 'Parabolün simetri ekseni: <b class="domain">{axisOfSymmetry}</b>. Bu eksen, en küçük ya da en büyük değerinin alındığı x değerini de verir.', state: 'axis' }
         ];
         
         const explanationTitle = document.getElementById('explanation-title'), explanationText = document.getElementById('explanation-text');
@@ -432,7 +484,75 @@
         document.addEventListener('click', primePlay, { once: true });
         
         let currentAnimFunc, currentAnimStep = 0, currentQuizFunc;
-        const scale = 30;
+        const BASE_SCALE = 30; // base pixels per unit, maximum preferred scale
+        function computeViewport(canvas, func) {
+            const leftPad = 40, rightPad = 40, topPad = 40, bottomPad = 40;
+            const domain = (func.domain && func.domain.length===2) ? func.domain : [-6,6];
+            // sample function to find y min/max, fall back to provided min/max if present
+            let yMin = Infinity, yMax = -Infinity;
+            const step = Math.max((domain[1]-domain[0]) / 200, 0.02);
+            for (let x = domain[0]; x <= domain[1]; x += step) {
+                try {
+                    const y = func.func(x);
+                    if (!Number.isFinite(y)) continue;
+                    if (y < yMin) yMin = y;
+                    if (y > yMax) yMax = y;
+                } catch (e) { }
+            }
+            if (!isFinite(yMin) || !isFinite(yMax)) { yMin = (func.minValue !== undefined ? func.minValue : -6); yMax = (func.maxValue !== undefined ? func.maxValue : 6); }
+            // also include provided minValue/maxValue if they exist
+            if (func.minValue !== undefined) yMin = Math.min(yMin, func.minValue);
+            if (func.maxValue !== undefined) yMax = Math.max(yMax, func.maxValue);
+            if (Math.abs(yMax - yMin) < 1e-6) { yMax = yMin + 1; }
+
+            // add small padding in units
+            const padUnitsY = Math.max(0.5, (yMax - yMin) * 0.08);
+            yMax += padUnitsY; yMin -= padUnitsY;
+
+            const xRange = Math.max(0.0001, domain[1] - domain[0]);
+            const yRange = Math.max(0.0001, yMax - yMin);
+
+            const scaleX = (canvas.width - leftPad - rightPad) / xRange;
+            const scaleY = (canvas.height - topPad - bottomPad) / yRange;
+            let s = Math.floor(Math.min(scaleX, scaleY, BASE_SCALE));
+            s = Math.max(4, s);
+
+            // compute origin: try to center origin horizontally and vertically while keeping domain and y-range visible
+            // preferred: show at least negative x down to -4 when possible
+            const minLeftVisibleX = -4;
+            // compute naive centered origin
+            const centerOriginX = Math.round((canvas.width / 2));
+            const domainMid = (domain[0] + domain[1]) / 2;
+            let originX = Math.round(centerOriginX - domainMid * s);
+            // ensure domain fits within left/right padding
+            const leftmost = originX + domain[0] * s;
+            const rightmost = originX + domain[1] * s;
+            if (leftmost > leftPad) {
+                originX -= (leftmost - leftPad);
+            }
+            if (rightmost < canvas.width - rightPad) {
+                originX += (canvas.width - rightPad - rightmost);
+            }
+            // ensure minLeftVisibleX is visible if possible
+            const minLeftPx = originX + minLeftVisibleX * s;
+            if (minLeftPx > leftPad) {
+                // shift left if shifting won't hide domain right edge
+                const shift = Math.min(minLeftPx - leftPad, originX - (-domain[1]*s + leftPad));
+                originX -= shift;
+            }
+
+            // vertical origin: map yMax to topPad and yMin to bottomPad if possible, else center vertically
+            const originY_for_top = yMax * s + topPad;
+            const originY_for_bottom = yMin * s + (canvas.height - bottomPad);
+            let originY = Math.round((originY_for_top + originY_for_bottom) / 2);
+            // prefer vertical centering around 0 if 0 in [yMin,yMax]
+            if (yMin <= 0 && yMax >= 0) {
+                originY = Math.round(canvas.height/2 + (yMax + yMin)/2 * s - ((yMax - Math.abs(yMax - Math.abs((yMax+yMin)/2)))>0?0:0));
+            }
+
+            const origin = { x: originX, y: originY };
+            return { s, origin, domain, yMin, yMax };
+        }
 
         // Sesler: klasördeki mp3 dosyalarını kullan
         const sounds = {
@@ -449,7 +569,7 @@
             try { a.currentTime = 0; a.play().catch(() => {}); } catch(e) {}
         }
         
-        function mapCoords(p, customOrigin) { return { x: customOrigin.x + p[0] * scale, y: customOrigin.y - p[1] * scale }; }
+    function mapCoords(p, customOrigin, s) { return { x: customOrigin.x + p[0] * s, y: customOrigin.y - p[1] * s }; }
         // Renkleri sabit light palette göre çöz
         function resolveColor(color) { 
             const m = color.match(/^var\((--[^)]+)\)/); 
@@ -592,7 +712,7 @@
             return [ (-b - sqrtD)/(2*a), (-b + sqrtD)/(2*a) ];
         }
 
-        function drawAxes(ctx, canvas, customOrigin) {
+        function drawAxes(ctx, canvas, customOrigin, s) {
             ctx.strokeStyle = resolveColor('var(--text-color)');
             ctx.fillStyle = resolveColor('var(--text-color)');
             ctx.font = "14px Arial"; 
@@ -665,13 +785,13 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
             
-            const yMax = customOrigin.y / scale;
-            const yMin = (customOrigin.y - canvas.height) / scale;
+            const yMax = Math.ceil((customOrigin.y) / s);
+            const yMin = Math.floor((customOrigin.y - canvas.height) / s);
             
             // X ekseni sayıları
-            for (let i = -7; i <= 7; i++) {
+            for (let i = -Math.max(7, Math.ceil(canvas.width / (2*s))); i <= Math.max(7, Math.ceil(canvas.width / (2*s))); i++) {
                 if (i === 0) continue;
-                const x = customOrigin.x + i * scale;
+                const x = customOrigin.x + i * s;
                 if (x > 30 && x < canvas.width - 30) {
                     ctx.beginPath(); 
                     ctx.moveTo(x, customOrigin.y - 6); 
@@ -686,7 +806,7 @@
             ctx.textBaseline = 'middle';
             for (let i = Math.floor(yMin); i <= Math.ceil(yMax); i++) {
                 if (i === 0) continue;
-                const y = customOrigin.y - i * scale;
+                const y = customOrigin.y - i * s;
                 if (y > 30 && y < canvas.height - 30) {
                     ctx.beginPath(); 
                     ctx.moveTo(customOrigin.x - 6, y); 
@@ -698,25 +818,24 @@
             
             ctx.lineWidth = 1;
         }
-        function drawGraph(ctx, canvas, func, color, domain, interval = null) {
+        function drawGraph(ctx, canvas, func, color, domain, interval = null, s, localOrigin) {
             ctx.beginPath(); 
             ctx.strokeStyle = resolveColor(color);
             ctx.lineWidth = 3;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            const localOrigin = { x: canvas.width / 2, y: func.a > 0 ? 440 : 140 };
             let firstPoint = true;
             let lastValidPoint = null;
-        
+
             // Daha yüksek çözünürlük için daha küçük adımlar
             const step = 0.02;
-        
+
             for (let x = domain[0]; x <= domain[1]; x += step) {
                 if (interval && (x < interval[0] || x > interval[1])) continue;
-            
+
                 const y = func.func(x);
-                const px = localOrigin.x + x * scale;
-                const py = localOrigin.y - y * scale;
+                const px = localOrigin.x + x * s;
+                const py = localOrigin.y - y * s;
             
                 // Canvas sınırları içinde kontrol
                 if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
@@ -740,14 +859,12 @@
             ctx.lineCap = 'butt';
             ctx.lineJoin = 'miter';
         }
-        function drawPoint(ctx, canvas, func, p, color, radius = 6) {
-            const localOrigin = { x: canvas.width / 2, y: func.a > 0 ? 440 : 140 };
-            const mappedP = mapCoords(p, localOrigin);
+        function drawPoint(ctx, canvas, func, p, color, radius = 6, s, localOrigin) {
+            const mappedP = mapCoords(p, localOrigin, s);
             ctx.beginPath(); ctx.fillStyle = resolveColor(color); ctx.arc(mappedP.x, mappedP.y, radius, 0, 2 * Math.PI); ctx.fill();
         }
-        function drawSignMarkers(ctx, func, domain) {
+        function drawSignMarkers(ctx, func, domain, s, localOrigin) {
             ctx.font = "bold 20px Arial";
-            const localOrigin = { x: ctx.canvas.width / 2, y: func.a > 0 ? 440 : 140 };
             for (let x = domain[0]; x <= domain[1]; x += 0.5) {
                 const y = func.func(x);
                 if(Math.abs(y) < 0.1) continue;
@@ -755,14 +872,13 @@
                 const color = y > 0 ? 'var(--highlight-color-increase)' : 'var(--highlight-color-decrease)';
                 const yOffset = y > 0 ? -15 : 15;
                 ctx.fillStyle = resolveColor(color);
-                const pos = mapCoords([x, y], localOrigin);
+                const pos = mapCoords([x, y], localOrigin, s);
                 ctx.fillText(text, pos.x, pos.y + yOffset);
             }
         }
-        function drawAxisInterval(ctx, canvas, func, start, end, color) {
-            const localOrigin = { x: canvas.width / 2, y: func.a > 0 ? 440 : 140 };
-            const startPos = mapCoords([start, 0], localOrigin);
-            const endPos = mapCoords([end, 0], localOrigin);
+        function drawAxisInterval(ctx, canvas, func, start, end, color, s, localOrigin) {
+            const startPos = mapCoords([start, 0], localOrigin, s);
+            const endPos = mapCoords([end, 0], localOrigin, s);
             ctx.beginPath();
             ctx.strokeStyle = resolveColor(color);
             ctx.lineWidth = 6;
@@ -775,20 +891,26 @@
         }
         function redrawCanvas(ctx, canvas, func, state) {
             if(animationFrameId) cancelAnimationFrame(animationFrameId);
-            const localOrigin = { x: canvas.width / 2, y: func.a > 0 ? 440 : 140 };
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawAxes(ctx, canvas, localOrigin);
-            drawGraph(ctx, canvas, func, resolveColor('var(--primary-color)'), func.domain);
-            drawPoint(ctx, canvas, func, [func.domain[0], func.func(func.domain[0])], 'blue');
-            drawPoint(ctx, canvas, func, [func.domain[1], func.func(func.domain[1])], 'blue');
 
-            if (state === 'full') { drawAxisInterval(ctx, canvas, func, func.domain[0], func.domain[1], 'var(--primary-color)'); }
+            // compute per-function viewport so graph fits fully
+            const vp = computeViewport(canvas, func);
+            const s = vp.s;
+            const localOrigin = vp.origin;
+
+            // draw base elements
+            drawAxes(ctx, canvas, localOrigin, s);
+            drawGraph(ctx, canvas, func, resolveColor('var(--primary-color)'), func.domain, null, s, localOrigin);
+            drawPoint(ctx, canvas, func, [func.domain[0], func.func(func.domain[0])], 'blue', 6, s, localOrigin);
+            drawPoint(ctx, canvas, func, [func.domain[1], func.func(func.domain[1])], 'blue', 6, s, localOrigin);
+
+            if (state === 'full') { drawAxisInterval(ctx, canvas, func, func.domain[0], func.domain[1], 'var(--primary-color)', s, localOrigin); }
             else if (state === 'axis') {
                 // Simetri ekseni: x = h
                 const m = (func.axisOfSymmetry || '').match(/x\s*=\s*(-?\d+(?:\.\d+)?)/);
                 if (m) {
                     const h = parseFloat(m[1]);
-                    const px = mapCoords([h, 0], localOrigin).x;
+                    const px = mapCoords([h, 0], localOrigin, s).x;
                     ctx.beginPath();
                     ctx.setLineDash([6, 6]);
                     ctx.moveTo(px, 20);
@@ -801,19 +923,19 @@
             }
             else if (state === 'range') {
                 ctx.fillStyle = "rgba(0, 123, 255, 0.2)";
-                const y1 = mapCoords([0, func.minValue], localOrigin).y;
-                const y2 = mapCoords([0, func.maxValue], localOrigin).y;
+                const y1 = mapCoords([0, func.minValue], localOrigin, s).y;
+                const y2 = mapCoords([0, func.maxValue], localOrigin, s).y;
                 ctx.fillRect(localOrigin.x - 10, y2, 20, y1 - y2);
             } else if (state === 'sign') { 
-                drawSignMarkers(ctx, func, func.domain);
+                drawSignMarkers(ctx, func, func.domain, s, localOrigin);
                 // Pozitif aralık(lar)ı yeşil, negatif aralık(lar)ı kırmızı göster
                 if (func.signPositive && func.signPositive.toUpperCase() !== 'YOK') {
-                    const intervals = func.signPositive.split('U').map(s => (s.match(/-?[\d\.]+/g) || []).map(Number)).filter(a => a.length === 2);
-                    intervals.forEach(interval => drawAxisInterval(ctx, canvas, func, interval[0], interval[1], 'var(--highlight-color-increase)'));
+                    const intervals = func.signPositive.split('U').map(ss => (ss.match(/-?[\d\.]+/g) || []).map(Number)).filter(a => a.length === 2);
+                    intervals.forEach(interval => drawAxisInterval(ctx, canvas, func, interval[0], interval[1], 'var(--highlight-color-increase)', s, localOrigin));
                 }
                 if (func.signNegative && func.signNegative.toUpperCase() !== 'YOK') {
-                    const intervals = func.signNegative.split('U').map(s => (s.match(/-?[\d\.]+/g) || []).map(Number)).filter(a => a.length === 2);
-                    intervals.forEach(interval => drawAxisInterval(ctx, canvas, func, interval[0], interval[1], 'var(--highlight-color-decrease)'));
+                    const intervals = func.signNegative.split('U').map(ss => (ss.match(/-?[\d\.]+/g) || []).map(Number)).filter(a => a.length === 2);
+                    intervals.forEach(interval => drawAxisInterval(ctx, canvas, func, interval[0], interval[1], 'var(--highlight-color-decrease)', s, localOrigin));
                 }
             } else if (state === 'zeros') {
                 let zeros = [];
@@ -824,7 +946,7 @@
                 }
                 zeros
                     .filter(z => z >= func.domain[0] && z <= func.domain[1])
-                    .forEach(z => drawPoint(ctx, canvas, func, [z, 0], 'red'));
+                    .forEach(z => drawPoint(ctx, canvas, func, [z, 0], 'red', 6, s, localOrigin));
             } else if (state === 'intervals') {
                 const vertexX = func.vertex ? func.vertex[0] : 0;
                 // a'ya göre artan/azalan renklerini doğru tarafta göster
@@ -832,22 +954,22 @@
                 const rightInterval = [vertexX, func.domain[1]];
                 const leftColor = (func.a < 0) ? 'var(--highlight-color-increase)' : 'var(--highlight-color-decrease)';
                 const rightColor = (func.a < 0) ? 'var(--highlight-color-decrease)' : 'var(--highlight-color-increase)';
-                drawGraph(ctx, canvas, func, leftColor, func.domain, leftInterval);
-                drawGraph(ctx, canvas, func, rightColor, func.domain, rightInterval);
-                drawAxisInterval(ctx, canvas, func, leftInterval[0], leftInterval[1], leftColor);
-                drawAxisInterval(ctx, canvas, func, rightInterval[0], rightInterval[1], rightColor);
+                drawGraph(ctx, canvas, func, leftColor, func.domain, leftInterval, s, localOrigin);
+                drawGraph(ctx, canvas, func, rightColor, func.domain, rightInterval, s, localOrigin);
+                drawAxisInterval(ctx, canvas, func, leftInterval[0], leftInterval[1], leftColor, s, localOrigin);
+                drawAxisInterval(ctx, canvas, func, rightInterval[0], rightInterval[1], rightColor, s, localOrigin);
             } 
             else if (state === 'extrema') {
                 let pulseRadius = 6 + Math.sin(Date.now() / 200) * 2;
                 const minPoints = func.minPoint.split(',').map(s => s.split('=')[1].trim());
                 const maxPoints = func.maxPoint.split(',').map(s => s.split('=')[1].trim());
-                minPoints.forEach(p => drawPoint(ctx, canvas, func, [parseFloat(p), func.minValue], 'green', pulseRadius));
-                maxPoints.forEach(p => drawPoint(ctx, canvas, func, [parseFloat(p), func.maxValue], 'red', pulseRadius));
+                minPoints.forEach(p => drawPoint(ctx, canvas, func, [parseFloat(p), func.minValue], 'green', pulseRadius, s, localOrigin));
+                maxPoints.forEach(p => drawPoint(ctx, canvas, func, [parseFloat(p), func.maxValue], 'red', pulseRadius, s, localOrigin));
                 animationFrameId = requestAnimationFrame(() => redrawCanvas(ctx, canvas, func, state));
             }
             else if (state === 'one-to-one') {
-                let yStart = mapCoords([0, func.maxValue], localOrigin).y - 10;
-                let yEnd = mapCoords([0, func.minValue], localOrigin).y + 10;
+                let yStart = mapCoords([0, func.maxValue], localOrigin, s).y - 10;
+                let yEnd = mapCoords([0, func.minValue], localOrigin, s).y + 10;
 
                 const topY = Math.min(yStart, yEnd);
                 const bottomY = Math.max(yStart, yEnd);
@@ -860,10 +982,10 @@
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                     // Statik elemanları çiz (eksenler ve tam grafik)
-                    drawAxes(ctx, canvas, localOrigin);
-                    drawGraph(ctx, canvas, func, resolveColor('var(--primary-color)'), func.domain);
-                    drawPoint(ctx, canvas, func, [func.domain[0], func.func(func.domain[0])], 'blue');
-                    drawPoint(ctx, canvas, func, [func.domain[1], func.func(func.domain[1])], 'blue');
+                    drawAxes(ctx, canvas, localOrigin, s);
+                    drawGraph(ctx, canvas, func, resolveColor('var(--primary-color)'), func.domain, null, s, localOrigin);
+                    drawPoint(ctx, canvas, func, [func.domain[0], func.func(func.domain[0])], 'blue', 6, s, localOrigin);
+                    drawPoint(ctx, canvas, func, [func.domain[1], func.func(func.domain[1])], 'blue', 6, s, localOrigin);
 
                     // Animasyon ilerlemesini hesapla (0'dan 1'e)
                     const elapsedTime = (Date.now() - sweepStartTime);
@@ -874,7 +996,7 @@
                     
                     // Bu y seviyesindeki kesişimleri bul
                     const intersections = [];
-                    const currentYValue = (localOrigin.y - currentSweepY) / scale;
+                    const currentYValue = (localOrigin.y - currentSweepY) / s;
                     for(let x = func.domain[0]; x <= func.domain[1]; x += 0.02) {
                         if (Math.abs(func.func(x) - currentYValue) < 0.1) {
                             if (!intersections.some(p => Math.abs(p[0] - x) < 0.2)) {
@@ -895,7 +1017,7 @@
                     
                     // Kesişim noktalarını vurgula
                     if (intersections.length > 0) {
-                        intersections.forEach(p => drawPoint(ctx, canvas, func, p, 'orange', 7));
+                        intersections.forEach(p => drawPoint(ctx, canvas, func, p, 'orange', 7, s, localOrigin));
                     }
                     
                     // Animasyona devam etmek için bir sonraki çerçeveyi iste
@@ -946,22 +1068,7 @@
             if (step.state === 'range') {
                 const expr = (currentAnimFunc.name.split('f(x) = ')[1] || '').trim();
                 const alreadyVertex = isVertexFormLike(expr);
-                if (!alreadyVertex && typeof currentAnimFunc.a === 'number' && 'b' in currentAnimFunc && 'c' in currentAnimFunc) {
-                    const a = currentAnimFunc.a, b = currentAnimFunc.b, c = currentAnimFunc.c;
-                    const squareForm = toSquareFormString(a, b, c);
-                    const h = -b / (2 * a);
-                    const k = c - (b * b) / (4 * a);
-                    const round3 = (v) => Math.abs(v) < 1e-10 ? 0 : Math.round(v * 1000) / 1000;
-                    const hStr = String(round3(h));
-                    const kStr = String(round3(k));
-                    const infoBox = `
-                        <div style="padding:10px; border:1px solid ${resolveColor('var(--border-color)')}; border-radius:8px; background:${resolveColor('var(--secondary-color)')}; margin-bottom:10px; color:#0f172a;">
-                            <b>Tam kareye çevirme:</b><br>
-                            f(x) = ${expr} = <b>${squareForm}</b><br>
-                            h = <b>${hStr}</b>, k = <b>${kStr}</b>. a > 0 ise minimum değer k; a < 0 ise maksimum değer k olur. Görüntü kümesi bu k değerine göre belirlenir.
-                        </div>`;
-                    text = infoBox + text;
-                }
+                // tam kareye çevirme bilgisi artık gösterilmiyor (kutu kaldırıldı)
             }
             // Sayı + 'dur/dir/dır/dür uyumunu düzelt
             // Ayrıca locative ve copula düzeltmelerini uygula
@@ -1028,8 +1135,15 @@
                 </div>`;
             const quizCanvas = document.getElementById('quiz-canvas');
             const quizCtx = quizCanvas.getContext('2d');
-            quizCanvas.style.backgroundColor = GRAPH_LIGHT_THEME['--container-bg'];
-            quizCanvas.style.borderColor = GRAPH_LIGHT_THEME['--border-color'];
+            try {
+                const cbg = getComputedStyle(document.documentElement).getPropertyValue('--container-bg') || GRAPH_LIGHT_THEME['--container-bg'];
+                const bcol = getComputedStyle(document.documentElement).getPropertyValue('--border-color') || GRAPH_LIGHT_THEME['--border-color'];
+                quizCanvas.style.backgroundColor = cbg.trim() || GRAPH_LIGHT_THEME['--container-bg'];
+                quizCanvas.style.borderColor = bcol.trim() || GRAPH_LIGHT_THEME['--border-color'];
+            } catch(e) {
+                quizCanvas.style.backgroundColor = GRAPH_LIGHT_THEME['--container-bg'];
+                quizCanvas.style.borderColor = GRAPH_LIGHT_THEME['--border-color'];
+            }
             redrawCanvas(quizCtx, quizCanvas, currentQuizFunc, 'full');
             renderQuizStep();
             document.getElementById('quiz-check-btn').onclick = (ev) => { playSound('click'); checkQuizStep(); };
@@ -1136,6 +1250,7 @@
         };
 
         // Eski toplu kontrol kaldırıldı; adım adım kontrol kullanılıyor.
+        
         
         animationFunctions.forEach((data, index) => {
             const animBtn = document.createElement('button'); animBtn.className = 'func-btn'; animBtn.textContent = data.name;
