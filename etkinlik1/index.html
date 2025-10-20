@@ -209,54 +209,7 @@
             body { overflow: hidden; }
         }
 
-        /* Arka Plan Animasyonu */
-        #bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0; /* above body background, below .container */
-            pointer-events: none;
-            overflow: hidden;
-        }
-        /* Soft moving color blobs behind the content */
-        .bg-blob {
-            position: absolute;
-            width: 420px;
-            height: 420px;
-            border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.9;
-            mix-blend-mode: screen;
-            transform: translate3d(0,0,0);
-            will-change: transform, opacity;
-        }
-    .bg-blob.blob1 { background: var(--blob-1); left: -8%; top: -10%; animation: floatA 18s ease-in-out infinite; }
-    .bg-blob.blob2 { background: var(--blob-2); right: -6%; top: 5%; animation: floatB 22s ease-in-out infinite; }
-    .bg-blob.blob3 { background: var(--blob-3); left: 20%; bottom: -12%; animation: floatC 26s ease-in-out infinite; }
-    .bg-blob.blob4 { background: linear-gradient(120deg, var(--blob-1), var(--blob-2)); left: 60%; bottom: -8%; width: 520px; height: 520px; filter: blur(90px); animation: floatD 30s ease-in-out infinite; opacity: 0.9; }
-
-        @keyframes floatA {
-            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.9; }
-            50% { transform: translateY(40px) translateX(30px) scale(1.05); opacity: 0.7; }
-            100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.9; }
-        }
-        @keyframes floatB {
-            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.85; }
-            50% { transform: translateY(-30px) translateX(-40px) scale(1.08); opacity: 0.6; }
-            100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.85; }
-        }
-        @keyframes floatC {
-            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.88; }
-            50% { transform: translateY(-50px) translateX(20px) scale(0.98); opacity: 0.65; }
-            100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.88; }
-        }
-        @keyframes floatD {
-            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
-            50% { transform: translateY(60px) translateX(-20px) scale(1.06); opacity: 0.55; }
-            100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
-        }
+        /* Arka plan animasyonu kaldırıldı (mobil performans için) */
         /* removed math-symbol floating texts by request */
 
     </style>
@@ -272,13 +225,7 @@
         <p>Lütfen cihazınızı yatay konuma çevirin.</p>
     </div>
 
-    <div id="bg-animation">
-        <!-- Animated soft background blobs (texts removed by request) -->
-        <div class="bg-blob blob1" aria-hidden="true"></div>
-        <div class="bg-blob blob2" aria-hidden="true"></div>
-        <div class="bg-blob blob3" aria-hidden="true"></div>
-        <div class="bg-blob blob4" aria-hidden="true"></div>
-    </div>
+    <!-- Arka plan animasyonu kaldırıldı -->
 
     <div class="container">
         <div class="header">
@@ -1199,7 +1146,13 @@
             if (step.select) {
                 inputHtml = `<select id="${fieldId}">${step.select.map(o => `<option>${o}</option>`).join('')}</select>`;
             } else {
-                inputHtml = `<input id="${fieldId}" placeholder="${step.placeholder}">`;
+                const isNumeric = step.state === 'extrema';
+                if (isNumeric) {
+                    // Mobilde sayı klavyesi için type=number + inputmode=decimal
+                    inputHtml = `<input id="${fieldId}" type="number" inputmode="decimal" step="any" placeholder="${step.placeholder}" pattern="-?[0-9]*[.,]?[0-9]*">`;
+                } else {
+                    inputHtml = `<input id="${fieldId}" placeholder="${step.placeholder}">`;
+                }
             }
             let symbolsHtml = '';
             if (step.symbols) {
