@@ -63,7 +63,9 @@
         .tab-btn { padding: 15px 30px; cursor: pointer; border: none; background-color: transparent; font-size: 1.1em; font-weight: 600; color: var(--tab-text); position: relative; bottom: -2px; transition: all 0.2s; }
         .tab-btn.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
         .tab-content { display: none; }
-        .tab-content.active { display: block; }
+    .tab-content.active { display: block; }
+    /* Quiz content uses normal page scroll (no inner scroll container) */
+    #quiz-content.active { display: block; }
         .selection-panel { text-align: center; margin-bottom: 25px; }
         .function-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 15px; }
         .func-btn { font-size: 1.2em; padding: 10px 16px; background-color: var(--container-bg); border: 1px solid var(--button-border); color: var(--button-text); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
@@ -74,9 +76,9 @@
         .nav-btn, .step-btn { background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin: 0 10px; transition: all 0.2s; }
         .nav-btn:hover, .step-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
         .nav-btn:disabled, .step-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
-        .feedback { margin-top: 15px; padding: 10px; border-radius: 5px; font-weight: 500; display: none; }
-        .feedback.correct { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
-        .feedback.incorrect { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+    .feedback { margin-top: 15px; padding: 10px; border-radius: 5px; font-weight: 500; display: none; }
+    .feedback.correct { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+    .feedback.incorrect { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
         code { font-family: "Courier New", monospace; background-color: var(--secondary-color); padding: 2px 4px; border-radius: 4px;}
     #theme-toggle-btn { background: none; border: none; cursor: pointer; padding: 5px; font-size: 24px; line-height: 1; transition: transform 0.2s ease; justify-self: end; }
     #theme-toggle-btn:hover { transform: scale(1.1) rotate(15deg); }
@@ -132,6 +134,8 @@
         .input-group label { font-weight: bold; }
         .input-group input, .input-group select { width: 100%; box-sizing: border-box; padding: 8px; border-radius: 5px; border: 1px solid var(--border-color); background-color: var(--container-bg); color: var(--text-color); font-size: 1em; }
         .final-controls { grid-column: 1 / -1; text-align: center; }
+        /* Sticky footer removed */
+        #quiz-content .final-controls { position: static; padding: 0; box-shadow: none; }
 
         /* Yardımcı sembol butonları: daha çekici ve büyük */
         .symbol-buttons {
@@ -937,7 +941,7 @@
 
             if (state === 'full') { drawAxisInterval(ctx, canvas, func, func.domain[0], func.domain[1], 'var(--primary-color)', s, localOrigin); }
             else if (state === 'axis') {
-                // Simetri ekseni: x = h
+                // Simetri ekseni: x = r
                 const m = (func.axisOfSymmetry || '').match(/x\s*=\s*(-?\d+(?:\.\d+)?)/);
                 if (m) {
                     const h = parseFloat(m[1]);
@@ -1138,7 +1142,6 @@
         let currentQuizStepIndex = 0;
         const quizSteps = [
             { key: 'range', label: 'a) Görüntü Kümesi', placeholder: '[min, max]', state: 'range', symbols: ['[',']','(',')'] },
-            { key: 'axisOfSymmetry', label: 'a2) Simetri Ekseni', placeholder: 'x = h', state: 'axis' },
             { key: 'signPositive', label: 'b) Pozitif Olduğu Aralık', placeholder: 'aralık veya Yok', state: 'sign', symbols: ['[',']','(',')',' U ','∞'] },
             { key: 'zeros', label: 'c) Fonksiyonun Sıfırı', placeholder: 'sayı veya Yok', state: 'zeros' },
             { key: 'decreasingInterval', label: 'ç) Azalan Olduğu Aralık', placeholder: 'aralık', state: 'intervals', symbols: ['[',']','(',')'] },
@@ -1146,7 +1149,8 @@
             { key: 'maxValue', label: 'd) Maksimum Değeri', placeholder: 'sayı', state: 'extrema' },
             { key: 'minValue', label: 'd) Minimum Değeri', placeholder: 'sayı', state: 'extrema' },
             { key: 'isOneToOne', label: 'e) Bire bir mi?', placeholder: '', state: 'one-to-one', select: ['Hayır','Evet'] },
-            { key: 'isOnto', label: 'f) Örten mi? (Değer Kümesi: ℝ)', placeholder: '', state: 'onto', select: ['Hayır','Evet'] }
+            { key: 'isOnto', label: 'f) Örten mi? (Değer Kümesi: ℝ)', placeholder: '', state: 'onto', select: ['Hayır','Evet'] },
+            { key: 'axisOfSymmetry', label: 'g) Simetri Ekseni', placeholder: 'x = r', state: 'axis' }
         ];
         function flashCanvasBorder(canvas, ok) {
             const orig = canvas.style.boxShadow || '';
@@ -1224,12 +1228,15 @@
             const msg = ok ? 'Doğru.' : `Yanlış. Beklenen: ${expectedRaw}`;
             feedbackEl.textContent = fixCopulaSuffixes(msg);
             feedbackEl.style.display = 'block';
+            feedbackEl.style.scrollMarginBottom = '120px';
             const quizCanvas = document.getElementById('quiz-canvas');
             const quizCtx = quizCanvas.getContext('2d');
             redrawCanvas(quizCtx, quizCanvas, currentQuizFunc, step.state);
             flashCanvasBorder(quizCanvas, ok);
             document.getElementById('quiz-next-btn').disabled = false;
             playSound(ok ? 'correct' : 'wrong');
+            // Ensure feedback is visible: page-level smooth scroll
+            try { feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch(e) {}
         }
 
         // Navigasyon butonları
