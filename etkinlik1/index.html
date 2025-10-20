@@ -9,7 +9,12 @@
         :root {
             --primary-color: #005a9c; --secondary-color: #e6f2ff;
             --text-color: #333; --highlight-color-increase: #28a745; --highlight-color-decrease: #dc3545;
-            --background-color: #f0f8ff; --container-bg: white;
+            /* Slightly warmer pale azure page background to match screenshots */
+            --background-color: #eaf6ff; --container-bg: #ffffff;
+            /* Soft background blob colors (light theme) */
+            --blob-1: rgba(14,165,233,0.18); /* soft cyan */
+            --blob-2: rgba(37,99,235,0.12);  /* soft blue */
+            --blob-3: rgba(255,230,240,0.10); /* soft pink */
             --container-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
             --border-color: #dee2e6; --button-border: #b3d9ff;
             --button-text: #005a9c; --tab-text: #495057;
@@ -21,9 +26,15 @@
             --text-color: #ffffff;               /* Beyaz */
             --highlight-color-increase: #39ff14;   /* Neon Yeşil */
             --highlight-color-decrease: #ff4500;   /* Neon Turuncu */
-            --background-color: #0a0a23;         /* Koyu Mavi-Siyah */
+            /* Keep the page margins a pale azure so the dark container sits centered like the screenshot */
+            --background-color: #eaf6ff;        /* Pale Azure page background */
+            /* Container stays dark navy so the central card is dark while page sides remain light */
             --container-bg: #0a0a23;             /* Koyu Mavi-Siyah */
-            --container-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
+            /* Soft background blob colors (dark theme) - more saturated but subtle */
+            --blob-1: rgba(14,165,233,0.20); /* neon cyan soft */
+            --blob-2: rgba(124,58,237,0.14); /* purple soft */
+            --blob-3: rgba(0,255,200,0.08);  /* teal soft */
+            --container-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
             --border-color: #333333;             /* Koyu Gri */
             --button-border: #00ffff;           /* Neon Cyan */
             --button-text: #ffffff;               /* Beyaz */
@@ -38,6 +49,7 @@
         .container {
             width: 100%; max-width: 1200px; margin: 20px auto; background: var(--container-bg);
             padding: 25px; border-radius: 12px; box-shadow: var(--container-shadow);
+            position: relative; z-index: 1; /* keep content above animated background */
         }
         .header {
             background: var(--container-bg);
@@ -200,29 +212,48 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: 0; /* above body background, below .container */
             pointer-events: none;
             overflow: hidden;
         }
-        .math-symbol {
+        /* Soft moving color blobs behind the content */
+        .bg-blob {
             position: absolute;
-            font-size: 24px;
-            color: var(--primary-color);
-            opacity: 0.4;
-            animation: fall 15s infinite linear;
-            font-family: Arial, sans-serif;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.9;
+            mix-blend-mode: screen;
+            transform: translate3d(0,0,0);
+            will-change: transform, opacity;
         }
-        .math-symbol:nth-child(1) { left: 10%; animation-delay: 0s; }
-        .math-symbol:nth-child(2) { left: 30%; animation-delay: 3s; }
-        .math-symbol:nth-child(3) { left: 50%; animation-delay: 6s; }
-        .math-symbol:nth-child(4) { left: 70%; animation-delay: 9s; }
-        .math-symbol:nth-child(5) { left: 90%; animation-delay: 12s; }
-        @keyframes fall {
-            0% { transform: translateY(-100px); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(100vh); opacity: 0; }
+    .bg-blob.blob1 { background: var(--blob-1); left: -8%; top: -10%; animation: floatA 18s ease-in-out infinite; }
+    .bg-blob.blob2 { background: var(--blob-2); right: -6%; top: 5%; animation: floatB 22s ease-in-out infinite; }
+    .bg-blob.blob3 { background: var(--blob-3); left: 20%; bottom: -12%; animation: floatC 26s ease-in-out infinite; }
+    .bg-blob.blob4 { background: linear-gradient(120deg, var(--blob-1), var(--blob-2)); left: 60%; bottom: -8%; width: 520px; height: 520px; filter: blur(90px); animation: floatD 30s ease-in-out infinite; opacity: 0.9; }
+
+        @keyframes floatA {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.9; }
+            50% { transform: translateY(40px) translateX(30px) scale(1.05); opacity: 0.7; }
+            100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.9; }
         }
+        @keyframes floatB {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.85; }
+            50% { transform: translateY(-30px) translateX(-40px) scale(1.08); opacity: 0.6; }
+            100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.85; }
+        }
+        @keyframes floatC {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.88; }
+            50% { transform: translateY(-50px) translateX(20px) scale(0.98); opacity: 0.65; }
+            100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.88; }
+        }
+        @keyframes floatD {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
+            50% { transform: translateY(60px) translateX(-20px) scale(1.06); opacity: 0.55; }
+            100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
+        }
+        /* removed math-symbol floating texts by request */
 
     </style>
 </head>
@@ -238,11 +269,11 @@
     </div>
 
     <div id="bg-animation">
-        <span class="math-symbol">x²</span>
-        <span class="math-symbol">y=ax²+bx+c</span>
-        <span class="math-symbol">parabol</span>
-        <span class="math-symbol">tepe noktası</span>
-        <span class="math-symbol">f(x)=x²</span>
+        <!-- Animated soft background blobs (texts removed by request) -->
+        <div class="bg-blob blob1" aria-hidden="true"></div>
+        <div class="bg-blob blob2" aria-hidden="true"></div>
+        <div class="bg-blob blob3" aria-hidden="true"></div>
+        <div class="bg-blob blob4" aria-hidden="true"></div>
     </div>
 
     <div class="container">
