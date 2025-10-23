@@ -334,6 +334,17 @@
             font-size: 0.9rem; /* Yazı boyutunu küçültür */
             white-space: nowrap; /* İçindeki metnin alt satıra geçmesini engeller */
         }
+
+        /* Bitir butonu için başarılı (yeşil) tema */
+        .btn-finish {
+            background: linear-gradient(135deg, var(--success-color), var(--success-light));
+            color: #ffffff;
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-finish:hover {
+            background: linear-gradient(135deg, var(--success-light), var(--success-color));
+        }
         
         .btn-nav:hover { 
             background: linear-gradient(145deg, #f8fafc, #e2e8f0);
@@ -732,6 +743,13 @@
                             <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
+                    <!-- Etkinlik bittiğinde görünecek Bitir butonu -->
+                    <button id="finish-btn" class="btn btn-nav btn-finish" style="display: none;">
+                        Bitir
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
                 </div>
                 <div class="info-column">
                     <div id="info-content">
@@ -756,6 +774,13 @@
                                 <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
+                        <!-- Masaüstü için Bitir butonu -->
+                        <button id="finish-btn-desktop" class="btn btn-nav btn-finish" style="display: none;">
+                            Bitir
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -770,7 +795,9 @@
                 next: document.getElementById('next-btn'), 
                 prev: document.getElementById('prev-btn'), 
                 nextDesktop: document.getElementById('next-btn-desktop'), 
-                prevDesktop: document.getElementById('prev-btn-desktop')
+                prevDesktop: document.getElementById('prev-btn-desktop'),
+                finish: document.getElementById('finish-btn'),
+                finishDesktop: document.getElementById('finish-btn-desktop')
             };
             const canvas = document.getElementById('geometry-canvas');
             const ctx = canvas.getContext('2d');
@@ -1051,6 +1078,12 @@
                         }
                     }
                 });
+                // Bitir butonlarını sadece son aşamada göster
+                const showFinish = (stage === totalStages);
+                [buttons.finish, buttons.finishDesktop].forEach(btn => {
+                    if (!btn) return;
+                    btn.style.display = showFinish ? 'inline-flex' : 'none';
+                });
                 
                 const fractionHtml = `<span>Aşama<br><span class="stage-fraction">${stage} / ${totalStages}</span></span>`;
                 if (stageIndicator) stageIndicator.innerHTML = fractionHtml;
@@ -1197,6 +1230,19 @@
                 }
             }
 
+            function handleFinishClick() {
+                // Etkinliği tamamla: intro ekranına dön, sesleri durdur ve durumu sıfırla
+                if (SOUNDS.bgm) { try { SOUNDS.bgm.pause(); SOUNDS.bgm.currentTime = 0; } catch(e) {} }
+                shapes = [];
+                showScreen('intro');
+                currentStage = 0;
+                // Bitir sonrası butonları gizli tutmak için güvenlik
+                if (buttons.finish) buttons.finish.style.display = 'none';
+                if (buttons.finishDesktop) buttons.finishDesktop.style.display = 'none';
+                // Pencereyi üste kaydır
+                try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e) { window.scrollTo(0, 0); }
+            }
+
             buttons.start.addEventListener('click', () => { 
                 showScreen('activity'); 
                 setupCanvas(); 
@@ -1210,6 +1256,8 @@
             
             buttons.nextDesktop.addEventListener('click', handleNextClick);
             buttons.prevDesktop.addEventListener('click', handlePrevClick);
+            if (buttons.finish) buttons.finish.addEventListener('click', handleFinishClick);
+            if (buttons.finishDesktop) buttons.finishDesktop.addEventListener('click', handleFinishClick);
             
             function showScreen(screenName) { Object.values(screens).forEach(s => s.style.display = 'none'); screens[screenName].style.display = 'block'; }
             
