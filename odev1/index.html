@@ -43,14 +43,20 @@
       </div>
     </header>
 
-    <!-- Test Category Pills Row -->
+    <!-- Test Category Pills Row (Tam Ekrana Sığan 5'li Butonlar) -->
     <nav class="test-pills-row">
-      <button class="test-pill active" data-filter="all">Tümü (40 Soru)</button>
-      <button class="test-pill" data-filter="quiz-1">Test 01: Temel & Tuzaklar</button>
-      <button class="test-pill" data-filter="quiz-2">Test 02: Ortak Parantez</button>
-      <button class="test-pill" data-filter="quiz-3">Test 03: Analitik & SAT</button>
-      <button class="test-pill" data-filter="quiz-4">Test 04: Modelleme</button>
+      <button class="test-pill active" data-filter="all" title="Tüm Sorular (40 Soru)">Tümü (40)</button>
+      <button class="test-pill" data-filter="quiz-1" title="Test 01: Temel & Hata Tuzakları">Test 1</button>
+      <button class="test-pill" data-filter="quiz-2" title="Test 02: Ortak Parantez">Test 2</button>
+      <button class="test-pill" data-filter="quiz-3" title="Test 03: Analitik & SAT">Test 3</button>
+      <button class="test-pill" data-filter="quiz-4" title="Test 04: Modelleme">Test 4</button>
     </nav>
+
+    <!-- Seçili Test Açıklama Bandı -->
+    <div class="active-test-banner" id="activeTestBanner">
+      <span>📌</span>
+      <span id="activeTestTitle"><strong>Tüm Sorular:</strong> 4 Test • 40 Sokratik Soru</span>
+    </div>
 
     <!-- Question View Area -->
     <main class="quiz-main">

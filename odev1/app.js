@@ -66,6 +66,7 @@
       progressMeta: document.getElementById('progressMeta'),
       progressBarFill: document.getElementById('progressBarFill'),
       testPills: document.querySelectorAll('.test-pill'),
+      activeTestTitle: document.getElementById('activeTestTitle'),
       
       qBadge: document.getElementById('qBadge'),
       qHintCount: document.getElementById('qHintCount'),
@@ -449,11 +450,22 @@
       broadcastEvent('STUDENT_RENAMED', { newName: state.studentName });
     });
 
+    const testTitles = {
+      'all': '<strong>Tüm Sorular:</strong> 4 Test • 40 Sokratik Soru',
+      'quiz-1': '<strong>Test 01:</strong> Temel Düzey & Hata Tuzakları (10 Soru)',
+      'quiz-2': '<strong>Test 02:</strong> Ortak Parantez & Taban Dönüşümleri (10 Soru)',
+      'quiz-3': '<strong>Test 03:</strong> Analitik Cebirsel Denklemler & SAT (10 Soru)',
+      'quiz-4': '<strong>Test 04:</strong> Beceri Temelli Problem Modelleme (10 Soru)'
+    };
+
     el.testPills.forEach(pill => {
       pill.addEventListener('click', () => {
         el.testPills.forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
         state.currentFilter = pill.dataset.filter;
+        if (el.activeTestTitle) {
+          el.activeTestTitle.innerHTML = testTitles[state.currentFilter] || 'Test';
+        }
         filterQuestions();
         renderQuestion();
       });
