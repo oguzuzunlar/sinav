@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sokratik Mobil • 4. Bölüm Üslü Sayılar Pekiştirme</title>
+  <meta name="description" content="Cevabı vermeyen, sokratik sorularla düşündüren mobil üslü sayılar pekiştirme uygulaması.">
+
+  <!-- KaTeX Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Mobile Viewport Wrapper -->
+  <div class="mobile-wrapper">
+    
+    <!-- Topbar -->
+    <header class="app-topbar">
+      <div class="topbar-header">
+        <div class="student-tag">
+          <span>👤</span>
+          <input type="text" id="studentNameInput" title="Öğrenci Adını Değiştir" value="Emir">
+        </div>
+
+        <div class="topbar-actions">
+          <span class="timer-badge" id="timerDisplay">⏱️ 00:00</span>
+        </div>
+      </div>
+
+      <!-- Overall Test Progress -->
+      <div class="progress-container">
+        <div class="progress-meta">
+          <span id="progressMeta">Soru 1 / 40 • %3</span>
+          <span style="color: #818cf8; font-weight: 700;">Maarif 4. Bölüm</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressBarFill" style="width: 3%;"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Test Category Pills Row -->
+    <nav class="test-pills-row">
+      <button class="test-pill active" data-filter="all">Tümü (40 Soru)</button>
+      <button class="test-pill" data-filter="quiz-1">Test 01: Temel & Tuzaklar</button>
+      <button class="test-pill" data-filter="quiz-2">Test 02: Ortak Parantez</button>
+      <button class="test-pill" data-filter="quiz-3">Test 03: Analitik & SAT</button>
+      <button class="test-pill" data-filter="quiz-4">Test 04: Modelleme</button>
+    </nav>
+
+    <!-- Question View Area -->
+    <main class="quiz-main">
+      <div class="question-info-card">
+        <span class="q-badge" id="qBadge">TEST 01 • Soru 1</span>
+        <span class="q-hint-count" id="qHintCount">🦉 İpuçları: <strong>0</strong>/3</span>
+      </div>
+
+      <!-- Question Text Box -->
+      <div class="question-content-box">
+        <div class="question-text" id="questionText">
+          Yükleniyor...
+        </div>
+
+        <!-- Options Stack -->
+        <div class="options-stack" id="optionsStack">
+          <!-- Dynamically inserted buttons -->
+        </div>
+      </div>
+
+      <!-- Socratic Guidance Drawer -->
+      <section class="socratic-drawer" id="socraticDrawer">
+        <div class="socratic-header">
+          <div class="socratic-title">
+            <span>🦉</span>
+            <span id="socraticStageBadge">DÜŞÜNME ASİSTANI</span>
+          </div>
+          <span class="socratic-rule-tag">Cevap Söylemez • Yönlendirir</span>
+        </div>
+
+        <div class="socratic-chat-bubble" id="socraticBubble">
+          Soruyu dikkatle oku. Takıldığın bir nokta olursa aşağıdaki butona basarak <strong>Sokratik İpucu</strong> isteyebilirsin.
+        </div>
+
+        <div class="socratic-actions-row">
+          <button class="btn-socratic" id="requestHintBtn">
+            <span>💡</span>
+            <span>Sokratik İpucu İste</span>
+          </button>
+          <button class="btn-socratic btn-deeper" id="deeperHintBtn" style="display: none;">
+            <span>🔍</span>
+            <span>Bir Adım Daha Derinleş (2/3)</span>
+          </button>
+          <button class="icon-btn" id="toggleScratchpadBtn" title="Karalama Tahtası" style="margin-left: auto;">
+            <span>✏️</span>
+            <span>İşlem Tahtası</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Mobile Scratchpad Drawer -->
+      <div class="scratchpad-container" id="scratchpadContainer">
+        <div class="scratchpad-toolbar">
+          <span>✍️ Parmakla / Kalemle Hesaplama Alanı</span>
+          <button class="icon-btn" id="clearScratchpadBtn" style="padding: 2px 8px; font-size: 11px;">Temizle</button>
+        </div>
+        <canvas id="scratchpadCanvas"></canvas>
+      </div>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <footer class="mobile-navbar">
+      <button class="nav-btn nav-btn-prev" id="prevBtn" disabled>
+        <span>←</span>
+        <span>Önceki Soru</span>
+      </button>
+
+      <button class="nav-btn nav-btn-next" id="nextBtn">
+        <span>Sonraki Soru</span>
+        <span>→</span>
+      </button>
+    </footer>
+
+  </div>
+
+  <!-- Socratic Questions Data & Logic -->
+  <script src="questions_data.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>

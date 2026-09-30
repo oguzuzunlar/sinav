@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Öğretmen Canlı Takip Paneli • 4. Bölüm Sokratik Gözlem & Analiz</title>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="teacher-body">
+
+  <div class="teacher-wrapper">
+    
+    <!-- Top Header -->
+    <header class="teacher-header">
+      <div class="teacher-title">
+        <h1>
+          <span>👨‍🏫</span>
+          <span>Sokratik Öğrenci Canlı Takip & Teşhis Paneli</span>
+        </h1>
+        <p>4. Bölüm Üslü Sayılar • 40 Soruluk Pekiştirme Sürecini Canlı İzleme & Pedagojik Hata Radarı</p>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div class="live-indicator">
+          <span class="live-pulse"></span>
+          <span id="liveStatusText">Canlı Telemetri Aktif</span>
+        </div>
+        <a href="index.html" target="_blank" class="icon-btn" style="background:#4f46e5; border-color:#6366f1; color:white; font-weight:700;">
+          <span>📱</span>
+          <span>Öğrenci Mobilini Aç</span>
+        </a>
+        <button id="lockDashboardBtn" class="icon-btn" title="Paneli kilitle">
+          <span>🔒</span>
+          <span>Kilitle</span>
+        </button>
+        <button id="demoSimulateBtn" class="icon-btn" title="Gözlem için örnek öğrenci verisi üret">
+          <span>⚡</span>
+          <span>Demo Simülasyon</span>
+        </button>
+        <button id="resetSessionBtn" class="icon-btn" title="Oturum verilerini sıfırla">
+          <span>🗑️</span>
+          <span>Sıfırla</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Öğretmen Güvenlik Kilidi (PIN Overlay) -->
+    <div id="pinLockOverlay" style="position:fixed; inset:0; background:rgba(11,15,25,0.96); backdrop-filter:blur(16px); z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px;">
+      <div style="background:#1e293b; border:1.5px solid #6366f1; border-radius:18px; max-width:400px; width:100%; padding:32px 28px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,0.6);">
+        <div style="font-size:44px; margin-bottom:12px;">🔒</div>
+        <h2 style="font-family:'Outfit', sans-serif; font-size:20px; font-weight:800; color:#fff; margin-bottom:6px;">Öğretmen Güvenlik Kilidi</h2>
+        <p style="font-size:12.5px; color:#94a3b8; line-height:1.5; margin-bottom:20px;">
+          Bu panel cevap anahtarlarını ve öğrenci telemetri analizlerini içerir. Giriş için 4 haneli öğretmen PIN kodunu giriniz:
+        </p>
+
+        <form id="pinForm" onsubmit="return false;" style="display:flex; flex-direction:column; gap:14px;">
+          <input type="password" id="pinInput" maxlength="6" placeholder="••••" autocomplete="off" style="font-family:'Outfit', monospace; font-size:26px; font-weight:800; text-align:center; letter-spacing:10px; background:#0f172a; border:2px solid #475569; color:#fff; border-radius:12px; padding:12px; outline:none; transition:border 0.2s;" />
+          <div id="pinErrorMsg" style="display:none; color:#fb7185; font-size:12px; font-weight:700;">⚠️ Hatalı PIN kodu! Lütfen tekrar deneyin.</div>
+          <button type="submit" id="pinSubmitBtn" style="background:linear-gradient(135deg, #4f46e5, #6366f1); color:white; border:none; border-radius:12px; padding:13px; font-weight:800; font-size:14px; cursor:pointer; transition:all 0.2s;">Giriş Yap</button>
+        </form>
+
+        <div style="margin-top:16px; font-size:11px; color:#64748b;">
+          Varsayılan PIN: <strong style="color:#94a3b8;">2027</strong> (Dilediğinizde değiştirebilirsiniz)
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Summary Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">Aktif Öğrenci</span>
+        <div class="kpi-value" id="kpiStudentName" style="color: #818cf8;">Emir</div>
+        <span class="kpi-sub" id="kpiLastActive">Son Etkinlik: Şimdi</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Çözülen / İlerleme</span>
+        <div class="kpi-value" id="kpiSolvedCount">0 / 40</div>
+        <span class="kpi-sub" id="kpiProgressPct">%0 Tamamlandı</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">İlk Denemede Doğru</span>
+        <div class="kpi-value" id="kpiFirstTryRate" style="color: #34d399;">%0</div>
+        <span class="kpi-sub" id="kpiFirstTryCount">0 Soru İpuçsuz Başarı</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Sokratik İpucu Talebi</span>
+        <div class="kpi-value" id="kpiHintsTotal" style="color: #fbbf24;">0 Kez</div>
+        <span class="kpi-sub">Cevap vermeden düşünmeye teşvik edildi</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Toplam Çalışma Süresi</span>
+        <div class="kpi-value" id="kpiTimeSpent">00:00</div>
+        <span class="kpi-sub" id="kpiAvgTime">Ortalama: 0 sn / soru</span>
+      </div>
+    </section>
+
+    <!-- Two Columns Layout: Left Matrix & Details, Right Live Timeline & Misconception Radar -->
+    <div class="teacher-grid">
+      
+      <!-- Left Column: 40-Question Progress Matrix & Question Inspector -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        
+        <!-- Matrix Card -->
+        <div class="dashboard-panel">
+          <div class="panel-head">
+            <h2>
+              <span>🗺️</span>
+              <span>40 Soruluk Öğrenci Haritası (Test 01 - 04)</span>
+            </h2>
+            <div style="display: flex; gap: 12px; font-size: 11px; font-weight: 600;">
+              <span style="color:#34d399; display:flex; align-items:center; gap:4px;">● İlk Denemede Doğru</span>
+              <span style="color:#fbbf24; display:flex; align-items:center; gap:4px;">● İpucuyla Doğru</span>
+              <span style="color:#fb7185; display:flex; align-items:center; gap:4px;">● Hata / Tuzak</span>
+              <span style="color:#6366f1; display:flex; align-items:center; gap:4px;">● Aktif</span>
+            </div>
+          </div>
+
+          <div class="matrix-grid" id="matrixGrid">
+            <!-- 40 nodes dynamically generated -->
+          </div>
+          <div style="font-size: 11px; color: var(--text-dim); text-align: center;">
+            💡 Herhangi bir soru kutusuna tıklayarak öğrencinin o sorudaki denemelerini ve aldığı Sokratik ipuçlarını inceleyebilirsiniz.
+          </div>
+        </div>
+
+        <!-- Question Inspector Panel -->
+        <div class="dashboard-panel" id="inspectorPanel">
+          <div class="panel-head">
+            <h2>
+              <span>🔍</span>
+              <span id="inspectorTitle">Soru İnceleme & Öğrenci Teşhisi</span>
+            </h2>
+            <span class="q-badge" id="inspectorBadge">Soru Seçilmedi</span>
+          </div>
+
+          <div id="inspectorContent" style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="color: var(--text-dim); font-style: italic; padding: 20px 0; text-align: center;">
+              Yukarıdaki haritadan bir soruya tıklayarak detaylı teşhis raporunu açın.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Live Event Timeline & Misconception Radar -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        
+        <!-- Misconception Radar -->
+        <div class="dashboard-panel">
+          <div class="panel-head">
+            <h2>
+              <span>🎯</span>
+              <span>Kavram Yanılgısı & Teşhis Radarı</span>
+            </h2>
+          </div>
+          <div id="misconceptionList">
+            <div class="misconception-card">
+              <div class="misconception-title">1. Üsleri Toplama Yanılgısı ($3^7 + 3^7 \neq 3^{14}$)</div>
+              <div class="misconception-desc">Öğrenci tekrarlı toplama ile çarpmayı karıştırıyor. Katsayı mantığı ($x+x=2x$) hatırlatılmalı.</div>
+            </div>
+            <div class="misconception-card" style="border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.06);">
+              <div class="misconception-title" style="color: #fde68a;">2. Parantezsiz Negatif Kuvvet $(-2^4 \neq +16)$</div>
+              <div class="misconception-desc">Parantezin kuvvetin kapsamını belirlediği hatırlatılmalı.</div>
+            </div>
+            <div class="misconception-card" style="border-color: rgba(99, 102, 241, 0.3); background: rgba(99, 102, 241, 0.06);">
+              <div class="misconception-title" style="color: #c7d2fe;">3. Ortak Parantezde Gizli 1 Çarpanı</div>
+              <div class="misconception-desc">$5^8$ paranteze alınırken en sondaki terimden 1 kaldığı unutulmamalı.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Events Stream -->
+        <div class="dashboard-panel" style="flex:1;">
+          <div class="panel-head">
+            <h2>
+              <span>⚡</span>
+              <span>Canlı Hareket Akışı (Live Stream)</span>
+            </h2>
+            <button id="clearLogsBtn" class="icon-btn" style="padding: 2px 8px; font-size: 11px;">Temizle</button>
+          </div>
+
+          <div class="timeline-list" id="timelineList">
+            <!-- Events injected dynamically -->
+            <div class="timeline-item">
+              <span class="timeline-time">Sistem</span>
+              <span class="timeline-msg">Canlı izleme başlatıldı. Öğrenci hareketleri anlık olarak buraya akacaktır.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="questions_data.js"></script>
+  <script>
+    (function() {
+      'use strict';
+
+      const questions = window.SOCRATIC_QUESTIONS || [];
+      const channel = window.BroadcastChannel ? new BroadcastChannel('socratic_telemetry') : null;
+
+      let selectedQuestionId = null;
+
+      // DOM Elements
+      const kpiStudentName = document.getElementById('kpiStudentName');
+      const kpiLastActive = document.getElementById('kpiLastActive');
+      const kpiSolvedCount = document.getElementById('kpiSolvedCount');
+      const kpiProgressPct = document.getElementById('kpiProgressPct');
+      const kpiFirstTryRate = document.getElementById('kpiFirstTryRate');
+      const kpiFirstTryCount = document.getElementById('kpiFirstTryCount');
+      const kpiHintsTotal = document.getElementById('kpiHintsTotal');
+      const kpiTimeSpent = document.getElementById('kpiTimeSpent');
+      const kpiAvgTime = document.getElementById('kpiAvgTime');
+
+      const matrixGrid = document.getElementById('matrixGrid');
+      const timelineList = document.getElementById('timelineList');
+      const inspectorTitle = document.getElementById('inspectorTitle');
+      const inspectorBadge = document.getElementById('inspectorBadge');
+      const inspectorContent = document.getElementById('inspectorContent');
+      const demoSimulateBtn = document.getElementById('demoSimulateBtn');
+      const resetSessionBtn = document.getElementById('resetSessionBtn');
+      const clearLogsBtn = document.getElementById('clearLogsBtn');
+
+      function getStudentState() {
+        const raw = localStorage.getItem('SOCRATIC_STUDENT_STATE');
+        return raw ? JSON.parse(raw) : {
+          studentName: localStorage.getItem('SOCRATIC_STUDENT_NAME') || 'Emir',
+          currentIndex: 0,
+          currentQId: 'q-1',
+          progress: JSON.parse(localStorage.getItem('SOCRATIC_PROGRESS_DATA') || '{}'),
+          lastActive: Date.now()
+        };
+      }
+
+      function getEventLogs() {
+        return JSON.parse(localStorage.getItem('SOCRATIC_EVENT_LOGS') || '[]');
+      }
+
+      function updateDashboard() {
+        const studentState = getStudentState();
+        const progress = studentState.progress || {};
+
+        // KPIs
+        kpiStudentName.textContent = studentState.studentName || 'Emir';
+        
+        let solvedCount = 0;
+        let firstTryCount = 0;
+        let totalHints = 0;
+        let totalTimeMs = 0;
+
+        Object.values(progress).forEach(p => {
+          if (p.solved) {
+            solvedCount++;
+            if (p.attempts.length === 1 && p.hintsUsed === 0) {
+              firstTryCount++;
+            }
+          }
+          totalHints += (p.hintsUsed || 0);
+          totalTimeMs += (p.timeSpentMs || 0);
+        });
+
+        const pct = Math.round((solvedCount / 40) * 100);
+        kpiSolvedCount.textContent = `${solvedCount} / 40`;
+        kpiProgressPct.textContent = `%${pct} Tamamlandı`;
+
+        const firstRate = solvedCount > 0 ? Math.round((firstTryCount / solvedCount) * 100) : 0;
+        kpiFirstTryRate.textContent = `%${firstRate}`;
+        kpiFirstTryCount.textContent = `${firstTryCount} Soru İlk Seferde Doğru`;
+
+        kpiHintsTotal.textContent = `${totalHints} Kez`;
+
+        const totalSec = Math.floor(totalTimeMs / 1000);
+        const m = String(Math.floor(totalSec / 60)).padStart(2, '0');
+        const s = String(totalSec % 60).padStart(2, '0');
+        kpiTimeSpent.textContent = `${m}:${s}`;
+
+        const avgSec = solvedCount > 0 ? Math.round(totalSec / solvedCount) : 0;
+        kpiAvgTime.textContent = `Ortalama: ${avgSec} sn / soru`;
+
+        // Render Matrix Nodes
+        renderMatrix(studentState);
+
+        // Render Timeline
+        renderTimeline();
+
+        // If inspector is open, refresh it
+        if (selectedQuestionId) {
+          inspectQuestion(selectedQuestionId);
+        }
+      }
+
+      function renderMatrix(studentState) {
+        matrixGrid.innerHTML = '';
+        const progress = studentState.progress || {};
+
+        questions.forEach((q, idx) => {
+          const node = document.createElement('div');
+          node.className = 'matrix-node';
+          node.dataset.qid = q.id;
+
+          const p = progress[q.id];
+          const isCurrent = (studentState.currentQId === q.id);
+
+          if (isCurrent) {
+            node.classList.add('active-now');
+          } else if (p && p.solved) {
+            if (p.attempts.length === 1 && p.hintsUsed === 0) {
+              node.classList.add('correct-first');
+            } else {
+              node.classList.add('correct-hint');
+            }
+          } else if (p && p.attempts && p.attempts.length > 0 && !p.solved) {
+            node.classList.add('wrong');
+          }
+
+          node.innerHTML = `
+            <span>${idx + 1}</span>
+            ${p && p.hintsUsed > 0 ? '<div class="hint-badge-dot"></div>' : ''}
+          `;
+
+          node.addEventListener('click', () => {
+            inspectQuestion(q.id);
+          });
+
+          matrixGrid.appendChild(node);
+        });
+      }
+
+      function inspectQuestion(qId) {
+        selectedQuestionId = qId;
+        const q = questions.find(item => item.id === qId);
+        if (!q) return;
+
+        const studentState = getStudentState();
+        const p = studentState.progress[qId] || {
+          attempts: [],
+          hintsUsed: 0,
+          timeSpentMs: 0,
+          solved: false
+        };
+
+        inspectorTitle.textContent = `${q.testNo}. Test — Soru ${q.questionNo} Detay Analizi`;
+        inspectorBadge.textContent = p.solved ? '✅ ÇÖZÜLDÜ' : (p.attempts.length > 0 ? '❌ HATA YAPILDI' : '⏳ HENÜZ BAŞLANMADI');
+        inspectorBadge.style.color = p.solved ? '#34d399' : (p.attempts.length > 0 ? '#fb7185' : '#94a3b8');
+
+        let cleanText = q.text
+          .replace(/\\n\\n/g, '<br><br>')
+          .replace(/\\n/g, '<br>')
+          .replace(/\n\n/g, '<br><br>')
+          .replace(/\n/g, '<br>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        let attemptsHtml = '';
+        if (p.attempts.length > 0) {
+          attemptsHtml = p.attempts.map((att, i) => {
+            const isCorr = att === q.correctAnswer;
+            return `<span style="display:inline-block; padding:3px 8px; border-radius:4px; font-weight:800; font-size:12px; margin-right:6px; background:${isCorr ? 'rgba(16,185,129,0.2)' : 'rgba(244,63,94,0.2)'}; color:${isCorr ? '#34d399' : '#fb7185'};">${i+1}. Deneme: ${att} ${isCorr ? '✓' : '✗'}</span>`;
+          }).join('');
+        } else {
+          attemptsHtml = '<span style="color:var(--text-dim); font-size:12px;">Henüz işaretleme yapılmadı.</span>';
+        }
+
+        inspectorContent.innerHTML = `
+          <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:8px; border:1px solid var(--border);">
+            <div style="font-size:13.5px; font-weight:600; line-height:1.5;">${cleanText}</div>
+            <div style="margin-top:10px; font-size:12px; color:var(--text-muted);">
+              <strong>Doğru Cevap:</strong> <span style="color:#34d399; font-weight:800;">${q.correctAnswer}</span>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:6px; border:1px solid var(--border);">
+              <span style="font-size:11px; color:var(--text-muted); font-weight:700;">ÖĞRENCİ İŞARETLEMELERİ:</span>
+              <div style="margin-top:6px;">${attemptsHtml}</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:6px; border:1px solid var(--border);">
+              <span style="font-size:11px; color:var(--text-muted); font-weight:700;">SOKRATİK İPUCU KULLANIMI:</span>
+              <div style="margin-top:6px; font-size:13px; font-weight:800; color:#fbbf24;">
+                ${p.hintsUsed} / 3 Seviye İpucu İstendi
+              </div>
+            </div>
+          </div>
+
+          <div style="background:rgba(244,63,94,0.08); border-left:3px solid #f43f5e; padding:10px 14px; border-radius:0 8px 8px 0;">
+            <div style="font-weight:700; color:#fda4af; font-size:12px; margin-bottom:4px;">🚨 Öngörülen Hata Tuzağı & Pedagojik Uyarı:</div>
+            <div style="font-size:12px; color:#e2e8f0; line-height:1.45;">${q.trap}</div>
+          </div>
+
+          <div style="background:rgba(99,102,241,0.08); border-left:3px solid #6366f1; padding:10px 14px; border-radius:0 8px 8px 0;">
+            <div style="font-weight:700; color:#c7d2fe; font-size:12px; margin-bottom:4px;">🦉 Sokratik Rehberlik Soruları (Öğrenciye Sunulan):</div>
+            <ol style="margin-left:16px; font-size:11.5px; color:#cbd5e1; line-height:1.4;">
+              ${(q.socraticPrompts || []).map(pr => `<li style="margin-bottom:4px;">${pr}</li>`).join('')}
+            </ol>
+          </div>
+        `;
+
+        if (window.renderMathInElement) {
+          renderMathInElement(inspectorContent, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ],
+            throwOnError: false
+          });
+        }
+      }
+
+      function renderTimeline() {
+        const logs = getEventLogs();
+        if (logs.length === 0) return;
+
+        timelineList.innerHTML = '';
+        logs.slice(0, 30).forEach(ev => {
+          const item = document.createElement('div');
+          item.className = 'timeline-item';
+
+          const date = new Date(ev.timestamp);
+          const timeStr = `${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}:${String(date.getSeconds()).padStart(2,'0')}`;
+
+          let msg = '';
+          if (ev.type === 'QUESTION_VIEWED') {
+            msg = `<strong>${ev.studentName}</strong>, Test ${ev.payload.testNo} - Soru ${ev.payload.questionNo}'yi açtı.`;
+          } else if (ev.type === 'HINT_REQUESTED') {
+            item.classList.add('hint-event');
+            msg = `🦉 <strong>${ev.studentName}</strong>, Soru ${ev.payload.questionNo} için <strong>${ev.payload.stage}. Seviye Sokratik İpucu</strong> istedi.`;
+          } else if (ev.type === 'ANSWER_SUBMITTED') {
+            if (ev.payload.correct) {
+              item.classList.add('correct-event');
+              msg = `🎉 <strong>${ev.studentName}</strong>, Soru ${ev.payload.questionNo}'yi <strong>${ev.payload.chosen}</strong> şıkkıyla DOĞRU çözdü! (${ev.payload.attemptsCount}. deneme, ${Math.round(ev.payload.timeSpentMs/1000)} sn)`;
+            } else {
+              item.classList.add('wrong-event');
+              msg = `⚠️ <strong>${ev.studentName}</strong>, Soru ${ev.payload.questionNo}'de <strong>${ev.payload.chosen}</strong> şıkkını seçti (Yanlış / Çeldirici Tuzağı).`;
+            }
+          } else if (ev.type === 'STUDENT_RENAMED') {
+            msg = `👤 Öğrenci adı güncellendi: <strong>${ev.payload.newName}</strong>`;
+          }
+
+          item.innerHTML = `
+            <span class="timeline-time">${timeStr}</span>
+            <span class="timeline-msg">${msg}</span>
+          `;
+          timelineList.appendChild(item);
+        });
+      }
+
+      // Live listener via BroadcastChannel
+      if (channel) {
+        channel.onmessage = function(event) {
+          updateDashboard();
+        };
+      }
+
+      // Storage event listener for cross-window sync
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'SOCRATIC_EVENT_LOGS' || e.key === 'SOCRATIC_PROGRESS_DATA' || e.key === 'SOCRATIC_STUDENT_STATE') {
+          updateDashboard();
+        }
+      });
+
+      // Demo Simulation Generator
+      demoSimulateBtn.addEventListener('click', () => {
+        const studentName = 'Emir';
+        const progress = {};
+        const logs = [];
+        let now = Date.now() - 360000;
+
+        // Simulate 8 questions solved with realistic student patterns
+        for (let i = 0; i < 8; i++) {
+          const q = questions[i];
+          now += 25000;
+          logs.unshift({
+            type: 'QUESTION_VIEWED',
+            studentName,
+            timestamp: now,
+            payload: { qId: q.id, testNo: q.testNo, questionNo: q.questionNo }
+          });
+
+          if (i === 0) {
+            // Soru 1: Tried B (trap), asked hint 1, then solved A
+            now += 8000;
+            logs.unshift({
+              type: 'ANSWER_SUBMITTED',
+              studentName,
+              timestamp: now,
+              payload: { qId: q.id, testNo: q.testNo, questionNo: q.questionNo, chosen: 'B', correct: false, attemptsCount: 1, trapTriggered: true, hintsUsed: 0, timeSpentMs: 8000 }
+            });
+            now += 6000;
+            logs.unshift({
+              type: 'HINT_REQUESTED',
+              studentName,
+              timestamp: now,
+              payload: { qId: q.id, testNo: q.testNo, questionNo: q.questionNo, stage: 1 }
+            });
+            now += 12000;
+            logs.unshift({
+              type: 'ANSWER_SUBMITTED',
+              studentName,
+              timestamp: now,
+              payload: { qId: q.id, testNo: q.testNo, questionNo: q.questionNo, chosen: 'A', correct: true, attemptsCount: 2, hintsUsed: 1, timeSpentMs: 26000 }
+            });
+            progress[q.id] = { qId: q.id, globalIndex: 1, testNo: '01', questionNo: 1, attempts: ['B', 'A'], hintsUsed: 1, timeSpentMs: 26000, solved: true, solvedWithHint: true };
+          } else if (i === 1) {
+            // Soru 2: Solved immediately
+            now += 15000;
+            logs.unshift({
+              type: 'ANSWER_SUBMITTED',
+              studentName,
+              timestamp: now,
+              payload: { qId: q.id, testNo: q.testNo, questionNo: q.questionNo, chosen: 'B', correct: true, attemptsCount: 1, hintsUsed: 0, timeSpentMs: 15000 }
+            });
+            progress[q.id] = { qId: q.id, globalIndex: 2, testNo: '01', questionNo: 2, attempts: ['B'], hintsUsed: 0, timeSpentMs: 15000, solved: true, solvedWithHint: false };
+          } else {
+            // Random mix
+            const isFirst = (i % 2 === 0);
+            logs.unshift({
+              type: 'ANSWER_SUBMITTED',
+              studentName,
+              timestamp: now + 18000,
+              payload: { qId: q.id, testNo: q.testNo, questionNo: q.questionNo, chosen: q.correctAnswer, correct: true, attemptsCount: isFirst ? 1 : 2, hintsUsed: isFirst ? 0 : 1, timeSpentMs: 18000 }
+            });
+            progress[q.id] = { qId: q.id, globalIndex: i+1, testNo: q.testNo, questionNo: q.questionNo, attempts: [q.correctAnswer], hintsUsed: isFirst ? 0 : 1, timeSpentMs: 18000, solved: true, solvedWithHint: !isFirst };
+          }
+        }
+
+        localStorage.setItem('SOCRATIC_PROGRESS_DATA', JSON.stringify(progress));
+        localStorage.setItem('SOCRATIC_EVENT_LOGS', JSON.stringify(logs));
+        localStorage.setItem('SOCRATIC_STUDENT_STATE', JSON.stringify({
+          studentName,
+          currentIndex: 8,
+          currentQId: 'q-9',
+          progress,
+          lastActive: Date.now()
+        }));
+
+        updateDashboard();
+        inspectQuestion('q-1');
+      });
+
+      resetSessionBtn.addEventListener('click', () => {
+        if (confirm('Tüm öğrenci oturumu ve analitik verilerini sıfırlamak istediğinize emin misiniz?')) {
+          localStorage.removeItem('SOCRATIC_PROGRESS_DATA');
+          localStorage.removeItem('SOCRATIC_EVENT_LOGS');
+          localStorage.removeItem('SOCRATIC_STUDENT_STATE');
+          updateDashboard();
+        }
+      });
+
+      clearLogsBtn.addEventListener('click', () => {
+        localStorage.removeItem('SOCRATIC_EVENT_LOGS');
+        timelineList.innerHTML = '<div class="timeline-item"><span class="timeline-time">Sistem</span><span class="timeline-msg">Kayıtlar temizlendi.</span></div>';
+      });
+
+      // Teacher Security PIN Authentication
+      const TEACHER_PIN = '2027';
+      const pinLockOverlay = document.getElementById('pinLockOverlay');
+      const pinInput = document.getElementById('pinInput');
+      const pinForm = document.getElementById('pinForm');
+      const pinErrorMsg = document.getElementById('pinErrorMsg');
+      const lockDashboardBtn = document.getElementById('lockDashboardBtn');
+
+      function checkAuth() {
+        if (sessionStorage.getItem('TEACHER_LOGGED_IN') === 'true') {
+          pinLockOverlay.style.display = 'none';
+        } else {
+          pinLockOverlay.style.display = 'flex';
+          pinInput.value = '';
+          setTimeout(() => pinInput.focus(), 150);
+        }
+      }
+
+      pinForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (pinInput.value.trim() === TEACHER_PIN) {
+          sessionStorage.setItem('TEACHER_LOGGED_IN', 'true');
+          pinLockOverlay.style.display = 'none';
+          pinErrorMsg.style.display = 'none';
+        } else {
+          pinErrorMsg.style.display = 'block';
+          pinInput.style.borderColor = '#f43f5e';
+          pinInput.value = '';
+          pinInput.focus();
+        }
+      });
+
+      lockDashboardBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('TEACHER_LOGGED_IN');
+        checkAuth();
+      });
+
+      // Init
+      document.addEventListener('DOMContentLoaded', () => {
+        checkAuth();
+        updateDashboard();
+        // Default inspect Q1
+        inspectQuestion('q-1');
+      });
+
+    })();
+  </script>
+</body>
+</html>
